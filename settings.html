@@ -440,31 +440,6 @@ input[type="url"]:focus {
   color: var(--text-secondary);
 }
 
-/* Git Status */
-.git-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--accent-light);
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.git-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.git-status-dot.configured {
-  background: var(--success);
-}
-
-.git-status-dot.not-configured {
-  background: var(--warning);
-}
-
 /* Dark Mode Toggle */
 .dark-mode-toggle {
   position: fixed;
@@ -663,80 +638,6 @@ input[type="url"]:focus {
       </div>
     </section>
 
-    <!-- Git Setup Section -->
-    <section class="settings-section">
-      <div class="section-header">
-        <div class="section-icon">📦</div>
-        <div>
-          <h2 class="section-title" data-i18n="settings.git.title">Git Configuration</h2>
-          <p class="section-description" data-i18n="settings.git.description">Configure your Git settings for version control</p>
-        </div>
-      </div>
-
-      <div class="git-status" id="gitStatus">
-        <span class="git-status-dot not-configured" id="gitStatusDot"></span>
-        <span id="gitStatusText" data-i18n="settings.git.notConfigured">Not configured</span>
-      </div>
-
-      <div class="git-form">
-        <div class="form-group">
-          <label for="gitName" data-i18n="settings.git.name">Your Name</label>
-          <input type="text" id="gitName" placeholder="John Doe">
-          <span class="hint" data-i18n="settings.git.nameHint">This will be used for commit author information</span>
-        </div>
-
-        <div class="form-group">
-          <label for="gitEmail" data-i18n="settings.git.email">Email Address</label>
-          <input type="email" id="gitEmail" placeholder="john@example.com">
-          <span class="hint" data-i18n="settings.git.emailHint">Use the email associated with your Git hosting service</span>
-        </div>
-
-        <div class="form-group">
-          <label for="gitRemote" data-i18n="settings.git.remote">Remote Repository URL (Optional)</label>
-          <input type="url" id="gitRemote" placeholder="https://github.com/username/repo.git">
-          <span class="hint" data-i18n="settings.git.remoteHint">GitHub, GitLab, or Bitbucket repository URL</span>
-        </div>
-
-        <div class="setting-row">
-          <div class="setting-info">
-            <div class="setting-label" data-i18n="settings.git.autoCommit">Auto-commit Progress</div>
-            <div class="setting-hint" data-i18n="settings.git.autoCommitHint">Automatically commit your learning progress to Git</div>
-          </div>
-          <div class="setting-control">
-            <label class="toggle-switch">
-              <input type="checkbox" id="autoCommitToggle">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="setting-row">
-          <div class="setting-info">
-            <div class="setting-label" data-i18n="settings.git.defaultBranch">Default Branch</div>
-            <div class="setting-hint" data-i18n="settings.git.defaultBranchHint">The main branch to use for commits</div>
-          </div>
-          <div class="setting-control">
-            <select id="gitDefaultBranch">
-              <option value="main">main</option>
-              <option value="master">master</option>
-              <option value="develop">develop</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-primary" id="saveGitConfig">
-            <span>💾</span> Save Configuration
-          </button>
-          <button class="btn btn-secondary" id="testGitConfig">
-            <span>🔍</span> Test Connection
-          </button>
-        </div>
-
-        <div class="status-message" id="gitStatusMessage"></div>
-      </div>
-    </section>
-
     <!-- Save All Settings -->
     <div class="btn-group" style="justify-content: center; margin-top: 2rem;">
       <button class="btn btn-primary" id="saveAllSettings" style="padding: 1rem 2rem; font-size: 1.1rem;">
@@ -772,20 +673,6 @@ const translations = {
     'settings.theme.lightMode': 'Light Mode',
     'settings.theme.darkMode': 'Dark Mode',
     'settings.theme.currentTime': 'Current Time',
-    'settings.git.title': 'Git Configuration',
-    'settings.git.description': 'Configure your Git settings for version control',
-    'settings.git.notConfigured': 'Not configured',
-    'settings.git.configured': 'Configured',
-    'settings.git.name': 'Your Name',
-    'settings.git.nameHint': 'This will be used for commit author information',
-    'settings.git.email': 'Email Address',
-    'settings.git.emailHint': 'Use the email associated with your Git hosting service',
-    'settings.git.remote': 'Remote Repository URL (Optional)',
-    'settings.git.remoteHint': 'GitHub, GitLab, or Bitbucket repository URL',
-    'settings.git.autoCommit': 'Auto-commit Progress',
-    'settings.git.autoCommitHint': 'Automatically commit your learning progress to Git',
-    'settings.git.defaultBranch': 'Default Branch',
-    'settings.git.defaultBranchHint': 'The main branch to use for commits',
     'settings.saveAll': 'Save All Settings',
     'settings.reset': 'Reset to Defaults',
     'preview.welcome': 'Welcome to SkyGuide - Your Complete Flight Simulator Guide'
@@ -809,20 +696,6 @@ const translations = {
     'settings.theme.lightMode': 'Modo Claro',
     'settings.theme.darkMode': 'Modo Oscuro',
     'settings.theme.currentTime': 'Hora Actual',
-    'settings.git.title': 'Configuración de Git',
-    'settings.git.description': 'Configura tus ajustes de Git para control de versiones',
-    'settings.git.notConfigured': 'No configurado',
-    'settings.git.configured': 'Configurado',
-    'settings.git.name': 'Tu Nombre',
-    'settings.git.nameHint': 'Se usará para la información del autor en los commits',
-    'settings.git.email': 'Correo Electrónico',
-    'settings.git.emailHint': 'Usa el correo asociado a tu servicio de hosting Git',
-    'settings.git.remote': 'URL del Repositorio Remoto (Opcional)',
-    'settings.git.remoteHint': 'URL del repositorio en GitHub, GitLab o Bitbucket',
-    'settings.git.autoCommit': 'Auto-commit del Progreso',
-    'settings.git.autoCommitHint': 'Hacer commit automático de tu progreso de aprendizaje',
-    'settings.git.defaultBranch': 'Rama Predeterminada',
-    'settings.git.defaultBranchHint': 'La rama principal para los commits',
     'settings.saveAll': 'Guardar Toda la Configuración',
     'settings.reset': 'Restablecer Valores',
     'preview.welcome': 'Bienvenido a SkyGuide - Tu Guía Completa de Simuladores de Vuelo'
@@ -846,20 +719,6 @@ const translations = {
     'settings.theme.lightMode': 'Mode Clair',
     'settings.theme.darkMode': 'Mode Sombre',
     'settings.theme.currentTime': 'Heure Actuelle',
-    'settings.git.title': 'Configuration Git',
-    'settings.git.description': 'Configurez vos paramètres Git pour le contrôle de version',
-    'settings.git.notConfigured': 'Non configuré',
-    'settings.git.configured': 'Configuré',
-    'settings.git.name': 'Votre Nom',
-    'settings.git.nameHint': "Sera utilisé pour les informations d'auteur des commits",
-    'settings.git.email': 'Adresse Email',
-    'settings.git.emailHint': "Utilisez l'email associé à votre service d'hébergement Git",
-    'settings.git.remote': 'URL du Dépôt Distant (Optionnel)',
-    'settings.git.remoteHint': 'URL du dépôt GitHub, GitLab ou Bitbucket',
-    'settings.git.autoCommit': 'Auto-commit du Progrès',
-    'settings.git.autoCommitHint': "Commit automatique de votre progression d'apprentissage",
-    'settings.git.defaultBranch': 'Branche par Défaut',
-    'settings.git.defaultBranchHint': 'La branche principale pour les commits',
     'settings.saveAll': 'Enregistrer Tous les Paramètres',
     'settings.reset': 'Réinitialiser',
     'preview.welcome': 'Bienvenue sur SkyGuide - Votre Guide Complet des Simulateurs de Vol'
@@ -883,20 +742,6 @@ const translations = {
     'settings.theme.lightMode': 'Hellmodus',
     'settings.theme.darkMode': 'Dunkelmodus',
     'settings.theme.currentTime': 'Aktuelle Zeit',
-    'settings.git.title': 'Git-Konfiguration',
-    'settings.git.description': 'Konfigurieren Sie Ihre Git-Einstellungen für die Versionskontrolle',
-    'settings.git.notConfigured': 'Nicht konfiguriert',
-    'settings.git.configured': 'Konfiguriert',
-    'settings.git.name': 'Ihr Name',
-    'settings.git.nameHint': 'Wird für Commit-Autoreninformationen verwendet',
-    'settings.git.email': 'E-Mail-Adresse',
-    'settings.git.emailHint': 'Verwenden Sie die E-Mail, die mit Ihrem Git-Hosting-Dienst verbunden ist',
-    'settings.git.remote': 'Remote-Repository-URL (Optional)',
-    'settings.git.remoteHint': 'GitHub-, GitLab- oder Bitbucket-Repository-URL',
-    'settings.git.autoCommit': 'Auto-Commit Fortschritt',
-    'settings.git.autoCommitHint': 'Lernfortschritt automatisch committen',
-    'settings.git.defaultBranch': 'Standard-Branch',
-    'settings.git.defaultBranchHint': 'Der Hauptbranch für Commits',
     'settings.saveAll': 'Alle Einstellungen Speichern',
     'settings.reset': 'Zurücksetzen',
     'preview.welcome': 'Willkommen bei SkyGuide - Ihr Kompletter Flugsimulator-Leitfaden'
@@ -1035,76 +880,6 @@ function updateTimeDisplays() {
     `${now.getHours() % 12 || 12}:${now.getMinutes().toString().padStart(2, '0')} ${now.getHours() >= 12 ? 'PM' : 'AM'}`;
 }
 
-// Git configuration
-function loadGitConfig() {
-  const gitName = localStorage.getItem('skyguide-git-name') || '';
-  const gitEmail = localStorage.getItem('skyguide-git-email') || '';
-  const gitRemote = localStorage.getItem('skyguide-git-remote') || '';
-  const gitBranch = localStorage.getItem('skyguide-git-branch') || 'main';
-  const autoCommit = localStorage.getItem('skyguide-git-auto-commit') === 'true';
-
-  document.getElementById('gitName').value = gitName;
-  document.getElementById('gitEmail').value = gitEmail;
-  document.getElementById('gitRemote').value = gitRemote;
-  document.getElementById('gitDefaultBranch').value = gitBranch;
-  document.getElementById('autoCommitToggle').checked = autoCommit;
-
-  updateGitStatus();
-}
-
-function updateGitStatus() {
-  const gitName = document.getElementById('gitName').value;
-  const gitEmail = document.getElementById('gitEmail').value;
-  const statusDot = document.getElementById('gitStatusDot');
-  const statusText = document.getElementById('gitStatusText');
-  const langData = translations[currentLanguage] || translations['en'];
-
-  if (gitName && gitEmail) {
-    statusDot.className = 'git-status-dot configured';
-    statusText.textContent = langData['settings.git.configured'] || 'Configured';
-  } else {
-    statusDot.className = 'git-status-dot not-configured';
-    statusText.textContent = langData['settings.git.notConfigured'] || 'Not configured';
-  }
-}
-
-function saveGitConfig() {
-  const gitName = document.getElementById('gitName').value;
-  const gitEmail = document.getElementById('gitEmail').value;
-  const gitRemote = document.getElementById('gitRemote').value;
-  const gitBranch = document.getElementById('gitDefaultBranch').value;
-  const autoCommit = document.getElementById('autoCommitToggle').checked;
-
-  localStorage.setItem('skyguide-git-name', gitName);
-  localStorage.setItem('skyguide-git-email', gitEmail);
-  localStorage.setItem('skyguide-git-remote', gitRemote);
-  localStorage.setItem('skyguide-git-branch', gitBranch);
-  localStorage.setItem('skyguide-git-auto-commit', autoCommit);
-
-  updateGitStatus();
-  showStatusMessage('gitStatusMessage', 'Git configuration saved successfully!', 'success');
-}
-
-function testGitConfig() {
-  const gitRemote = document.getElementById('gitRemote').value;
-
-  if (!gitRemote) {
-    showStatusMessage('gitStatusMessage', 'Please enter a remote repository URL to test.', 'error');
-    return;
-  }
-
-  // Simulate connection test
-  showStatusMessage('gitStatusMessage', 'Testing connection...', 'success');
-
-  setTimeout(() => {
-    if (gitRemote.includes('github.com') || gitRemote.includes('gitlab.com') || gitRemote.includes('bitbucket.org')) {
-      showStatusMessage('gitStatusMessage', 'Connection test simulated successfully! (Note: Actual Git operations require a backend server)', 'success');
-    } else {
-      showStatusMessage('gitStatusMessage', 'URL format appears valid. (Note: Actual Git operations require a backend server)', 'success');
-    }
-  }, 1000);
-}
-
 function showStatusMessage(elementId, message, type) {
   const element = document.getElementById(elementId);
   element.textContent = message;
@@ -1136,9 +911,6 @@ function loadSettings() {
   document.getElementById('scheduleSettings').style.display = autoTheme ? 'flex' : 'none';
 
   updateTimeDisplays();
-
-  // Git
-  loadGitConfig();
 }
 
 // Save all settings
@@ -1168,9 +940,6 @@ function saveAllSettings() {
     applyScheduledTheme();
   }
 
-  // Save git config
-  saveGitConfig();
-
   showStatusMessage('globalStatusMessage', 'All settings saved successfully!', 'success');
 }
 
@@ -1186,11 +955,6 @@ function resetSettings() {
   localStorage.removeItem('skyguide-use-system-theme');
   localStorage.removeItem('skyguide-day-start');
   localStorage.removeItem('skyguide-night-start');
-  localStorage.removeItem('skyguide-git-name');
-  localStorage.removeItem('skyguide-git-email');
-  localStorage.removeItem('skyguide-git-remote');
-  localStorage.removeItem('skyguide-git-branch');
-  localStorage.removeItem('skyguide-git-auto-commit');
   localStorage.removeItem('skyguide-theme');
   localStorage.removeItem('skyguide-manual-theme');
 
@@ -1235,14 +999,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Time inputs
   document.getElementById('dayStartTime').addEventListener('change', updateTimeDisplays);
   document.getElementById('nightStartTime').addEventListener('change', updateTimeDisplays);
-
-  // Git buttons
-  document.getElementById('saveGitConfig').addEventListener('click', saveGitConfig);
-  document.getElementById('testGitConfig').addEventListener('click', testGitConfig);
-
-  // Git inputs for status update
-  document.getElementById('gitName').addEventListener('input', updateGitStatus);
-  document.getElementById('gitEmail').addEventListener('input', updateGitStatus);
 
   // Save all and reset buttons
   document.getElementById('saveAllSettings').addEventListener('click', saveAllSettings);
