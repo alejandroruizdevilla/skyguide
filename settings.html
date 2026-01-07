@@ -978,6 +978,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('languageSelect').addEventListener('change', (e) => {
     currentLanguage = e.target.value;
     applyTranslations(currentLanguage);
+    // Also update global translations system
+    if (typeof SkyGuideTranslations !== 'undefined') {
+      SkyGuideTranslations.setLanguage(currentLanguage);
+    }
   });
 
   // Auto theme toggle
@@ -1016,5 +1020,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 60000);
 });
 </script>
+<script src="js/translations.js"></script>
 </body>
 </html>
