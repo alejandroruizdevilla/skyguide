@@ -388,7 +388,7 @@ input:focus, select:focus {
   </div>
 
   <div class="quick-routes">
-    <h2>Popular Routes</h2>
+    <h2 data-i18n="planner.popularRoutes">Popular Routes</h2>
     <div class="routes-grid">
       <div class="route-card" onclick="loadRoute('KJFK', 'EGLL', 3451)">
         <div class="route-title">New York → London</div>
@@ -419,25 +419,25 @@ input:focus, select:focus {
 
   <div class="planner-grid">
     <div class="section">
-      <h2>Flight Details</h2>
+      <h2 data-i18n="planner.flightDetails">Flight Details</h2>
       <form id="flightPlanForm">
         <div class="form-group">
-          <label for="departure">Departure Airport (ICAO)</label>
+          <label for="departure" data-i18n="planner.departure">Departure Airport (ICAO)</label>
           <input type="text" id="departure" placeholder="e.g., KJFK" maxlength="4" required>
         </div>
 
         <div class="form-group">
-          <label for="arrival">Arrival Airport (ICAO)</label>
+          <label for="arrival" data-i18n="planner.arrival">Arrival Airport (ICAO)</label>
           <input type="text" id="arrival" placeholder="e.g., EGLL" maxlength="4" required>
         </div>
 
         <div class="form-group">
-          <label for="distance">Distance (Nautical Miles)</label>
+          <label for="distance" data-i18n="planner.distance">Distance (Nautical Miles)</label>
           <input type="number" id="distance" placeholder="Auto-calculated or enter manually" min="1">
         </div>
 
         <div class="form-group">
-          <label for="aircraft">Aircraft Type</label>
+          <label for="aircraft" data-i18n="planner.aircraft">Aircraft Type</label>
           <select id="aircraft">
             <option value="150">Cessna 172 (150 kts)</option>
             <option value="180">Piper PA-28 (180 kts)</option>
@@ -451,32 +451,32 @@ input:focus, select:focus {
         </div>
 
         <div class="form-group">
-          <label for="cruiseSpeed">Cruise Speed (knots)</label>
+          <label for="cruiseSpeed" data-i18n="planner.cruiseSpeed">Cruise Speed (knots)</label>
           <input type="number" id="cruiseSpeed" value="450" min="50" max="600">
         </div>
 
         <div class="form-group">
-          <label for="fuelBurn">Fuel Burn (lbs/hour or kg/hour)</label>
+          <label for="fuelBurn" data-i18n="planner.fuelBurn">Fuel Burn (lbs/hour or kg/hour)</label>
           <input type="number" id="fuelBurn" value="4500" min="10">
         </div>
 
-        <button type="submit" class="calculate-btn">Calculate Flight Plan</button>
+        <button type="submit" class="calculate-btn" data-i18n="planner.calculate">Calculate Flight Plan</button>
       </form>
     </div>
 
     <div class="section">
-      <h2>Flight Plan Results</h2>
+      <h2 data-i18n="planner.results">Flight Plan Results</h2>
       <div id="results">
         <div class="result-card">
-          <div class="result-label">Flight Time</div>
+          <div class="result-label" data-i18n="planner.flightTime">Flight Time</div>
           <div class="result-value">
             <span id="flightTime">--</span>
-            <span class="result-unit">hours</span>
+            <span class="result-unit" data-i18n="planner.hours">hours</span>
           </div>
         </div>
 
         <div class="result-card">
-          <div class="result-label">Total Distance</div>
+          <div class="result-label" data-i18n="planner.totalDistance">Total Distance</div>
           <div class="result-value">
             <span id="totalDistance">--</span>
             <span class="result-unit">nm</span>
@@ -484,7 +484,7 @@ input:focus, select:focus {
         </div>
 
         <div class="result-card">
-          <div class="result-label">Fuel Required</div>
+          <div class="result-label" data-i18n="planner.fuelRequired">Fuel Required</div>
           <div class="result-value">
             <span id="fuelRequired">--</span>
             <span class="result-unit">lbs/kg</span>
@@ -492,7 +492,7 @@ input:focus, select:focus {
         </div>
 
         <div class="result-card">
-          <div class="result-label">Reserve Fuel (30 min)</div>
+          <div class="result-label" data-i18n="planner.reserveFuel">Reserve Fuel (30 min)</div>
           <div class="result-value">
             <span id="reserveFuel">--</span>
             <span class="result-unit">lbs/kg</span>
@@ -500,23 +500,23 @@ input:focus, select:focus {
         </div>
 
         <div class="route-summary" id="routeSummary" style="display: none;">
-          <h3>Route Summary</h3>
+          <h3 data-i18n="planner.routeSummary">Route Summary</h3>
           <div class="summary-grid">
             <div class="summary-item">
               <span class="summary-value" id="summaryRoute">---</span>
-              <span class="summary-label">Route</span>
+              <span class="summary-label" data-i18n="planner.route">Route</span>
             </div>
             <div class="summary-item">
               <span class="summary-value" id="summaryAircraft">---</span>
-              <span class="summary-label">Aircraft</span>
+              <span class="summary-label" data-i18n="planner.aircraft">Aircraft</span>
             </div>
             <div class="summary-item">
               <span class="summary-value" id="summaryTotalFuel">---</span>
-              <span class="summary-label">Total Fuel</span>
+              <span class="summary-label" data-i18n="planner.totalFuel">Total Fuel</span>
             </div>
             <div class="summary-item">
               <span class="summary-value" id="summaryETA">---</span>
-              <span class="summary-label">ETA</span>
+              <span class="summary-label" data-i18n="planner.eta">ETA</span>
             </div>
           </div>
         </div>
@@ -525,8 +525,8 @@ input:focus, select:focus {
   </div>
 
   <div class="section">
-    <h2>External Flight Planning Tools</h2>
-    <p style="margin-bottom: 1.5rem;">For more advanced flight planning with real navigation data, weather, and procedures:</p>
+    <h2 data-i18n="planner.externalTools">External Flight Planning Tools</h2>
+    <p style="margin-bottom: 1.5rem;" data-i18n="planner.externalToolsDesc">For more advanced flight planning with real navigation data, weather, and procedures:</p>
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
       <a href="https://www.simbrief.com/" target="_blank" class="calculate-btn" style="width: auto; display: inline-block; text-decoration: none; text-align: center;">SimBrief (Professional)</a>
       <a href="https://skyvector.com/" target="_blank" class="calculate-btn" style="width: auto; display: inline-block; text-decoration: none; text-align: center;">SkyVector (Charts)</a>
