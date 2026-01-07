@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - IL-2 Sturmovik</title>
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .back-link:hover { color: var(--accent-alt); transform: translateX(-4px); }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .header {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    h1 {
+      font-size: 32px;
+      color: var(--accent-alt);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      border: none;
+      background: #d97757;
+      color: #ffffff;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .tagline {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+    .meta-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .meta-value { font-size: 15px; color: var(--text-main); }
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+    h2 {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    h3 {
+      font-size: 18px;
+      color: var(--accent-alt);
+      margin: 1.5rem 0 0.75rem;
+      font-weight: 600;
+    }
+    p { margin-bottom: 1rem; line-height: 1.7; }
+    ul { list-style: none; padding-left: 0; }
+    ul li {
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+    ul li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .rating-section { display: grid; gap: 1rem; margin-top: 1.5rem; }
+    .rating-item { display: flex; align-items: center; gap: 1rem; }
+    .rating-label {
+      min-width: 180px;
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 15px;
+    }
+    .rating-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border-light);
+      border-radius: 5px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+    .rating-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+    .rating-value {
+      min-width: 50px;
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+    .highlight-box strong { color: var(--accent); }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .spec-card {
+      background: var(--bg);
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+    .spec-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { background: var(--accent-alt); border-color: var(--accent-alt); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .btn-secondary:hover { background: var(--accent-light); }
+    .sticky-header {
+      position: fixed;
+      top: -100px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: top 0.3s ease;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .sticky-header.visible {
+      top: 0;
+    }
+
+    .sticky-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 26px; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .rating-item { flex-direction: column; align-items: stretch; }
+      .rating-label { min-width: auto; }
+      .rating-bar { max-width: 100%; }
+      .sticky-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .sticky-header h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sticky-header">
+      <h2>IL-2 Sturmovik: Great Battles</h2>
+    </div>
+
+        <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+    <div class="header">
+      <div class="title-row">
+        <h1>IL-2 Sturmovik: Great Battles</h1>
+        <span class="tag">Best WW2</span>
+      </div>
+      <p class="tagline">The Premier World War 2 Combat Flight Simulator</p>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Developer</span>
+          <span class="meta-value">1C Game Studios / 777 Studios</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Release Date</span>
+          <span class="meta-value">2013-Present (Ongoing)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Platforms</span>
+          <span class="meta-value">Windows (VR Supported)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Price</span>
+          <span class="meta-value">$49.99 per Battle/Collector module</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-value">WW2 Combat Flight Simulation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/PWU8RHuO2Vo?si=bK4qYTd_Mm9I5UFN"
+                title="IL-2 Sturmovik Battle of Stalingrad Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        IL-2 Sturmovik: Great Battles series is the definitive World War 2 combat flight simulation. With meticulously researched aircraft from all major nations, realistic damage modeling, and immersive career modes, it brings the air war of 1939-1945 to life like no other sim.
+      </p>
+      <p>
+        Unlike arcade WW2 games, IL-2 delivers authentic flight models where each aircraft has its own characteristics, strengths, and weaknesses. You'll learn to manage engine temperatures, fuel mixture, and ammunition conservation while engaging in intense dogfights over historically accurate battlefields.
+      </p>
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> WW2 aviation enthusiasts, history buffs, VR combat flight fans, and anyone who wants authentic propeller-driven combat with gorgeous graphics and excellent performance.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <h3>Massive Aircraft Selection</h3>
+      <ul>
+        <li>100+ flyable aircraft across all modules</li>
+        <li>German: Bf 109, Fw 190, Ju 87, He 111, Ju 88</li>
+        <li>Soviet: Yak-1/9, La-5/7, Il-2, Pe-2</li>
+        <li>American: P-51, P-47, P-38, B-25, A-20</li>
+        <li>British: Spitfire, Hurricane, Tempest, Mosquito</li>
+        <li>Japanese: A6M Zero, Ki-61 (Pacific module)</li>
+      </ul>
+
+      <h3>Dynamic Career Mode</h3>
+      <ul>
+        <li>Generated campaigns with consequences</li>
+        <li>Choose your squadron and role</li>
+        <li>Progress through ranks</li>
+        <li>Historical accuracy with dynamic events</li>
+        <li>Career survives across entire war</li>
+      </ul>
+
+      <h3>Damage Modeling</h3>
+      <ul>
+        <li>Realistic structural damage</li>
+        <li>Component-based destruction</li>
+        <li>Fuel leaks and engine damage</li>
+        <li>Pilot injuries affect controls</li>
+        <li>Spectacular visual damage effects</li>
+      </ul>
+
+      <h3>Multiplayer</h3>
+      <ul>
+        <li>Dogfight servers with 84 players</li>
+        <li>Cooperative missions</li>
+        <li>Dynamic campaign servers</li>
+        <li>Tank Crew integration</li>
+        <li>Active competitive community</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Technical Requirements</h2>
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-title">Minimum Specs</div>
+          <ul>
+            <li>GPU: GTX 960 / RX 560</li>
+            <li>CPU: Intel i5-4460 / Ryzen 3 1200</li>
+            <li>RAM: 8GB</li>
+            <li>Storage: 85GB</li>
+          </ul>
+        </div>
+        <div class="spec-card">
+          <div class="spec-title">Recommended Specs</div>
+          <ul>
+            <li>GPU: RTX 2060 / RX 5700</li>
+            <li>CPU: Intel i7-9700 / Ryzen 7 3700X</li>
+            <li>RAM: 16GB</li>
+            <li>Storage: 120GB SSD</li>
+          </ul>
+        </div>
+        <div class="spec-card">
+          <div class="spec-title">VR Requirements</div>
+          <ul>
+            <li>GPU: RTX 3060 Ti or higher</li>
+            <li>CPU: 6-core recommended</li>
+            <li>RAM: 16GB</li>
+            <li>Excellent VR performance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Performance Ratings</h2>
+      <div class="rating-section">
+        <div class="rating-item">
+          <span class="rating-label">WW2 Authenticity</span>
+          <div class="rating-bar"><div class="rating-fill" style="width: 98%"></div></div>
+          <span class="rating-value">9.8/10</span>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Flight Models</span>
+          <div class="rating-bar"><div class="rating-fill" style="width: 95%"></div></div>
+          <span class="rating-value">9.5/10</span>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Graphics Quality</span>
+          <div class="rating-bar"><div class="rating-fill" style="width: 90%"></div></div>
+          <span class="rating-value">9/10</span>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">VR Experience</span>
+          <div class="rating-bar"><div class="rating-fill" style="width: 92%"></div></div>
+          <span class="rating-value">9.2/10</span>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Career Mode Depth</span>
+          <div class="rating-bar"><div class="rating-fill" style="width: 90%"></div></div>
+          <span class="rating-value">9/10</span>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Beginner Friendly</span>
+          <div class="rating-bar"><div class="rating-fill" style="width: 65%"></div></div>
+          <span class="rating-value">6.5/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+      <h3>Strengths</h3>
+      <ul>
+        <li>Most authentic WW2 flight simulation available</li>
+        <li>100+ meticulously researched aircraft</li>
+        <li>Excellent VR performance and implementation</li>
+        <li>Dynamic career mode with progression</li>
+        <li>Realistic damage modeling</li>
+        <li>Beautiful graphics and effects</li>
+        <li>Active multiplayer community</li>
+        <li>Regular updates and new content</li>
+        <li>Historical campaigns included</li>
+      </ul>
+      <h3>Limitations</h3>
+      <ul>
+        <li>Modular pricing can get expensive</li>
+        <li>Steep learning curve for newcomers</li>
+        <li>Each Battle/module sold separately</li>
+        <li>Requires study of aircraft systems</li>
+        <li>Some clickable cockpits limited</li>
+        <li>Multiplayer can be unforgiving</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+      <h3>Which Module to Buy First?</h3>
+      <ul>
+        <li>Battle of Stalingrad - Eastern Front 1942-43, great variety</li>
+        <li>Battle of Bodenplatte - Western Front 1944-45, P-51s and late war</li>
+        <li>Battle of Kuban - Eastern Front 1943, excellent aircraft selection</li>
+      </ul>
+      <h3>For Beginners</h3>
+      <p>Start with easier aircraft like the Yak-1 or early Bf 109. Use simplified engine management initially. Practice takeoffs and landings before combat. The career mode is an excellent teacher.</p>
+      <h3>Essential Settings</h3>
+      <ul>
+        <li>Enable simplified engine controls initially</li>
+        <li>Use head tracking or VR for situational awareness</li>
+        <li>Start with normal difficulty</li>
+        <li>Practice offline before multiplayer</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://il2sturmovik.com/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://store.steampowered.com/app/307960/IL2_Sturmovik_Battle_of_Stalingrad/" target="_blank" class="btn btn-secondary">Buy on Steam</a>
+        <a href="https://forum.il2sturmovik.com/" target="_blank" class="btn btn-secondary">Community Forums</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

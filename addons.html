@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Recommended Add-ons & Expansions</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+      --success: #6b9e78;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --success: #8bc79f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Simulator Sections */
+    .sim-section {
+      margin-bottom: 4rem;
+    }
+
+    .sim-section-header {
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border-left: 4px solid var(--accent);
+    }
+
+    .sim-section-title {
+      font-size: 28px;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .sim-section-description {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    /* Add-on Categories */
+    .addon-category {
+      margin-bottom: 2.5rem;
+    }
+
+    .category-header {
+      font-size: 20px;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+      font-weight: 600;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-icon {
+      font-size: 24px;
+    }
+
+    /* Add-on Cards */
+    .addon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .addon-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .addon-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .addon-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .addon-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent-alt);
+      line-height: 1.3;
+    }
+
+    .addon-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .addon-tag {
+      font-size: 10px;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-must-have {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .tag-free {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .tag-beginner {
+      background: #7ba3d4;
+      color: #fff;
+    }
+
+    .tag-intermediate {
+      background: #d4a574;
+      color: #fff;
+    }
+
+    .tag-advanced {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .addon-description {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .addon-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .addon-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .addon-price.free {
+      color: var(--success);
+    }
+
+    .addon-difficulty {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .addon-link {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      background: var(--accent);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    .addon-link:hover {
+      background: var(--accent-alt);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(193, 122, 74, 0.3);
+    }
+
+    /* General Add-ons Section */
+    .general-addons {
+      background: linear-gradient(135deg, var(--accent-light) 0%, var(--bg-card) 100%);
+      padding: 2rem;
+      border-radius: 16px;
+      margin-top: 3rem;
+      border: 2px solid var(--accent);
+    }
+
+    .general-addons .sim-section-title {
+      text-align: center;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .addon-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+
+      .sim-section-title {
+        font-size: 24px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="sys-req-calc.html" class="nav-link">System Checker</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+        <a href="addons.html" class="nav-link">Add-ons</a>
+        <a href="map.html" class="nav-link">Coverage Map</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">Recommended Add-ons & Expansions</h1>
+      <p class="subtitle">Enhance Your Flight Simulation Experience</p>
+    </div>
+
+    <div class="intro">
+      <p>Take your flight simulation to the next level with these carefully curated add-ons. From highly detailed aircraft to stunning scenery and essential utilities, discover the best add-ons for each simulator platform.</p>
+    </div>
+
+    <!-- MICROSOFT FLIGHT SIMULATOR 2024/2020 -->
+    <section class="sim-section">
+      <div class="sim-section-header">
+        <h2 class="sim-section-title">Microsoft Flight Simulator 2024/2020</h2>
+        <p class="sim-section-description">The largest and most active add-on ecosystem with hundreds of high-quality aircraft, scenery, and utilities.</p>
+      </div>
+
+      <!-- Aircraft Add-ons -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">✈️</span>
+          Top Aircraft Add-ons
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">PMDG 737-700/800/900</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">The gold standard for airliner simulation. Every switch, light, and system modeled with extreme accuracy. Used for real pilot training.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$69.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Requires study</div>
+              <a href="https://www.pmdg.com/" class="addon-link" target="_blank">Visit PMDG →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">FenixSim A320</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Incredibly detailed Airbus A320. Features advanced flight model, custom sounds, and authentic systems simulation. The best A320 for MSFS.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$59.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Complex systems</div>
+              <a href="https://fenixsim.com/" class="addon-link" target="_blank">Visit FenixSim →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">PMDG 777-200LR/300ER</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Ultra-realistic Boeing 777 with study-level systems. Perfect for long-haul flights. Incredible detail in systems simulation.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$74.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Heavy aircraft</div>
+              <a href="https://www.pmdg.com/" class="addon-link" target="_blank">Visit PMDG →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Aerosoft CRJ 550/700/900/1000</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Excellent regional jet with realistic systems. Great introduction to complex aircraft. Four variants included in one package.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$49.99</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - Good learning aircraft</div>
+              <a href="https://www.aerosoft.com/" class="addon-link" target="_blank">Visit Aerosoft →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Blackbird Simulations Airbus H135</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Outstanding helicopter simulation with realistic flight dynamics. Perfect for medical and utility operations. Great VR support.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$39.99</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - Helicopter operations</div>
+              <a href="https://www.blackbirdsimulations.com/" class="addon-link" target="_blank">Visit Blackbird →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Scenery Add-ons -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🏙️</span>
+          Best Scenery Add-ons
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Orbx Scenery Regions</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-beginner">Beginner</span>
+            </div>
+            <p class="addon-description">Ultra-detailed regional scenery covering entire countries. Norway, UK, New Zealand and more with custom textures, objects, and landmarks.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$19.99 - $49.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://orbxdirect.com/" class="addon-link" target="_blank">Visit Orbx →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">iniBuilds Airport Packages</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-beginner">Beginner</span>
+            </div>
+            <p class="addon-description">Premium airports with exceptional detail. Features realistic ground operations, custom jetways, and 4K textures. KLAX, KJFK, EGLL and more.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$24.99 - $34.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://www.inibuilds.com/" class="addon-link" target="_blank">Visit iniBuilds →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">FlyTampa Airports</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Highly detailed airports with animated ground traffic. Dubai (OMDB), Corfu (LGKR), and more. Known for exceptional optimization.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$29.99 - $39.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://www.flytampa.org/" class="addon-link" target="_blank">Visit FlyTampa →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Essential Utilities -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🛠️</span>
+          Essential Utilities
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Little Navmap</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-free">Free</span>
+            </div>
+            <p class="addon-description">Essential flight planning tool. Create routes, view charts, track your flight in real-time. Supports all major simulators. Completely free.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Essential tool</div>
+              <a href="https://albar965.github.io/littlenavmap.html" class="addon-link" target="_blank">Download Free →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Navigraph Subscription</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Up-to-date navigation data and charts. Real-world AIRAC cycles updated monthly. Essential for serious IFR flying. Charts for all airports worldwide.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$8.99/month</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - For IFR flying</div>
+              <a href="https://navigraph.com/" class="addon-link" target="_blank">Subscribe →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">FS2Crew Voice Control</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Voice-activated crew commands. Speak to your copilot and cabin crew. Makes single-pilot operations in complex aircraft manageable.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$29.99+</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - Aircraft specific</div>
+              <a href="https://www.fs2crew.com/" class="addon-link" target="_blank">Visit FS2Crew →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- X-PLANE 12 -->
+    <section class="sim-section">
+      <div class="sim-section-header">
+        <h2 class="sim-section-title">X-Plane 12</h2>
+        <p class="sim-section-description">Known for study-level aircraft and advanced flight modeling. Strong third-party developer community.</p>
+      </div>
+
+      <!-- Aircraft -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">✈️</span>
+          Top Aircraft Add-ons
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">ToLiss A321</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">The best Airbus for X-Plane. Study-level systems, custom flight model, and outstanding support. Regular free updates.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$89.95</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Complex Airbus systems</div>
+              <a href="https://www.x-plane.org/" class="addon-link" target="_blank">X-Plane.org Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Zibo Mod 737-800</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-free">Free</span>
+            </div>
+            <p class="addon-description">The legendary free 737 mod. Study-level systems, excellent flight model. Rivals payware quality. Essential download for X-Plane.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Full systems simulation</div>
+              <a href="https://forums.x-plane.org/index.php?/forums/forum/384-zibo-b738-800-modified/" class="addon-link" target="_blank">Download Free →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Rotate MD-11</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Highly detailed MD-11 simulation. Complex systems, beautiful modeling. Great for long-haul cargo operations.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$84.95</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Complex tri-jet</div>
+              <a href="https://www.x-plane.org/" class="addon-link" target="_blank">X-Plane.org Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">FlightFactor 767</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Study-level Boeing 767 with realistic systems. Professional-grade simulation used for training. Outstanding flight dynamics.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$84.95</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Professional systems</div>
+              <a href="https://www.x-plane.org/" class="addon-link" target="_blank">X-Plane.org Store →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Scenery -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🏙️</span>
+          Scenery Add-ons
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Ortho4XP</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-free">Free</span>
+            </div>
+            <p class="addon-description">Transform X-Plane with real-world satellite imagery. Create stunning photorealistic scenery. Free but requires setup.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Requires technical setup</div>
+              <a href="https://github.com/oscarpilote/Ortho4XP" class="addon-link" target="_blank">Download Free →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">MisterX Airport Collection</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-free">Free</span>
+            </div>
+            <p class="addon-description">Huge collection of detailed airports worldwide. High quality, regular updates. Essential freeware for X-Plane.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://forums.x-plane.org/" class="addon-link" target="_blank">X-Plane Forums →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">X-Europe</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-beginner">Beginner</span>
+            </div>
+            <p class="addon-description">Enhanced European scenery with custom landmarks, textures, and objects. Transforms the entire continent.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$29.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://www.x-plane.org/" class="addon-link" target="_blank">X-Plane.org Store →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Plugins -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🔌</span>
+          Essential Plugins
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">BetterPushback</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-free">Free</span>
+            </div>
+            <p class="addon-description">Realistic pushback operations with animated ground crew. Plan your pushback route. Essential for immersive operations.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy to use</div>
+              <a href="https://forums.x-plane.org/" class="addon-link" target="_blank">Download Free →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">X-Camera</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-beginner">Beginner</span>
+            </div>
+            <p class="addon-description">Advanced camera system with head shake and dynamic movement. Makes views much more realistic and immersive.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$19.95</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Enhances immersion</div>
+              <a href="https://www.x-plane.org/" class="addon-link" target="_blank">X-Plane.org Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">AutoGate</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-free">Free</span>
+            </div>
+            <p class="addon-description">Automated jetway and ground service equipment. Adds life to airports with animated vehicles and jetways.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Automatic operation</div>
+              <a href="https://forums.x-plane.org/" class="addon-link" target="_blank">Download Free →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- DCS WORLD -->
+    <section class="sim-section">
+      <div class="sim-section-header">
+        <h2 class="sim-section-title">DCS World</h2>
+        <p class="sim-section-description">Study-level combat modules with authentic weapons and radar systems. Each module is a deep simulation.</p>
+      </div>
+
+      <!-- Aircraft Modules -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🚁</span>
+          Aircraft Modules
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">F/A-18C Hornet</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">The ultimate multirole fighter. Carrier operations, air-to-air, ground attack. Most versatile module in DCS. Perfect starting point.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$79.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Complex avionics</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">F-16C Viper</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Modern multirole fighter with advanced avionics. Fly-by-wire controls, JDAM, HARM. Excellent for BVR combat.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$79.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Modern systems</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">AH-64D Apache</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Legendary attack helicopter with multi-crew operations. George AI for solo play. Hellfire missiles, rockets, 30mm cannon.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$79.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Complex weapons systems</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">A-10C II Tank Killer</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Close air support specialist. Powerful 30mm GAU-8, Maverick missiles. Complex but incredibly rewarding ground attack platform.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$79.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Steep learning curve</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Maps -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🗺️</span>
+          Terrain Maps
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Syria Map</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+            </div>
+            <p class="addon-description">Highly detailed Middle East theater. Lebanon, Israel, Cyprus, and Syria. Perfect for modern combat scenarios.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$59.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Just a map</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Marianas Islands</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Pacific theater with carrier operations. Beautiful tropical scenery. Great for naval aviation and amphibious ops.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$49.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Just a map</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Persian Gulf</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">UAE, Iran, Strait of Hormuz. Massive carrier operations area. Popular for multiplayer missions.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$49.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Just a map</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Campaigns -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">📋</span>
+          Campaigns
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Red Flag Campaign</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Realistic Red Flag training exercise at Nellis AFB. Multi-day operations with realistic briefings and debrief.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$19.99</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - Structured missions</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">The Enemy Within 3.0</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Story-driven A-10C campaign. Insurgency operations with dynamic mission flow. Excellent voice acting and narrative.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$14.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - A-10C required</div>
+              <a href="https://www.digitalcombatsimulator.com/" class="addon-link" target="_blank">DCS Store →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PREPAR3D -->
+    <section class="sim-section">
+      <div class="sim-section-header">
+        <h2 class="sim-section-title">Prepar3D</h2>
+        <p class="sim-section-description">Professional training platform with extensive add-on compatibility from the FSX era.</p>
+      </div>
+
+      <!-- Aircraft -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">✈️</span>
+          Aircraft Add-ons
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">PMDG 737/777 (P3D versions)</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Industry-standard airliner simulations. Same quality as MSFS versions with years of development and refinement.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$69.99 - $99.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Professional grade</div>
+              <a href="https://www.pmdg.com/" class="addon-link" target="_blank">Visit PMDG →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Majestic Software Dash 8 Q400</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Ultra-detailed turboprop regional airliner. Complex systems simulation. Great for short-haul operations.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$69.99</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Turboprop operations</div>
+              <a href="https://majesticsoftware.com/" class="addon-link" target="_blank">Visit Majestic →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Scenery -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🏙️</span>
+          Scenery Add-ons
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">FSDreamTeam Airports</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+            </div>
+            <p class="addon-description">Premium airport scenery with custom animations. KLAX, KJFK, KORD and more. Excellent optimization and detail.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$24.99 - $34.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://www.fsdreamteam.com/" class="addon-link" target="_blank">Visit FSDT →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Aerosoft Airport Collection</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Wide selection of European airports. German airports are particularly detailed. Great value packages available.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$19.99 - $29.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://www.aerosoft.com/" class="addon-link" target="_blank">Visit Aerosoft →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Utilities -->
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🛠️</span>
+          Essential Utilities
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Active Sky for P3D</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+            </div>
+            <p class="addon-description">The weather engine for P3D. Real-world weather with cloud textures. Essential for realistic flying conditions.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$39.99</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - Weather engine</div>
+              <a href="https://hifisimtech.com/" class="addon-link" target="_blank">Visit HiFi →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">REX Texture Packages</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Enhanced textures for sky, water, and terrain. Dramatic visual improvement. Essential for better graphics.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$24.95 - $59.95</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy install</div>
+              <a href="https://www.rex.simulations/" class="addon-link" target="_blank">Visit REX →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- GENERAL ADD-ONS -->
+    <section class="general-addons">
+      <h2 class="sim-section-title">Universal Add-ons (All Simulators)</h2>
+
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">🎮</span>
+          Hardware Software
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">VoiceAttack</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+            </div>
+            <p class="addon-description">Voice-activated commands for any simulator. Create custom voice macros. Works with all major flight sims. Great for VR.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$10.00</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Easy setup</div>
+              <a href="https://voiceattack.com/" class="addon-link" target="_blank">Buy VoiceAttack →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">TrackIR 5</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+            </div>
+            <p class="addon-description">Head tracking hardware for natural view control. Essential for combat sims and VFR flying. Game-changing immersion.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$149.99</div>
+              <div class="addon-difficulty">Difficulty: Beginner - Hardware device</div>
+              <a href="https://www.trackir.com/" class="addon-link" target="_blank">Visit TrackIR →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">SimShaker</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">Tactile feedback system using bass shakers. Feel engine vibrations, runway bumps, weapon fire. Incredible immersion boost.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$19.99</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - Requires hardware setup</div>
+              <a href="https://www.simshaker.com/" class="addon-link" target="_blank">Visit SimShaker →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="addon-category">
+        <h3 class="category-header">
+          <span class="category-icon">📡</span>
+          Live ATC & Training
+        </h3>
+        <div class="addon-grid">
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">PilotEdge</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-must-have">Must Have</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Live human ATC coverage in North America. Professional controllers. Best way to learn real IFR procedures.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$19.95/month</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Real ATC procedures</div>
+              <a href="https://www.pilotedge.net/" class="addon-link" target="_blank">Subscribe →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">Pilot2ATC</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-intermediate">Intermediate</span>
+            </div>
+            <p class="addon-description">AI-powered ATC with voice recognition. Practice IFR procedures with realistic radio communications. Works offline.</p>
+            <div class="addon-meta">
+              <div class="addon-price">$39.99</div>
+              <div class="addon-difficulty">Difficulty: Intermediate - ATC communications</div>
+              <a href="https://pilot2atc.com/" class="addon-link" target="_blank">Visit Pilot2ATC →</a>
+            </div>
+          </div>
+
+          <div class="addon-card">
+            <div class="addon-header">
+              <h4 class="addon-name">VATSIM (Free Network)</h4>
+            </div>
+            <div class="addon-tags">
+              <span class="addon-tag tag-free">Free</span>
+              <span class="addon-tag tag-advanced">Advanced</span>
+            </div>
+            <p class="addon-description">Free worldwide volunteer ATC network. Fly with real controllers and other pilots globally. Most popular online network.</p>
+            <div class="addon-meta">
+              <div class="addon-price free">FREE</div>
+              <div class="addon-difficulty">Difficulty: Advanced - Real procedures required</div>
+              <a href="https://www.vatsim.net/" class="addon-link" target="_blank">Join VATSIM →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025 - Add-ons & Expansions</p>
+      <p>Prices are approximate and may vary. Check official stores for current pricing.</p>
+      <p style="margin-top: 1rem;">Happy Flying!</p>
+    </footer>
+
+  </div>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+</script>
+</body>
+</html>

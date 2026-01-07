@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Microsoft Flight Simulator 2024</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1rem 2rem;
+      margin: -2rem -1rem 2rem;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(-100%);
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .sticky-header.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sticky-header h2 {
+      font-size: 20px;
+      color: var(--accent-alt);
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--accent-alt);
+      transform: translateX(-4px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .header {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--accent-alt);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: var(--accent-alt);
+      margin: 1.5rem 0 0.75rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    ul li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .rating-section {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .rating-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .rating-label {
+      min-width: 180px;
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .rating-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border-light);
+      border-radius: 5px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .rating-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .rating-value {
+      min-width: 50px;
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    .highlight-box strong {
+      color: var(--accent);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .spec-card {
+      background: var(--bg);
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .spec-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-alt);
+      border-color: var(--accent-alt);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 26px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rating-label {
+        min-width: auto;
+      }
+
+      .rating-bar {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="sticky-header">
+      <h2>Microsoft Flight Simulator 2024</h2>
+    </div>
+
+    <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+    <a href="../index.html" class="back-link">← Back to Guide</a>
+    <a href="../minigames.html" class="back-link">Mini Games</a>
+
+    <div class="header">
+      <div class="title-row">
+        <h1>Microsoft Flight Simulator 2024</h1>
+        <span class="tag">Best Graphics</span>
+      </div>
+      <p class="tagline">The Gold Standard for Visual Fidelity and Real-World Accuracy</p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Developer</span>
+          <span class="meta-value">Asobo Studio / Xbox Game Studios</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Release Date</span>
+          <span class="meta-value">November 2024</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Platforms</span>
+          <span class="meta-value">PC, Xbox Series X|S, PS5</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Price</span>
+          <span class="meta-value">$69.99 Standard / $99.99 Premium</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-value">Civilian Aviation Simulation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/p3xp-SnZDoY?si=zU9odHJ7IcxKXKMh"
+                title="Microsoft Flight Simulator 2024 Official Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        The latest iteration of Microsoft's legendary flight simulator series, MSFS 2024 sets the gold standard for visual fidelity and real-world accuracy in flight simulation. Built on cutting-edge technology, it features the entire planet rendered with photorealistic satellite imagery, real-time weather systems, and a truly living world with AI-generated traffic.
+      </p>
+      <p>
+        This is not just a simulator—it's a complete aviation experience that lets you explore every corner of the Earth from the cockpit of highly detailed aircraft. Whether you want to fly over your hometown, experience the Northern Lights from a Cessna 172, or pilot an Airbus A320 across continents, MSFS 2024 delivers an unmatched level of immersion.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> Sightseeing flights, VFR flying, casual to serious simulation, and anyone who values stunning graphics and realistic scenery. Ideal for experiencing flight over your hometown or traveling the world virtually.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+
+      <h3>Photorealistic Scenery</h3>
+      <ul>
+        <li>Entire Earth covered with satellite imagery (2+ petabytes of data)</li>
+        <li>Hand-crafted airports with incredible detail</li>
+        <li>Real-time weather with live METAR data integration</li>
+        <li>Dynamic seasons and time-of-day lighting</li>
+        <li>Volumetric clouds and atmospheric effects</li>
+      </ul>
+
+      <h3>Aircraft Selection</h3>
+      <ul>
+        <li>65+ highly detailed aircraft included (ultralights to wide-body airliners)</li>
+        <li>Iconic aircraft: Cessna 172, Boeing 787, Airbus A320neo, F/A-18</li>
+        <li>Full glass cockpit and steam gauge variants</li>
+        <li>Study-level add-ons available from PMDG, FenixSim, and others</li>
+        <li>Working systems with realistic failures</li>
+      </ul>
+
+      <h3>New Career Mode</h3>
+      <ul>
+        <li>Structured missions across multiple disciplines</li>
+        <li>Bush flying in remote locations</li>
+        <li>Cargo operations and deliveries</li>
+        <li>Aerial firefighting challenges</li>
+        <li>Search and rescue missions</li>
+        <li>Progression system with unlockable content</li>
+      </ul>
+
+      <h3>Technology & Performance</h3>
+      <ul>
+        <li>Full VR support with incredible immersion</li>
+        <li>Multiplayer with shared cockpit capability</li>
+        <li>Cloud streaming technology for reduced local storage</li>
+        <li>DirectX 12 with advanced graphics features</li>
+        <li>Optimized for modern GPUs (RTX 40 series support)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Technical Requirements</h2>
+
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-title">Minimum Specs</div>
+          <ul>
+            <li>GPU: RTX 2060 / RX 5700</li>
+            <li>CPU: Ryzen 5 2600 / i5-8400</li>
+            <li>RAM: 16GB</li>
+            <li>Storage: 50GB base</li>
+            <li>Internet: Required for streaming</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">Recommended Specs</div>
+          <ul>
+            <li>GPU: RTX 4070 / RX 7800 XT</li>
+            <li>CPU: Ryzen 7 5800X / i7-12700K</li>
+            <li>RAM: 32GB</li>
+            <li>Storage: 100GB+ with add-ons</li>
+            <li>Internet: 50+ Mbps recommended</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">VR Requirements</div>
+          <ul>
+            <li>GPU: RTX 4080 or higher</li>
+            <li>CPU: High-end 8+ cores</li>
+            <li>RAM: 32GB minimum</li>
+            <li>Headset: Quest 3, Valve Index, etc.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Performance Ratings</h2>
+
+      <div class="rating-section">
+        <div class="rating-item">
+          <span class="rating-label">Realism</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 90%"></div>
+          </div>
+          <span class="rating-value">9/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Graphics Quality</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Beginner Friendly</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 85%"></div>
+          </div>
+          <span class="rating-value">8.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">System Requirements</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 85%"></div>
+          </div>
+          <span class="rating-value">High</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Content Library</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 95%"></div>
+          </div>
+          <span class="rating-value">9.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">VR Experience</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 95%"></div>
+          </div>
+          <span class="rating-value">9.5/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+
+      <h3>Strengths</h3>
+      <ul>
+        <li>Unmatched visual quality and photorealistic scenery</li>
+        <li>Entire world to explore with real-time weather</li>
+        <li>Excellent for VFR (visual flight) operations</li>
+        <li>Strong add-on ecosystem with quality third-party aircraft</li>
+        <li>Career mode adds structure for new pilots</li>
+        <li>Available on Game Pass (great value)</li>
+        <li>Regular updates and improvements</li>
+        <li>Accessible to beginners with flight assists</li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <ul>
+        <li>Requires high-end hardware for best experience</li>
+        <li>Large download size and storage requirements</li>
+        <li>Internet connection required for full features</li>
+        <li>Some default aircraft lack systems depth</li>
+        <li>Performance can be inconsistent in dense areas</li>
+        <li>Learning curve for complex aircraft</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+
+      <h3>For Beginners</h3>
+      <p>Start with the Flight Training modules included in the sim. Begin with the Cessna 152 or 172 with all flight assists enabled. Practice takeoffs and landings at your local airport. Gradually disable assists as you gain confidence.</p>
+
+      <h3>Recommended First Flight</h3>
+      <ul>
+        <li>Aircraft: Cessna 172 (G1000)</li>
+        <li>Location: Your nearest airport</li>
+        <li>Weather: Clear skies, light winds</li>
+        <li>Time: Midday for best visibility</li>
+        <li>Duration: 15-30 minute local flight</li>
+      </ul>
+
+      <h3>Hardware Recommendations</h3>
+      <ul>
+        <li>Joystick: Logitech Extreme 3D Pro (budget) or Thrustmaster T.16000M (better)</li>
+        <li>Yoke: Honeycomb Alpha + Bravo for full airliner experience</li>
+        <li>Rudder Pedals: Thrustmaster TFRP or MFG Crosswind</li>
+        <li>VR Headset: Meta Quest 3 offers best value/performance ratio</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://www.flightsimulator.com/microsoft-flight-simulator-2024/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://www.flightsimulator.com/store/" target="_blank" class="btn btn-secondary">Buy Now</a>
+        <a href="https://forums.flightsimulator.com/" target="_blank" class="btn btn-secondary">Community Forums</a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+
+<script src="/livereload.js"></script>
+</body>
+</html>

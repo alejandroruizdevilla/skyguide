@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - DCS World</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--accent-alt);
+      transform: translateX(-4px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+
+    .header {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--accent-alt);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      border: none;
+      background: #d97757;
+      color: #ffffff;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: var(--accent-alt);
+      margin: 1.5rem 0 0.75rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    ul li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .rating-section {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .rating-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .rating-label {
+      min-width: 180px;
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .rating-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border-light);
+      border-radius: 5px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .rating-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .rating-value {
+      min-width: 50px;
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    .highlight-box strong {
+      color: var(--accent);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .spec-card {
+      background: var(--bg);
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .spec-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-alt);
+      border-color: var(--accent-alt);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+    }
+
+    .sticky-header {
+      position: fixed;
+      top: -100px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: top 0.3s ease;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .sticky-header.visible {
+      top: 0;
+    }
+
+    .sticky-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 26px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rating-label {
+        min-width: auto;
+      }
+
+      .rating-bar {
+        max-width: 100%;
+      }
+
+      .sticky-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .sticky-header h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sticky-header">
+      <h2>DCS World</h2>
+    </div>
+
+        <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+
+    <div class="header">
+      <div class="title-row">
+        <h1>DCS World</h1>
+        <span class="tag">Best Combat Sim</span>
+      </div>
+      <p class="tagline">The Ultimate Study-Level Combat Flight Simulator</p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Developer</span>
+          <span class="meta-value">Eagle Dynamics</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Release Date</span>
+          <span class="meta-value">2008 (Continuous Development)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Platforms</span>
+          <span class="meta-value">Windows (VR Supported)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Price</span>
+          <span class="meta-value">Free + $39.99-$79.99 per module</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-value">Military Combat Flight Simulation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/S96B1eJFAlo?si=Cx8jEbJl3ZciiU-S"
+                title="DCS World 2024 and Beyond"https
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Digital Combat Simulator (DCS) World is THE definitive combat flight simulator. This is not an arcade game or a simplified sim - it's a study-level platform where aircraft modules take 50-100+ hours to truly master. Every switch, button, and system is modeled with incredible depth, requiring you to learn actual procedures used by real military pilots.
+      </p>
+      <p>
+        The base game is completely free and includes two aircraft (Su-25T and TF-51D). Additional aircraft modules are sold separately, each representing months or years of development by dedicated teams. From the A-10C Warthog to the F/A-18C Hornet to the F-16C Viper, DCS offers the most authentic modern military flying experience available to civilians.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> Military aviation enthusiasts, those who want authentic combat aircraft simulation, pilots willing to invest serious time learning complex systems, and anyone who dreams of flying modern jets with full realism.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+
+      <h3>Study-Level Aircraft</h3>
+      <ul>
+        <li>Fully clickable cockpits with every switch functional</li>
+        <li>Realistic radar and avionics simulation</li>
+        <li>Advanced weapon systems modeling</li>
+        <li>Real startup procedures and checklists</li>
+        <li>Aircraft include: F/A-18C, F-16C, A-10C II, F-14B, Mirage 2000C, and many more</li>
+      </ul>
+
+      <h3>Combat Systems</h3>
+      <ul>
+        <li>Realistic radar modeling (TWS, RWS, STT modes)</li>
+        <li>Advanced weapons: AMRAAMs, Sidewinders, JDAMs, LGBs</li>
+        <li>Electronic warfare and countermeasures</li>
+        <li>Air-to-air refueling</li>
+        <li>Carrier operations with full procedures</li>
+        <li>Ground attack and CAS missions</li>
+      </ul>
+
+      <h3>Multiplayer & Community</h3>
+      <ul>
+        <li>Massive multiplayer servers with 50+ players</li>
+        <li>Persistent campaign servers (Hoggit, etc.)</li>
+        <li>Coordinated squadron operations</li>
+        <li>Combined arms warfare (tanks, SAMs, ships)</li>
+        <li>GCI (Ground Controlled Intercept) and AWACS roles</li>
+      </ul>
+
+      <h3>Maps & Environments</h3>
+      <ul>
+        <li>Free Caucasus map included</li>
+        <li>Premium maps: Persian Gulf, Syria, Mariana Islands, Nevada, Normandy</li>
+        <li>Highly detailed terrain and airports</li>
+        <li>Dynamic weather and time of day</li>
+      </ul>
+
+      <h3>Free Content</h3>
+      <ul>
+        <li>Su-25T Frogfoot (free, clickable cockpit)</li>
+        <li>TF-51D Mustang (free, unarmed trainer)</li>
+        <li>Caucasus map (free)</li>
+        <li>Mission editor and campaign tools</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Technical Requirements</h2>
+
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-title">Minimum Specs</div>
+          <ul>
+            <li>GPU: GTX 1060 6GB / RX 580</li>
+            <li>CPU: Intel i5-9400F / Ryzen 5 3600</li>
+            <li>RAM: 16GB</li>
+            <li>Storage: 120GB+ SSD required</li>
+            <li>OS: Windows 10 64-bit</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">Recommended Specs</div>
+          <ul>
+            <li>GPU: RTX 3070 / RX 6800</li>
+            <li>CPU: Intel i7-12700 / Ryzen 7 5800X3D</li>
+            <li>RAM: 32GB</li>
+            <li>Storage: 250GB+ NVMe SSD</li>
+            <li>OS: Windows 11 64-bit</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">VR Requirements</div>
+          <ul>
+            <li>GPU: RTX 3080 or higher</li>
+            <li>CPU: High-end 8-core minimum</li>
+            <li>RAM: 32GB strongly recommended</li>
+            <li>VR is demanding but incredible</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Performance Ratings</h2>
+
+      <div class="rating-section">
+        <div class="rating-item">
+          <span class="rating-label">Systems Depth</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Combat Realism</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Graphics Quality</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 85%"></div>
+          </div>
+          <span class="rating-value">8.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Learning Curve</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 30%"></div>
+          </div>
+          <span class="rating-value">Very Steep</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Multiplayer Experience</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 95%"></div>
+          </div>
+          <span class="rating-value">9.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">VR Implementation</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 90%"></div>
+          </div>
+          <span class="rating-value">9/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Value (Free Base)</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+
+      <h3>Strengths</h3>
+      <ul>
+        <li>Most realistic combat aircraft simulation available</li>
+        <li>Free base game with quality included aircraft</li>
+        <li>Study-level aircraft modules with incredible depth</li>
+        <li>Vibrant multiplayer community</li>
+        <li>Excellent VR support in cockpit</li>
+        <li>Regular updates and new modules</li>
+        <li>Powerful mission editor</li>
+        <li>Authentic weapon systems and tactics</li>
+        <li>Combined arms gameplay (not just aircraft)</li>
+        <li>Real military pilots praise its accuracy</li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <ul>
+        <li>Extremely steep learning curve</li>
+        <li>Modules expensive ($40-$80 each)</li>
+        <li>Requires significant time investment</li>
+        <li>Performance can be demanding</li>
+        <li>Overwhelming for beginners</li>
+        <li>Full HOTAS setup highly recommended (expensive)</li>
+        <li>Some modules in early access for years</li>
+        <li>Graphics engine showing age in some areas</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+
+      <h3>For Complete Beginners</h3>
+      <p>Start with the free TF-51D Mustang to learn basic flying. Then try the Su-25T to learn combat systems. Expect to spend 10-20 hours just learning basics. Watch YouTube tutorials from Grim Reapers, Redkite, and others.</p>
+
+      <h3>First Module to Buy</h3>
+      <ul>
+        <li>F/A-18C Hornet - Most versatile, carrier ops, air-to-air and ground attack</li>
+        <li>A-10C II Warthog - Best for ground attack, excellent tutorials included</li>
+        <li>F-16C Viper - Modern multirole fighter, very capable</li>
+        <li>F-14B Tomcat - If you loved Top Gun, requires Jester AI or human RIO</li>
+      </ul>
+
+      <h3>Essential Hardware</h3>
+      <ul>
+        <li>Minimum: Thrustmaster T.16000M HOTAS</li>
+        <li>Better: Thrustmaster Warthog or Virpil/VKB setups</li>
+        <li>Head tracking: TrackIR or smooth-track (phone/webcam)</li>
+        <li>Rudder pedals highly recommended</li>
+        <li>VR headset optional but incredible experience</li>
+      </ul>
+
+      <h3>Learning Resources</h3>
+      <ul>
+        <li>Chuck's Guides (comprehensive PDFs for each module)</li>
+        <li>YouTube: Grim Reapers, Redkite, Tactical Pascale</li>
+        <li>Hoggit Reddit community</li>
+        <li>Official ED forums</li>
+        <li>Join a squadron for structured learning</li>
+      </ul>
+
+      <h3>Recommended First Mission</h3>
+      <ul>
+        <li>Free Flight in Su-25T</li>
+        <li>Practice takeoff and landing</li>
+        <li>Learn basic weapons employment</li>
+        <li>Try included training missions</li>
+        <li>Don't rush - mastery takes time</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Popular Aircraft Modules</h2>
+
+      <h3>Modern Jets</h3>
+      <ul>
+        <li>F/A-18C Hornet - Navy multirole, carrier ops</li>
+        <li>F-16C Viper - USAF multirole fighter</li>
+        <li>A-10C II Warthog - Close air support specialist</li>
+        <li>F-15E Strike Eagle - Heavy strike fighter (in development)</li>
+        <li>Mirage 2000C - French air superiority</li>
+      </ul>
+
+      <h3>Cold War Era</h3>
+      <ul>
+        <li>F-14B Tomcat - Iconic 4th gen interceptor</li>
+        <li>F-4E Phantom II - Vietnam-era multirole</li>
+        <li>MiG-21bis - Soviet interceptor</li>
+        <li>MiG-19P - Early supersonic fighter</li>
+      </ul>
+
+      <h3>Attack Helicopters</h3>
+      <ul>
+        <li>AH-64D Apache - Most advanced attack helo</li>
+        <li>Ka-50 Black Shark - Russian attack helicopter</li>
+        <li>Mi-24P Hind - Soviet gunship</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://www.digitalcombatsimulator.com/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://www.digitalcombatsimulator.com/en/downloads/world/" target="_blank" class="btn btn-secondary">Download Free</a>
+        <a href="https://forum.dcs.world/" target="_blank" class="btn btn-secondary">Official Forums</a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

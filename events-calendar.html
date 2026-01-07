@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Community Events Calendar</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --event-vatsim: #6b9e78;
+  --event-group: #8a9eb8;
+  --event-race: #d4a04a;
+  --event-training: #9b7fa8;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --event-vatsim: #7fb88d;
+  --event-group: #a0b5cc;
+  --event-race: #e8b87e;
+  --event-training: #b89cc0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.filter-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--accent-light);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.timeline {
+  position: relative;
+}
+
+.month-section {
+  margin-bottom: 3rem;
+}
+
+.month-header {
+  font-size: 28px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--accent);
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.event-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  border-left: 5px solid var(--accent);
+  transition: all 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.event-card.vatsim {
+  border-left-color: var(--event-vatsim);
+}
+
+.event-card.group-flight {
+  border-left-color: var(--event-group);
+}
+
+.event-card.race {
+  border-left-color: var(--event-race);
+}
+
+.event-card.training {
+  border-left-color: var(--event-training);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.event-date {
+  background: var(--accent-light);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 70px;
+}
+
+.event-day {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-alt);
+  display: block;
+  line-height: 1;
+}
+
+.event-month {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.event-info {
+  flex: 1;
+}
+
+.event-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent-alt);
+  margin-bottom: 0.5rem;
+}
+
+.event-time {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.event-description {
+  font-size: 14px;
+  color: var(--text-main);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.event-tag {
+  font-size: 11px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.tag-vatsim {
+  background: var(--event-vatsim);
+}
+
+.tag-group {
+  background: var(--event-group);
+}
+
+.tag-race {
+  background: var(--event-race);
+}
+
+.tag-training {
+  background: var(--event-training);
+}
+
+.event-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.event-link:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Community Events Calendar</h1>
+    <p class="subtitle">Join Virtual Events, Group Flights, and Fly-Ins</p>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label">Filter by Event Type:</label>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All Events</button>
+      <button class="filter-btn" data-filter="vatsim">VATSIM Events</button>
+      <button class="filter-btn" data-filter="group-flight">Group Flights</button>
+      <button class="filter-btn" data-filter="race">Races & Challenges</button>
+      <button class="filter-btn" data-filter="training">Training Sessions</button>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="month-section">
+      <h2 class="month-header">January 2026</h2>
+      <div class="events-grid">
+        <div class="event-card vatsim" data-category="vatsim">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">10</span>
+              <span class="event-month">JAN</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">VATSIM Cross the Pond</div>
+              <div class="event-time">18:00 - 23:59 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Fly across the North Atlantic with full ATC coverage from North America to Europe. Choose your route and join hundreds of pilots for this monthly transatlantic event.
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-vatsim">VATSIM</span>
+            <span class="event-tag tag-vatsim">Transatlantic</span>
+          </div>
+          <a href="https://www.vatsim.net/events" target="_blank" class="event-link">Learn More →</a>
+        </div>
+
+        <div class="event-card group-flight" data-category="group-flight">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">12</span>
+              <span class="event-month">JAN</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">Sunday Group Flight: Caribbean Island Hop</div>
+              <div class="event-time">15:00 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Join us for a relaxed VFR tour hopping between Caribbean islands. Flying Cessnas and light aircraft through beautiful tropical scenery. All skill levels welcome!
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-group">Group Flight</span>
+            <span class="event-tag tag-group">VFR</span>
+            <span class="event-tag tag-group">MSFS</span>
+          </div>
+          <a href="#" class="event-link">Join Discord →</a>
+        </div>
+
+        <div class="event-card race" data-category="race">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">15</span>
+              <span class="event-month">JAN</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">Red Bull Air Race Championship</div>
+              <div class="event-time">19:00 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Race through pylons at high speed in aerobatic aircraft. Competition format with qualifying rounds and finals. Fastest times win prizes!
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-race">Air Race</span>
+            <span class="event-tag tag-race">Competition</span>
+          </div>
+          <a href="#" class="event-link">Register Now →</a>
+        </div>
+
+        <div class="event-card training" data-category="training">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">18</span>
+              <span class="event-month">JAN</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">IFR Procedures Workshop</div>
+              <div class="event-time">20:00 UTC • 2 hours</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Learn instrument approaches, holding patterns, and IFR flight planning. Live instruction with Q&A session. Perfect for pilots wanting to improve their IFR skills.
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-training">Training</span>
+            <span class="event-tag tag-training">IFR</span>
+          </div>
+          <a href="#" class="event-link">Sign Up →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-section">
+      <h2 class="month-header">February 2026</h2>
+      <div class="events-grid">
+        <div class="event-card vatsim" data-category="vatsim">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">01</span>
+              <span class="event-month">FEB</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">VATSIM World Tour: Asia</div>
+              <div class="event-time">12:00 - 18:00 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Explore major Asian hubs with full ATC coverage. Fly between Tokyo, Singapore, Hong Kong, and Dubai with hundreds of other pilots.
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-vatsim">VATSIM</span>
+            <span class="event-tag tag-vatsim">Asia Tour</span>
+          </div>
+          <a href="https://www.vatsim.net/events" target="_blank" class="event-link">Learn More →</a>
+        </div>
+
+        <div class="event-card group-flight" data-category="group-flight">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">07</span>
+              <span class="event-month">FEB</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">Virtual Airline Weekly Ops</div>
+              <div class="event-time">20:00 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Delta Virtual Airlines weekly group flight. This week: ATL-LAX in Boeing 737s with full procedures and VATSIM ATC. Members and guests welcome.
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-group">Virtual Airline</span>
+            <span class="event-tag tag-group">Boeing 737</span>
+          </div>
+          <a href="#" class="event-link">Join Flight →</a>
+        </div>
+
+        <div class="event-card training" data-category="training">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">14</span>
+              <span class="event-month">FEB</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">DCS F/A-18 Combat Training</div>
+              <div class="event-time">19:00 UTC • 3 hours</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Advanced BVR and ACM training for DCS World F/A-18 pilots. Covers radar employment, missile tactics, and defensive maneuvers. Instructor-led with practical exercises.
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-training">Training</span>
+            <span class="event-tag tag-training">DCS World</span>
+            <span class="event-tag tag-training">Combat</span>
+          </div>
+          <a href="#" class="event-link">Register →</a>
+        </div>
+
+        <div class="event-card race" data-category="race">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">21</span>
+              <span class="event-month">FEB</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">Bush Plane Challenge: Alaska</div>
+              <div class="event-time">16:00 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Navigate challenging Alaskan terrain in bush aircraft. Points for successful backcountry landings and completion time. Weather and turbulence enabled!
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-race">Challenge</span>
+            <span class="event-tag tag-race">Bush Flying</span>
+          </div>
+          <a href="#" class="event-link">Join Challenge →</a>
+        </div>
+
+        <div class="event-card vatsim" data-category="vatsim">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-day">28</span>
+              <span class="event-month">FEB</span>
+            </div>
+            <div class="event-info">
+              <div class="event-title">Friday Night Flight: European Capitals</div>
+              <div class="event-time">19:00 - 23:00 UTC</div>
+            </div>
+          </div>
+          <p class="event-description">
+            Fly between major European capital cities with enhanced ATC coverage. Paris, London, Berlin, Rome, and Madrid all staffed for the evening.
+          </p>
+          <div class="event-meta">
+            <span class="event-tag tag-vatsim">VATSIM</span>
+            <span class="event-tag tag-vatsim">Europe</span>
+          </div>
+          <a href="https://www.vatsim.net/events" target="_blank" class="event-link">Learn More →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Find More Events</h2>
+    <p style="margin-bottom: 1.5rem;">Discover more community events on these platforms:</p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="https://www.vatsim.net/events" target="_blank" class="event-link">VATSIM Events</a>
+      <a href="https://www.ivao.aero/events" target="_blank" class="event-link">IVAO Events</a>
+      <a href="https://discord.gg/msfs" target="_blank" class="event-link">MSFS Discord</a>
+      <a href="https://www.reddit.com/r/flightsim/" target="_blank" class="event-link">r/flightsim</a>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Filter functionality
+const filterButtons = document.querySelectorAll('.filter-btn');
+const eventCards = document.querySelectorAll('.event-card');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Update active button
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    const filter = button.getAttribute('data-filter');
+
+    // Filter cards
+    eventCards.forEach(card => {
+      if (filter === 'all' || card.getAttribute('data-category') === filter) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

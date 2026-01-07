@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - YSFlight</title>
+<style>:root{--bg:#faf8f6;--bg-card:#fff;--accent:#c17a4a;--accent-alt:#a66843;--accent-light:#f4e8df;--text-main:#2d2520;--text-secondary:#6b5d54;--border-light:#e8dfd6;--shadow-soft:0 2px 12px rgba(45,37,32,0.08)}*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text-main);line-height:1.7;padding:2rem 1rem;font-size:16px}.container{max-width:1000px;margin:0 auto}.back-link{display:inline-flex;align-items:center;gap:0.5rem;color:var(--accent);text-decoration:none;margin-bottom:2rem;font-size:14px;transition:all 0.2s}.back-link:hover{color:var(--accent-alt);transform:translateX(-4px)}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+.header{background:var(--bg-card);border-radius:12px;padding:2rem;margin-bottom:2rem;box-shadow:var(--shadow-soft)}.title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}h1{font-size:32px;color:var(--accent-alt);font-weight:600;line-height:1.2}.tag{font-size:11px;padding:0.4rem 0.8rem;border-radius:4px;background:#6b9e78;color:#fff;font-weight:600;text-transform:uppercase}.tagline{font-size:20px;color:var(--accent);margin-bottom:1.5rem}.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem}.meta-item{display:flex;flex-direction:column;gap:0.25rem}.meta-label{font-size:12px;color:var(--accent);font-weight:600;text-transform:uppercase}.meta-value{font-size:15px;color:var(--text-main)}.section{background:var(--bg-card);border-radius:12px;padding:2rem;margin-bottom:2rem;box-shadow:var(--shadow-soft)}h2{font-size:24px;color:var(--accent);margin-bottom:1rem;font-weight:600}h3{font-size:18px;color:var(--accent-alt);margin:1.5rem 0 0.75rem;font-weight:600}p{margin-bottom:1rem}ul{list-style:none;padding-left:0}ul li{padding-left:1.5rem;position:relative;margin-bottom:0.75rem}ul li::before{content:"▸";position:absolute;left:0;color:var(--accent);font-weight:bold}.highlight-box{background:var(--accent-light);border-left:3px solid var(--accent);padding:1.25rem;margin:1.5rem 0;border-radius:4px}.highlight-box strong{color:var(--accent)}.links{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem}.btn{display:inline-block;padding:0.75rem 1.5rem;border-radius:6px;text-decoration:none;font-weight:500;font-size:15px;transition:all 0.2s}.btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}.btn-primary:hover{background:var(--accent-alt)}.btn-secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}.btn-secondary:hover{background:var(--accent-light)}.sticky-header{position:fixed;top:-100px;left:0;right:0;background:var(--bg-card);box-shadow:var(--shadow-soft);padding:1rem 2rem;z-index:1000;transition:top 0.3s ease;border-bottom:2px solid var(--accent)}.sticky-header.visible{top:0}.sticky-header h2{margin:0;font-size:20px;color:var(--accent)}.video-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-top:1rem}.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}.section h2{position:sticky;top:60px;background:var(--bg-card);padding:1rem 0;margin:-2rem -2rem 1rem -2rem;padding-left:2rem;padding-right:2rem;z-index:50;border-bottom:2px solid var(--border-light)}.section:first-of-type h2{top:60px}@media (max-width: 768px){.sticky-header{padding:0.75rem 1rem}.sticky-header h2{font-size:16px}}</style>
+</head>
+<body>
+<div class="container">
+<div class="sticky-header">
+<h2>YSFlight</h2>
+</div>
+
+    <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+<div class="header">
+<div class="title-row"><h1>YSFlight</h1><span class="tag">Retro & Free</span></div>
+<p class="tagline">The Charming Lightweight Flight Simulator</p>
+<div class="meta-grid">
+<div class="meta-item"><span class="meta-label">Developer</span><span class="meta-value">Soji Yamakawa</span></div>
+<div class="meta-item"><span class="meta-label">Release Date</span><span class="meta-value">1999-Present</span></div>
+<div class="meta-item"><span class="meta-label">Platforms</span><span class="meta-value">Windows, macOS, Linux</span></div>
+<div class="meta-item"><span class="meta-label">Price</span><span class="meta-value">FREE</span></div>
+<div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">Arcade Flight Simulation</span></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Official Trailer</h2>
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/i2l-esmPxVw?si=fYWfe6buRVZ-E83J"
+title="YSFlight Gameplay Video"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>
+</div>
+</div>
+
+<div class="section">
+<h2>Overview</h2>
+<p>YSFlight is a charming, lightweight flight simulator that proves you don't need cutting-edge graphics to have fun flying. Developed by one person (Soji Yamakawa) since 1999, it runs on absolutely anything - from modern PCs to ancient laptops - making it accessible to everyone.</p>
+<p>With simplified controls, instant action, and a huge library of community-created aircraft (1000+), YSFlight is perfect for casual flying fun, multiplayer dogfights, and introducing kids to flight simulation. It's the ultimate "pick up and play" flight sim.</p>
+<div class="highlight-box">
+<strong>Perfect for:</strong> Kids and beginners, retro gaming enthusiasts, anyone with low-end hardware, casual multiplayer dogfights, and people who want simple flying fun without complexity.
+</div>
+</div>
+
+<div class="section">
+<h2>Key Features</h2>
+<h3>Accessibility</h3>
+<ul>
+<li>Runs on anything - even 20-year-old PCs</li>
+<li>Tiny download size (under 50MB)</li>
+<li>Simple, intuitive controls</li>
+<li>No installation complexity</li>
+<li>Cross-platform (Windows, Mac, Linux)</li>
+</ul>
+<h3>Massive Aircraft Library</h3>
+<ul>
+<li>1000+ downloadable aircraft</li>
+<li>Everything from Cessnas to F-22s</li>
+<li>Fictional and real aircraft</li>
+<li>Easy to install add-ons</li>
+<li>Active modding community</li>
+</ul>
+<h3>Multiplayer Fun</h3>
+<ul>
+<li>Dogfight servers</li>
+<li>Ground attack missions</li>
+<li>Cooperative play</li>
+<li>Simple join and play</li>
+<li>Voice communication support</li>
+</ul>
+<h3>Scenarios</h3>
+<ul>
+<li>Dogfighting practice</li>
+<li>Aerobatics and stunts</li>
+<li>Formation flying</li>
+<li>Simple missions</li>
+<li>Just exploring and flying</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Pros & Cons</h2>
+<h3>Strengths</h3>
+<ul>
+<li>Completely free forever</li>
+<li>Runs on absolutely any PC</li>
+<li>1000+ aircraft available</li>
+<li>Fun multiplayer dogfights</li>
+<li>Easy to learn</li>
+<li>Great for kids</li>
+<li>No system requirements to speak of</li>
+<li>Charming retro aesthetic</li>
+</ul>
+<h3>Limitations</h3>
+<ul>
+<li>Very basic graphics</li>
+<li>Simplified flight model</li>
+<li>Limited scenery detail</li>
+<li>Not realistic simulation</li>
+<li>More arcade than sim</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Getting Started</h2>
+<h3>Installation</h3>
+<ul>
+<li>Download from ysflight.org</li>
+<li>Extract and run - no installation</li>
+<li>Download aircraft packs from community</li>
+<li>Configure controls (keyboard, gamepad, or joystick)</li>
+</ul>
+<h3>Perfect For</h3>
+<ul>
+<li>Teaching kids about aviation</li>
+<li>Casual flying sessions</li>
+<li>Multiplayer dogfights with friends</li>
+<li>Old computer resurrection</li>
+<li>Quick arcade flying fun</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Official Links</h2>
+<div class="links">
+<a href="http://www.ysflight.com/" target="_blank" class="btn btn-primary">Official Website</a>
+<a href="http://www.ysflight.com/download.html" target="_blank" class="btn btn-secondary">Download Free</a>
+</div>
+</div>
+</div>
+
+<script>
+// Sticky header on scroll
+const stickyHeader = document.querySelector('.sticky-header');
+const mainHeader = document.querySelector('.header');
+
+window.addEventListener('scroll', () => {
+const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+if (window.scrollY > headerBottom) {
+stickyHeader.classList.add('visible');
+} else {
+stickyHeader.classList.remove('visible');
+}
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

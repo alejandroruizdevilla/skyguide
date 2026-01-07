@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - FlightGear</title>
+  <style>
+    :root { --bg: #faf8f6; --bg-card: #fff; --accent: #c17a4a; --accent-alt: #a66843; --accent-light: #f4e8df; --text-main: #2d2520; --text-secondary: #6b5d54; --border-light: #e8dfd6; --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.7; padding: 2rem 1rem; font-size: 16px; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent); text-decoration: none; margin-bottom: 2rem; font-size: 14px; transition: all 0.2s ease; }
+    .back-link:hover { color: var(--accent-alt); transform: translateX(-4px); }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .header { background: var(--bg-card); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-soft); }
+    .title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    h1 { font-size: 32px; color: var(--accent-alt); font-weight: 600; line-height: 1.2; }
+    .tag { font-size: 11px; padding: 0.4rem 0.8rem; border-radius: 4px; background: #6b9e78; color: #fff; font-weight: 600; text-transform: uppercase; }
+    .tagline { font-size: 20px; color: var(--accent); margin-bottom: 1.5rem; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+    .meta-label { font-size: 12px; color: var(--accent); font-weight: 600; text-transform: uppercase; }
+    .meta-value { font-size: 15px; color: var(--text-main); }
+    .section { background: var(--bg-card); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-soft); }
+    h2 { font-size: 24px; color: var(--accent); margin-bottom: 1rem; font-weight: 600; }
+    h3 { font-size: 18px; color: var(--accent-alt); margin: 1.5rem 0 0.75rem; font-weight: 600; }
+    p { margin-bottom: 1rem; }
+    ul { list-style: none; padding-left: 0; }
+    ul li { padding-left: 1.5rem; position: relative; margin-bottom: 0.75rem; }
+    ul li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+    .highlight-box { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 1.25rem; margin: 1.5rem 0; border-radius: 4px; }
+    .highlight-box strong { color: var(--accent); }
+    .links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 15px; transition: all 0.2s ease; }
+    .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+    .btn-primary:hover { background: var(--accent-alt); }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .btn-secondary:hover { background: var(--accent-light); }
+
+    .sticky-header {
+      position: fixed;
+      top: -100px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: top 0.3s ease;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .sticky-header.visible {
+      top: 0;
+    }
+
+    .sticky-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .sticky-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .sticky-header h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sticky-header">
+      <h2>FlightGear</h2>
+    </div>
+
+        <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+    <div class="header">
+      <div class="title-row">
+        <h1>FlightGear</h1>
+        <span class="tag">100% Free</span>
+      </div>
+      <p class="tagline">The Free, Open-Source Flight Simulator</p>
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">Developer</span><span class="meta-value">FlightGear Community</span></div>
+        <div class="meta-item"><span class="meta-label">Release Date</span><span class="meta-value">1997-Present (Continuous)</span></div>
+        <div class="meta-item"><span class="meta-label">Platforms</span><span class="meta-value">Windows, macOS, Linux</span></div>
+        <div class="meta-item"><span class="meta-label">Price</span><span class="meta-value">FREE (Open Source)</span></div>
+        <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">General Aviation Simulation</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/PZ-pjYoFSSo?si=w7fNQs2xsc6c0IZF"
+                title="FlightGear 2020 Overview"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        FlightGear is a completely free, open-source flight simulator that has been developed by a dedicated community for over 25 years. While it may not have the cutting-edge graphics of commercial simulators, it offers a solid flight model, global coverage, and the freedom to learn aviation fundamentals without spending a penny.
+      </p>
+      <p>
+        Perfect for students, aviation enthusiasts on a budget, or anyone who wants to try flight simulation before investing in commercial products. FlightGear proves that you don't need to spend hundreds of dollars to experience realistic flight.
+      </p>
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> Budget-conscious beginners, students learning aviation, Linux users, open-source enthusiasts, and anyone wanting to try flight simulation risk-free.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <h3>Extensive Aircraft Library</h3>
+      <ul>
+        <li>500+ aircraft available for download</li>
+        <li>Cessna 172, PA-28, C130, 737, 777, and more</li>
+        <li>Helicopters, gliders, military aircraft</li>
+        <li>Quality varies but many excellent models</li>
+        <li>Community-created with love</li>
+      </ul>
+
+      <h3>Global Scenery</h3>
+      <ul>
+        <li>Entire world covered</li>
+        <li>Free to download all scenery</li>
+        <li>30,000+ airports</li>
+        <li>Terrain based on real elevation data</li>
+        <li>Custom scenery available</li>
+      </ul>
+
+      <h3>Simulation Features</h3>
+      <ul>
+        <li>Decent flight physics</li>
+        <li>Full IFR capabilities with working navaids</li>
+        <li>Real weather integration</li>
+        <li>Multiplayer support</li>
+        <li>Air traffic control simulation</li>
+      </ul>
+
+      <h3>Open Source Benefits</h3>
+      <ul>
+        <li>Completely free forever</li>
+        <li>Cross-platform (Windows, Mac, Linux)</li>
+        <li>Active development community</li>
+        <li>Customizable and extensible</li>
+        <li>Great for learning aviation</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+      <h3>Strengths</h3>
+      <ul>
+        <li>Completely free - no cost whatsoever</li>
+        <li>Runs on Linux, Mac, and Windows</li>
+        <li>500+ aircraft available</li>
+        <li>Global scenery coverage</li>
+        <li>Good for learning IFR procedures</li>
+        <li>Active community</li>
+        <li>No DRM or licensing restrictions</li>
+        <li>Educational and learning-friendly</li>
+      </ul>
+      <h3>Limitations</h3>
+      <ul>
+        <li>Graphics dated compared to commercial sims</li>
+        <li>Setup can be confusing for beginners</li>
+        <li>Aircraft quality varies significantly</li>
+        <li>Interface not as polished</li>
+        <li>Performance optimization needed</li>
+        <li>Smaller active user base</li>
+        <li>Steeper learning curve for setup</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+      <h3>Installation</h3>
+      <ul>
+        <li>Download from flightgear.org</li>
+        <li>Simple installer for all platforms</li>
+        <li>Download additional aircraft and scenery as needed</li>
+        <li>Completely free - no accounts or purchases</li>
+      </ul>
+
+      <h3>First Flight</h3>
+      <ul>
+        <li>Start with Cessna 172p (default aircraft)</li>
+        <li>Choose a familiar airport</li>
+        <li>Work through built-in tutorials</li>
+        <li>Join FlightGear multiplayer for help</li>
+      </ul>
+
+      <h3>Best Uses</h3>
+      <ul>
+        <li>Learning basic aviation concepts</li>
+        <li>IFR procedure practice</li>
+        <li>Budget-friendly flight training supplement</li>
+        <li>Testing if flight simulation interests you</li>
+        <li>Linux flight simulation</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://www.flightgear.org/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://www.flightgear.org/download/" target="_blank" class="btn btn-secondary">Download Free</a>
+        <a href="https://forum.flightgear.org/" target="_blank" class="btn btn-secondary">Community Forums</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

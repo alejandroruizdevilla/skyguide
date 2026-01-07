@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Microsoft Flight Simulator X</title>
+<style>:root{--bg:#faf8f6;--bg-card:#fff;--accent:#c17a4a;--accent-alt:#a66843;--accent-light:#f4e8df;--text-main:#2d2520;--text-secondary:#6b5d54;--border-light:#e8dfd6;--shadow-soft:0 2px 12px rgba(45,37,32,0.08)}*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text-main);line-height:1.7;padding:2rem 1rem;font-size:16px}.container{max-width:1000px;margin:0 auto}.back-link{display:inline-flex;align-items:center;gap:0.5rem;color:var(--accent);text-decoration:none;margin-bottom:2rem;font-size:14px;transition:all 0.2s}.back-link:hover{color:var(--accent-alt);transform:translateX(-4px)}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+.header{background:var(--bg-card);border-radius:12px;padding:2rem;margin-bottom:2rem;box-shadow:var(--shadow-soft)}.title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}h1{font-size:32px;color:var(--accent-alt);font-weight:600;line-height:1.2}.tag{font-size:11px;padding:0.4rem 0.8rem;border-radius:4px;background:#9b7d4f;color:#fff;font-weight:600;text-transform:uppercase}.tagline{font-size:20px;color:var(--accent);margin-bottom:1.5rem}.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem}.meta-item{display:flex;flex-direction:column;gap:0.25rem}.meta-label{font-size:12px;color:var(--accent);font-weight:600;text-transform:uppercase}.meta-value{font-size:15px;color:var(--text-main)}.section{background:var(--bg-card);border-radius:12px;padding:2rem;margin-bottom:2rem;box-shadow:var(--shadow-soft)}h2{font-size:24px;color:var(--accent);margin-bottom:1rem;font-weight:600}h3{font-size:18px;color:var(--accent-alt);margin:1.5rem 0 0.75rem;font-weight:600}p{margin-bottom:1rem}ul{list-style:none;padding-left:0}ul li{padding-left:1.5rem;position:relative;margin-bottom:0.75rem}ul li::before{content:"▸";position:absolute;left:0;color:var(--accent);font-weight:bold}.highlight-box{background:var(--accent-light);border-left:3px solid var(--accent);padding:1.25rem;margin:1.5rem 0;border-radius:4px}.highlight-box strong{color:var(--accent)}.links{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem}.btn{display:inline-block;padding:0.75rem 1.5rem;border-radius:6px;text-decoration:none;font-weight:500;font-size:15px;transition:all 0.2s}.btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}.btn-primary:hover{background:var(--accent-alt)}.btn-secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}.btn-secondary:hover{background:var(--accent-light)}.sticky-header{position:fixed;top:-100px;left:0;right:0;background:var(--bg-card);box-shadow:var(--shadow-soft);padding:1rem 2rem;z-index:1000;transition:top 0.3s ease;border-bottom:2px solid var(--accent)}.sticky-header.visible{top:0}.sticky-header h2{margin:0;font-size:20px;color:var(--accent)}.video-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-top:1rem}.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}.section h2{position:sticky;top:60px;background:var(--bg-card);padding:1rem 0;margin:-2rem -2rem 1rem -2rem;padding-left:2rem;padding-right:2rem;z-index:50;border-bottom:2px solid var(--border-light)}.section:first-of-type h2{top:60px}@media (max-width: 768px){.sticky-header{padding:0.75rem 1rem}.sticky-header h2{font-size:16px}}</style>
+</head>
+<body>
+<div class="container">
+<div class="sticky-header">
+<h2>Microsoft Flight Simulator X</h2>
+</div>
+
+    <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+<div class="header">
+<div class="title-row"><h1>Microsoft Flight Simulator X</h1><span class="tag">Classic</span></div>
+<p class="tagline">The Legendary 2006 Simulator with the Largest Add-on Library Ever</p>
+<div class="meta-grid">
+<div class="meta-item"><span class="meta-label">Developer</span><span class="meta-value">Microsoft / Aces Game Studio</span></div>
+<div class="meta-item"><span class="meta-label">Release Date</span><span class="meta-value">October 2006</span></div>
+<div class="meta-item"><span class="meta-label">Platforms</span><span class="meta-value">Windows</span></div>
+<div class="meta-item"><span class="meta-label">Price</span><span class="meta-value">$24.99 (Steam Edition)</span></div>
+<div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">Classic Civilian Aviation Sim</span></div>
+</div>
+</div>
+
+<div class="section">
+<h2>Official Trailer</h2>
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/CdrjyPhSRuM?si=WMmD8JUMln8qfLT2"
+title="FSX Steam Edition Trailer"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>
+</div>
+</div>
+
+<div class="section">
+<h2>Overview</h2>
+<p>Microsoft Flight Simulator X (FSX) is the legendary 2006 simulator that dominated the flight simulation world for over a decade. While graphically dated compared to modern sims, FSX holds one incredible advantage: the largest library of freeware and payware add-ons in flight simulation history - literally tens of thousands of aircraft, scenery packages, and utilities.</p>
+<p>FSX runs perfectly on modern low-end PCs, making it accessible to anyone. If you want to fly a specific obscure aircraft or visit a particular small airport, chances are someone made it for FSX. It's the ultimate "fly anything, anywhere" simulator on a budget.</p>
+<div class="highlight-box">
+<strong>Perfect for:</strong> Budget-conscious simmers, low-end PC users, those seeking specific aircraft/airports, nostalgia seekers, and anyone wanting access to the largest add-on library in flight simulation history.
+</div>
+</div>
+
+<div class="section">
+<h2>Key Features</h2>
+<h3>Massive Add-on Library</h3>
+<ul>
+<li>10,000+ freeware aircraft available</li>
+<li>Thousands of airport sceneries</li>
+<li>Every major payware developer supported it</li>
+<li>PMDG 737/747/777 classics available</li>
+<li>Massive utility and tool ecosystem</li>
+<li>If it exists, it's probably in FSX</li>
+</ul>
+<h3>Accessibility</h3>
+<ul>
+<li>Runs on modern low-end PCs easily</li>
+<li>Cheap to buy ($5-25)</li>
+<li>Huge knowledge base and tutorials</li>
+<li>Every problem has been solved</li>
+<li>Active community still exists</li>
+</ul>
+<h3>Historic Significance</h3>
+<ul>
+<li>Defined flight simulation 2006-2020</li>
+<li>Trained a generation of simmers</li>
+<li>Still used for flight training</li>
+<li>Compatible with modern hardware</li>
+<li>Works on Windows 11</li>
+</ul>
+<h3>Features</h3>
+<ul>
+<li>Global scenery (basic)</li>
+<li>24,000+ airports</li>
+<li>Multiplayer support</li>
+<li>Missions and challenges</li>
+<li>Full IFR capabilities</li>
+<li>ATC system</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Pros & Cons</h2>
+<h3>Strengths</h3>
+<ul>
+<li>Largest add-on library in flight sim history</li>
+<li>Runs on absolutely anything</li>
+<li>Very cheap to buy</li>
+<li>Massive freeware community</li>
+<li>Every aircraft imaginable available</li>
+<li>Perfect for learning</li>
+<li>Proven stability</li>
+<li>Study-level aircraft available (PMDG, etc.)</li>
+<li>Historic significance</li>
+</ul>
+<h3>Limitations</h3>
+<ul>
+<li>Graphics very dated (2006)</li>
+<li>32-bit limitations</li>
+<li>No VR support</li>
+<li>No modern weather</li>
+<li>Requires tweaking for modern systems</li>
+<li>Development ended in 2006</li>
+<li>No official support</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Getting Started</h2>
+<h3>Installation</h3>
+<ul>
+<li>Buy FSX: Steam Edition (recommended, $24.99)</li>
+<li>Or find original FSX Gold Edition</li>
+<li>Install on modern Windows 10/11</li>
+<li>Apply common fixes for modern systems</li>
+<li>Start downloading add-ons!</li>
+</ul>
+<h3>Essential Freeware</h3>
+<ul>
+<li>FTX Global (scenery enhancement)</li>
+<li>Ultimate Traffic 2 (AI traffic)</li>
+<li>FSPassengers (career mode)</li>
+<li>Massive aircraft libraries on flightsim.to</li>
+</ul>
+<h3>Recommended Add-ons</h3>
+<ul>
+<li>PMDG 737 NGX (study-level Boeing)</li>
+<li>FSLabs A320 (study-level Airbus)</li>
+<li>FTX scenery packages</li>
+<li>Active Sky for weather</li>
+<li>REX texture replacements</li>
+</ul>
+<h3>Why Choose FSX in 2025?</h3>
+<ul>
+<li>Low-end PC performance</li>
+<li>Access to specific rare aircraft</li>
+<li>Budget-friendly entry to serious simulation</li>
+<li>Learning platform before investing in modern sims</li>
+<li>Nostalgia and historical experience</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Official Links</h2>
+<div class="links">
+<a href="https://store.steampowered.com/app/314160/Microsoft_Flight_Simulator_X_Steam_Edition/" target="_blank" class="btn btn-primary">Buy on Steam</a>
+<a href="https://www.avsim.com/" target="_blank" class="btn btn-secondary">AVSIM Community</a>
+<a href="https://www.flightsim.com/" target="_blank" class="btn btn-secondary">Flightsim.com</a>
+</div>
+</div>
+</div>
+
+<script>
+// Sticky header on scroll
+const stickyHeader = document.querySelector('.sticky-header');
+const mainHeader = document.querySelector('.header');
+
+window.addEventListener('scroll', () => {
+const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+if (window.scrollY > headerBottom) {
+stickyHeader.classList.add('visible');
+} else {
+stickyHeader.classList.remove('visible');
+}
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

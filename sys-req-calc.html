@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - System Requirements Calculator</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --success: #6b9e78;
+      --warning: #e8a445;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --success: #8bc49c;
+      --warning: #f4b760;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    .input-section {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-label {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    select, input {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .check-btn {
+      padding: 1rem 2rem;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .check-btn:hover {
+      background: var(--accent-alt);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(193, 122, 74, 0.3);
+    }
+
+    .results-section {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+      display: none;
+    }
+
+    .results-section.show {
+      display: block;
+    }
+
+    .result-card {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--border-light);
+      transition: all 0.2s;
+    }
+
+    .result-card:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .result-card.excellent {
+      border-left-color: var(--success);
+      background: linear-gradient(to right, rgba(107, 158, 120, 0.1) 0%, var(--bg) 20%);
+    }
+
+    .result-card.good {
+      border-left-color: var(--warning);
+      background: linear-gradient(to right, rgba(232, 164, 69, 0.1) 0%, var(--bg) 20%);
+    }
+
+    .result-card.poor {
+      border-left-color: var(--danger);
+      background: linear-gradient(to right, rgba(217, 119, 87, 0.1) 0%, var(--bg) 20%);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .result-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .result-badge {
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .badge-excellent {
+      background: var(--success);
+      color: white;
+    }
+
+    .badge-good {
+      background: var(--warning);
+      color: white;
+    }
+
+    .badge-poor {
+      background: var(--danger);
+      color: white;
+    }
+
+    .result-details {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .result-settings {
+      font-weight: 600;
+      color: var(--accent-alt);
+      margin-bottom: 0.5rem;
+    }
+
+    .upgrade-section {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+    }
+
+    .upgrade-section h3 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 20px;
+    }
+
+    .upgrade-section p {
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      line-height: 1.7;
+    }
+
+    .upgrade-section ul {
+      margin: 1rem 0 0 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .upgrade-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 28px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="sys-req-calc.html" class="nav-link active">System Checker</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">System Requirements Calculator</h1>
+      <p class="subtitle">Find Out Which Simulators Your PC Can Run</p>
+    </div>
+
+    <div class="intro">
+      <p>Enter your PC specifications below to see which flight simulators you can run and at what quality settings. Get personalized recommendations for upgrades to improve your experience.</p>
+    </div>
+
+    <!-- Input Section -->
+    <div class="input-section">
+      <h2 class="section-title">Enter Your PC Specifications</h2>
+
+      <div class="input-grid">
+        <div class="input-group">
+          <label class="input-label">CPU (Processor)</label>
+          <select id="cpu">
+            <option value="">-- Select your CPU --</option>
+            <option value="high">Intel i9 13900K / AMD Ryzen 9 7950X or better</option>
+            <option value="high">Intel i7 13700K / AMD Ryzen 7 7800X3D</option>
+            <option value="mid-high">Intel i5 13600K / AMD Ryzen 5 7600X</option>
+            <option value="mid">Intel i5 12400 / AMD Ryzen 5 5600X</option>
+            <option value="mid">Intel i7 10700K / AMD Ryzen 7 3700X</option>
+            <option value="low-mid">Intel i5 10400 / AMD Ryzen 5 3600</option>
+            <option value="low">Intel i3 12100 / AMD Ryzen 3 3300X</option>
+            <option value="low">Intel i5 9400F / AMD Ryzen 5 2600</option>
+            <option value="very-low">Intel i3 9100F / AMD Ryzen 3 2200G</option>
+            <option value="very-low">Older than 9th gen Intel / Ryzen 2000</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">GPU (Graphics Card)</label>
+          <select id="gpu">
+            <option value="">-- Select your GPU --</option>
+            <option value="high">RTX 4090 / RTX 4080</option>
+            <option value="high">RTX 4070 Ti / RX 7900 XTX</option>
+            <option value="mid-high">RTX 4070 / RX 7900 XT</option>
+            <option value="mid-high">RTX 3080 / RX 6800 XT</option>
+            <option value="mid">RTX 4060 Ti / RX 7700 XT</option>
+            <option value="mid">RTX 3070 / RX 6700 XT</option>
+            <option value="low-mid">RTX 3060 / RX 6600 XT</option>
+            <option value="low-mid">RTX 2060 / RX 5700</option>
+            <option value="low">GTX 1660 Super / RX 5600 XT</option>
+            <option value="low">GTX 1650 / RX 5500 XT</option>
+            <option value="very-low">GTX 1050 Ti / RX 570</option>
+            <option value="very-low">Older or integrated graphics</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">RAM (Memory)</label>
+          <select id="ram">
+            <option value="">-- Select your RAM --</option>
+            <option value="high">32GB or more</option>
+            <option value="mid">16GB</option>
+            <option value="low">8GB</option>
+            <option value="very-low">4GB or less</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="check-btn" onclick="checkCompatibility()">Check My System</button>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection">
+      <h2 class="section-title">Your Results</h2>
+      <div id="resultsContainer"></div>
+      <div id="upgradeRecommendations"></div>
+    </div>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025</p>
+      <p>Updated December 2025</p>
+      <p style="margin-top: 1rem;">Remember: These are estimates. Actual performance may vary based on settings and other factors.</p>
+    </footer>
+
+  </div>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+
+// Performance scoring
+const scores = {
+  'very-low': 1,
+  'low': 2,
+  'low-mid': 3,
+  'mid': 4,
+  'mid-high': 5,
+  'high': 6
+};
+
+// Simulator requirements and info
+const simulators = [
+  {
+    name: 'Microsoft Flight Simulator 2024',
+    cpuMin: 3, gpuMin: 3, ramMin: 'mid',
+    excellent: { cpu: 5, gpu: 5, settings: 'Ultra settings, 60+ FPS at 1440p, VR ready' },
+    good: { cpu: 4, gpu: 4, settings: 'High settings, 45-60 FPS at 1080p, VR possible' },
+    poor: { cpu: 3, gpu: 3, settings: 'Medium-Low settings, 30-45 FPS at 1080p, no VR' }
+  },
+  {
+    name: 'Microsoft Flight Simulator 2020',
+    cpuMin: 3, gpuMin: 3, ramMin: 'mid',
+    excellent: { cpu: 5, gpu: 5, settings: 'Ultra settings, 60+ FPS at 1440p, VR excellent' },
+    good: { cpu: 4, gpu: 4, settings: 'High settings, 50+ FPS at 1080p, VR good' },
+    poor: { cpu: 3, gpu: 3, settings: 'Medium settings, 30-45 FPS at 1080p' }
+  },
+  {
+    name: 'X-Plane 12',
+    cpuMin: 3, gpuMin: 3, ramMin: 'mid',
+    excellent: { cpu: 5, gpu: 5, settings: 'Max settings, 60+ FPS, excellent VR' },
+    good: { cpu: 4, gpu: 4, settings: 'High settings, 45-60 FPS, VR usable' },
+    poor: { cpu: 3, gpu: 3, settings: 'Medium settings, 30-45 FPS' }
+  },
+  {
+    name: 'Prepar3D v6',
+    cpuMin: 3, gpuMin: 3, ramMin: 'mid',
+    excellent: { cpu: 5, gpu: 4, settings: 'All sliders maxed, smooth performance' },
+    good: { cpu: 4, gpu: 3, settings: 'High settings, stable FPS' },
+    poor: { cpu: 3, gpu: 3, settings: 'Medium settings, acceptable FPS' }
+  },
+  {
+    name: 'Aerofly FS 4',
+    cpuMin: 2, gpuMin: 2, ramMin: 'low',
+    excellent: { cpu: 4, gpu: 4, settings: 'Max settings, 90+ FPS, amazing VR' },
+    good: { cpu: 3, gpu: 3, settings: 'High settings, 60+ FPS, great VR' },
+    poor: { cpu: 2, gpu: 2, settings: 'Medium settings, 45+ FPS, VR possible' }
+  },
+  {
+    name: 'DCS World',
+    cpuMin: 3, gpuMin: 3, ramMin: 'mid',
+    excellent: { cpu: 5, gpu: 5, settings: 'Max settings, 60+ FPS, VR smooth' },
+    good: { cpu: 4, gpu: 4, settings: 'High settings, 45-60 FPS, VR playable' },
+    poor: { cpu: 3, gpu: 3, settings: 'Medium settings, 30-45 FPS' }
+  },
+  {
+    name: 'IL-2 Sturmovik',
+    cpuMin: 3, gpuMin: 3, ramMin: 'low',
+    excellent: { cpu: 5, gpu: 5, settings: 'Ultra settings, 90+ FPS, excellent VR' },
+    good: { cpu: 4, gpu: 4, settings: 'High settings, 60+ FPS, good VR' },
+    poor: { cpu: 3, gpu: 3, settings: 'Medium settings, 45+ FPS' }
+  },
+  {
+    name: 'Falcon BMS',
+    cpuMin: 2, gpuMin: 2, ramMin: 'low',
+    excellent: { cpu: 4, gpu: 3, settings: 'Max settings, 60+ FPS' },
+    good: { cpu: 3, gpu: 2, settings: 'High settings, smooth' },
+    poor: { cpu: 2, gpu: 2, settings: 'Medium settings, playable' }
+  },
+  {
+    name: 'FlightGear',
+    cpuMin: 2, gpuMin: 2, ramMin: 'low',
+    excellent: { cpu: 4, gpu: 3, settings: 'Max settings, excellent performance' },
+    good: { cpu: 3, gpu: 2, settings: 'High settings, smooth' },
+    poor: { cpu: 2, gpu: 2, settings: 'Default settings, runs well' }
+  },
+  {
+    name: 'YSFlight',
+    cpuMin: 1, gpuMin: 1, ramMin: 'very-low',
+    excellent: { cpu: 2, gpu: 1, settings: 'Runs perfectly on anything' },
+    good: { cpu: 1, gpu: 1, settings: 'Runs great on low-end PCs' },
+    poor: { cpu: 1, gpu: 1, settings: 'Will run on a potato' }
+  },
+  {
+    name: 'War Thunder (Simulator Mode)',
+    cpuMin: 2, gpuMin: 2, ramMin: 'low',
+    excellent: { cpu: 5, gpu: 5, settings: 'Max settings, 100+ FPS' },
+    good: { cpu: 4, gpu: 4, settings: 'High settings, 60+ FPS' },
+    poor: { cpu: 2, gpu: 2, settings: 'Medium settings, 45+ FPS' }
+  },
+  {
+    name: 'Ace Combat 7',
+    cpuMin: 2, gpuMin: 2, ramMin: 'low',
+    excellent: { cpu: 4, gpu: 4, settings: 'Max settings, 60+ FPS' },
+    good: { cpu: 3, gpu: 3, settings: 'High settings, 60 FPS' },
+    poor: { cpu: 2, gpu: 2, settings: 'Medium settings, 30-60 FPS' }
+  },
+  {
+    name: 'Condor 2',
+    cpuMin: 2, gpuMin: 2, ramMin: 'low',
+    excellent: { cpu: 4, gpu: 3, settings: 'Max settings, smooth soaring' },
+    good: { cpu: 3, gpu: 2, settings: 'High settings, good FPS' },
+    poor: { cpu: 2, gpu: 2, settings: 'Medium settings, playable' }
+  },
+  {
+    name: 'Microsoft FSX',
+    cpuMin: 1, gpuMin: 1, ramMin: 'very-low',
+    excellent: { cpu: 3, gpu: 2, settings: 'Max settings, locked 60 FPS' },
+    good: { cpu: 2, gpu: 1, settings: 'High settings, smooth' },
+    poor: { cpu: 1, gpu: 1, settings: 'Medium settings, runs on old PCs' }
+  }
+];
+
+function checkCompatibility() {
+  const cpu = document.getElementById('cpu').value;
+  const gpu = document.getElementById('gpu').value;
+  const ram = document.getElementById('ram').value;
+
+  if (!cpu || !gpu || !ram) {
+    alert('Please select all three specifications');
+    return;
+  }
+
+  const cpuScore = scores[cpu];
+  const gpuScore = scores[gpu];
+  const ramScore = scores[ram];
+
+  const resultsContainer = document.getElementById('resultsContainer');
+  resultsContainer.innerHTML = '';
+
+  simulators.forEach(sim => {
+    let rating = 'poor';
+    let details = sim.poor;
+    let badgeClass = 'badge-poor';
+    let cardClass = 'poor';
+    let badgeText = 'Runs Poorly';
+
+    if (cpuScore >= sim.excellent.cpu && gpuScore >= sim.excellent.gpu) {
+      rating = 'excellent';
+      details = sim.excellent;
+      badgeClass = 'badge-excellent';
+      cardClass = 'excellent';
+      badgeText = 'Runs Great!';
+    } else if (cpuScore >= sim.good.cpu && gpuScore >= sim.good.gpu) {
+      rating = 'good';
+      details = sim.good;
+      badgeClass = 'badge-good';
+      cardClass = 'good';
+      badgeText = 'Runs Well';
+    }
+
+    // Check if system doesn't meet minimum
+    if (cpuScore < sim.cpuMin || gpuScore < sim.gpuMin || (sim.ramMin === 'mid' && ramScore < 4)) {
+      badgeText = 'Below Minimum';
+      badgeClass = 'badge-poor';
+      cardClass = 'poor';
+      details = { settings: 'System below minimum requirements. Expect poor performance or unable to run.' };
+    }
+
+    const resultCard = document.createElement('div');
+    resultCard.className = `result-card ${cardClass}`;
+    resultCard.innerHTML = `
+      <div class="result-header">
+        <div class="result-name">${sim.name}</div>
+        <div class="result-badge ${badgeClass}">${badgeText}</div>
+      </div>
+      <div class="result-settings">${details.settings}</div>
+    `;
+
+    resultsContainer.appendChild(resultCard);
+  });
+
+  // Generate upgrade recommendations
+  generateUpgradeRecommendations(cpuScore, gpuScore, ramScore);
+
+  // Show results
+  document.getElementById('resultsSection').classList.add('show');
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function generateUpgradeRecommendations(cpuScore, gpuScore, ramScore) {
+  const upgradeContainer = document.getElementById('upgradeRecommendations');
+
+  let recommendations = [];
+
+  if (gpuScore < 4) {
+    recommendations.push({
+      priority: 'high',
+      component: 'GPU (Graphics Card)',
+      reason: 'Your GPU is the main bottleneck for flight simulators.',
+      suggestions: [
+        'Budget ($250-400): RTX 4060 or RX 7600',
+        'Mid-Range ($400-600): RTX 4070 or RX 7800 XT',
+        'High-End ($600-1000): RTX 4070 Ti or RX 7900 XT'
+      ]
+    });
+  }
+
+  if (cpuScore < 4) {
+    recommendations.push({
+      priority: 'medium',
+      component: 'CPU (Processor)',
+      reason: 'A faster CPU will improve frame times and overall smoothness.',
+      suggestions: [
+        'Budget ($150-250): Ryzen 5 7600 or Intel i5-13400',
+        'Mid-Range ($250-400): Ryzen 7 7800X3D or Intel i7-13700K',
+        'High-End ($400+): Ryzen 9 7950X or Intel i9-13900K'
+      ]
+    });
+  }
+
+  if (ramScore < 4) {
+    recommendations.push({
+      priority: 'medium',
+      component: 'RAM (Memory)',
+      reason: 'Modern flight simulators benefit greatly from 16GB+ RAM.',
+      suggestions: [
+        'Upgrade to 16GB DDR4 ($40-70) or DDR5 ($60-100)',
+        '32GB recommended for MSFS 2024 and heavy multiplayer',
+        'Make sure to get dual-channel (2 sticks) for best performance'
+      ]
+    });
+  }
+
+  if (recommendations.length === 0) {
+    upgradeContainer.innerHTML = `
+      <div class="upgrade-section">
+        <h3>Your System is Great!</h3>
+        <p>Your PC meets the recommended specs for most flight simulators. You should have a great experience across the board!</p>
+        <p>To further improve VR performance, consider upgrading to RTX 4080/4090 or waiting for next-gen GPUs.</p>
+      </div>
+    `;
+  } else {
+    let html = '<div class="upgrade-section"><h3>Upgrade Recommendations</h3>';
+
+    recommendations.forEach(rec => {
+      html += `
+        <p><strong>${rec.component}:</strong> ${rec.reason}</p>
+        <ul>
+          ${rec.suggestions.map(s => `<li>${s}</li>`).join('')}
+        </ul>
+      `;
+    });
+
+    html += `
+      <p style="margin-top: 1.5rem;"><strong>Upgrade Priority:</strong></p>
+      <p>1. Graphics Card (biggest impact on visuals and FPS)</p>
+      <p>2. RAM if you have 8GB or less</p>
+      <p>3. CPU if experiencing stuttering</p>
+      <p style="margin-top: 1rem; font-style: italic;">Pro Tip: Upgrade one component at a time and test the improvement before continuing.</p>
+    </div>
+    `;
+
+    upgradeContainer.innerHTML = html;
+  }
+}
+</script>
+</body>
+</html>

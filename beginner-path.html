@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Beginner Learning Path</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --success: #6b9e78;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --success: #7fb88d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 3rem;
+  margin: 2rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+
+.week-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.week-section:hover {
+  transform: translateX(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.week-marker {
+  position: absolute;
+  left: -2.4rem;
+  top: 2rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.week-title {
+  font-size: 24px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.week-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.objectives {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.objectives-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.objectives-list {
+  list-style: none;
+  padding: 0;
+}
+
+.objectives-list li {
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  position: relative;
+  color: var(--text-main);
+}
+
+.objectives-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.activities {
+  margin-bottom: 1.5rem;
+}
+
+.activities-title {
+  font-size: 18px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.activity-card {
+  background: var(--bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+}
+
+.activity-card:hover {
+  background: var(--accent-light);
+}
+
+.activity-name {
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.25rem;
+}
+
+.activity-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.resources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.resource-link:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.progress-tracker {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  position: sticky;
+  top: 2rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.progress-title {
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.progress-bar-container {
+  background: var(--accent-light);
+  border-radius: 8px;
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+.checklist li {
+  padding: 0.75rem;
+  background: var(--accent-light);
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checklist li:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.checklist li.completed .checkbox {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 968px) {
+  .progress-tracker {
+    position: relative;
+    top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .timeline {
+    padding-left: 2rem;
+  }
+
+  .week-marker {
+    left: -1.9rem;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Beginner Learning Path</h1>
+    <p class="subtitle">Your First 30 Days in Flight Simulation</p>
+    <p>A structured roadmap to take you from complete beginner to confident virtual pilot. Follow this week-by-week guide to build a solid foundation in flight simulation.</p>
+  </div>
+
+  <div class="progress-tracker">
+    <div class="progress-title">Your Progress</div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">0% Complete (0/30 tasks)</div>
+    <ul class="checklist">
+      <li data-week="1"><span class="checkbox"></span> Week 1: Getting Started</li>
+      <li data-week="2"><span class="checkbox"></span> Week 2: Basic Flight Maneuvers</li>
+      <li data-week="3"><span class="checkbox"></span> Week 3: Navigation Basics</li>
+      <li data-week="4"><span class="checkbox"></span> Week 4: Putting It Together</li>
+    </ul>
+  </div>
+
+  <div class="timeline">
+    <div class="week-section">
+      <div class="week-marker">1</div>
+      <h2 class="week-title">Week 1: Getting Started</h2>
+      <p class="week-subtitle">Foundation & Familiarization</p>
+
+      <div class="objectives">
+        <div class="objectives-title">Learning Objectives</div>
+        <ul class="objectives-list">
+          <li>Set up your simulator and basic controls</li>
+          <li>Understand cockpit layout and primary flight instruments</li>
+          <li>Master basic control inputs (pitch, roll, yaw)</li>
+          <li>Complete your first successful takeoff and landing</li>
+        </ul>
+      </div>
+
+      <div class="activities">
+        <h3 class="activities-title">Daily Activities</h3>
+        <div class="activity-card">
+          <div class="activity-name">Day 1-2: Setup & Settings</div>
+          <div class="activity-description">Install simulator, configure graphics, set up basic joystick/yoke controls, complete in-game tutorials</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 3-4: Cockpit Familiarization</div>
+          <div class="activity-description">Learn the 6-pack instruments (airspeed, attitude, altitude, turn coordinator, heading, VSI). Practice reading instruments in different aircraft.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 5-7: First Flights</div>
+          <div class="activity-description">Start with Cessna 172 or similar trainer. Practice straight and level flight, gentle turns, climbs and descents. Attempt pattern work (traffic pattern circuits).</div>
+        </div>
+      </div>
+
+      <div class="resources">
+        <a href="https://www.youtube.com/@FlightSimSchool" target="_blank" class="resource-link">📺 Flight Sim School</a>
+        <a href="#" class="resource-link">📖 Beginner's Guide PDF</a>
+      </div>
+    </div>
+
+    <div class="week-section">
+      <div class="week-marker">2</div>
+      <h2 class="week-title">Week 2: Basic Flight Maneuvers</h2>
+      <p class="week-subtitle">Building Core Skills</p>
+
+      <div class="objectives">
+        <div class="objectives-title">Learning Objectives</div>
+        <ul class="objectives-list">
+          <li>Execute standard rate turns accurately</li>
+          <li>Maintain altitude and airspeed in various configurations</li>
+          <li>Perform coordinated climbs and descents</li>
+          <li>Complete traffic pattern circuits consistently</li>
+        </ul>
+      </div>
+
+      <div class="activities">
+        <h3 class="activities-title">Daily Activities</h3>
+        <div class="activity-card">
+          <div class="activity-name">Day 8-10: Turns & Coordination</div>
+          <div class="activity-description">Practice 15°, 30°, and 45° banked turns. Learn to use rudder for coordinated flight. Try "turn to a heading" exercises.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 11-12: Climbs & Descents</div>
+          <div class="activity-description">Practice maintaining climb/descent rates. Learn power settings for different phases of flight. Try VY (best rate) and VX (best angle) climbs.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 13-14: Pattern Work</div>
+          <div class="activity-description">Fly complete traffic patterns. Practice crosswind, downwind, base, and final legs. Aim for 5-10 circuits per session with full-stop landings.</div>
+        </div>
+      </div>
+
+      <div class="resources">
+        <a href="https://www.youtube.com/@2MinuteFlightSim" target="_blank" class="resource-link">📺 Quick Tips</a>
+        <a href="#" class="resource-link">✈️ Pattern Practice Missions</a>
+      </div>
+    </div>
+
+    <div class="week-section">
+      <div class="week-marker">3</div>
+      <h2 class="week-title">Week 3: Navigation Basics</h2>
+      <p class="week-subtitle">Going Places</p>
+
+      <div class="objectives">
+        <div class="objectives-title">Learning Objectives</div>
+        <ul class="objectives-list">
+          <li>Read and interpret aeronautical charts</li>
+          <li>Navigate using VOR and GPS</li>
+          <li>Plan and fly a simple cross-country route</li>
+          <li>Understand basic radio communication procedures</li>
+        </ul>
+      </div>
+
+      <div class="activities">
+        <h3 class="activities-title">Daily Activities</h3>
+        <div class="activity-card">
+          <div class="activity-name">Day 15-17: Chart Reading</div>
+          <div class="activity-description">Study sectional charts. Learn symbols for airports, airspace, terrain. Practice finding landmarks. Use SkyVector or similar tools.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 18-19: VOR Navigation</div>
+          <div class="activity-description">Learn VOR principles. Practice intercepting and tracking radials. Fly VOR-to-VOR routes. Understand TO/FROM indicators.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 20-21: First Cross-Country</div>
+          <div class="activity-description">Plan a 50-100nm flight between two airports. Calculate heading, time, fuel. Fly the route using pilotage and dead reckoning.</div>
+        </div>
+      </div>
+
+      <div class="resources">
+        <a href="https://skyvector.com/" target="_blank" class="resource-link">🗺️ SkyVector Charts</a>
+        <a href="#" class="resource-link">📻 Radio Communication Guide</a>
+      </div>
+    </div>
+
+    <div class="week-section">
+      <div class="week-marker">4</div>
+      <h2 class="week-title">Week 4: Putting It Together</h2>
+      <p class="week-subtitle">Real-World Scenarios</p>
+
+      <div class="objectives">
+        <div class="objectives-title">Learning Objectives</div>
+        <ul class="objectives-list">
+          <li>Fly complete missions from planning to shutdown</li>
+          <li>Handle basic weather conditions</li>
+          <li>Use ATC (AI or human on VATSIM)</li>
+          <li>Develop consistent procedures and checklists</li>
+        </ul>
+      </div>
+
+      <div class="activities">
+        <h3 class="activities-title">Daily Activities</h3>
+        <div class="activity-card">
+          <div class="activity-name">Day 22-24: Weather Flying</div>
+          <div class="activity-description">Practice in various weather: light winds, crosswinds, reduced visibility, different cloud layers. Learn to read METARs and TAFs.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 25-27: ATC Communication</div>
+          <div class="activity-description">Use AI ATC or join VATSIM as Observer. Practice standard phraseology. Fly into controlled airports. Request flight following.</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name">Day 28-30: Complete Flights</div>
+          <div class="activity-description">Plan and fly realistic scenarios: short hops between small airports, scenic flights, touch-and-go practice. Use checklists for every phase.</div>
+        </div>
+      </div>
+
+      <div class="resources">
+        <a href="https://www.aviationweather.gov/" target="_blank" class="resource-link">☁️ Aviation Weather</a>
+        <a href="https://www.vatsim.net/" target="_blank" class="resource-link">🎮 Join VATSIM</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-section" style="background: var(--accent-light); border-left: 4px solid var(--accent);">
+    <h2 class="week-title">What's Next?</h2>
+    <p style="margin-bottom: 1rem;">After completing your first 30 days, you'll have a solid foundation. Here are your next steps:</p>
+    <ul class="objectives-list">
+      <li>Start instrument training (IFR procedures and approaches)</li>
+      <li>Try more complex aircraft (twins, turboprops, jets)</li>
+      <li>Join a virtual airline or online network</li>
+      <li>Explore different types of flying (bush, aerobatics, gliding)</li>
+      <li>Consider studying for real-world pilot ratings</li>
+    </ul>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Progress tracking
+const checklistItems = document.querySelectorAll('.checklist li');
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+
+// Load saved progress
+let completedWeeks = JSON.parse(localStorage.getItem('learningPathProgress') || '[]');
+
+// Apply saved state
+completedWeeks.forEach(week => {
+  const item = document.querySelector(`[data-week="${week}"]`);
+  if (item) item.classList.add('completed');
+});
+
+updateProgress();
+
+checklistItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const week = item.getAttribute('data-week');
+    item.classList.toggle('completed');
+
+    if (item.classList.contains('completed')) {
+      if (!completedWeeks.includes(week)) {
+        completedWeeks.push(week);
+      }
+    } else {
+      completedWeeks = completedWeeks.filter(w => w !== week);
+    }
+
+    localStorage.setItem('learningPathProgress', JSON.stringify(completedWeeks));
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const total = checklistItems.length;
+  const completed = completedWeeks.length;
+  const percentage = Math.round((completed / total) * 100);
+
+  progressBar.style.width = percentage + '%';
+  progressText.textContent = `${percentage}% Complete (${completed}/${total} weeks)`;
+}
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

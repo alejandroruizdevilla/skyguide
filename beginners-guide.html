@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Beginner's Guide to Flight Simulation</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --success: #6b9e78;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --success: #8bc49c;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .section {
+      background: var(--bg-card);
+      padding: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section-subtitle {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent-alt);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    .content p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .content ul, .content ol {
+      margin: 1rem 0 1.5rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .content li {
+      margin-bottom: 0.75rem;
+      line-height: 1.7;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+
+    .highlight-box h4 {
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-size: 18px;
+    }
+
+    .highlight-box p {
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .sim-recommendation {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .sim-rec-card {
+      background: var(--bg);
+      border: 2px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+
+    .sim-rec-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .sim-rec-card h4 {
+      color: var(--accent);
+      font-size: 18px;
+      margin-bottom: 0.5rem;
+    }
+
+    .sim-rec-card .label {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .sim-rec-card p {
+      font-size: 14px;
+      margin: 0.5rem 0;
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-weight: 600;
+      margin-right: 0.75rem;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      color: var(--accent-alt);
+      font-size: 18px;
+      margin-bottom: 0.5rem;
+    }
+
+    .mistake-item {
+      background: var(--bg);
+      border-left: 4px solid var(--danger);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+
+    .mistake-item h4 {
+      color: var(--danger);
+      font-size: 16px;
+      margin-bottom: 0.5rem;
+    }
+
+    .resource-item {
+      background: var(--bg);
+      border-left: 4px solid var(--success);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+
+    .resource-item h4 {
+      color: var(--success);
+      font-size: 16px;
+      margin-bottom: 0.5rem;
+    }
+
+    .resource-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .resource-item a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 28px;
+      }
+
+      .section {
+        padding: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .sim-recommendation {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link active">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="sys-req-calc.html" class="nav-link">System Checker</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">Beginner's Guide to Flight Simulation</h1>
+      <p class="subtitle">Everything You Need to Get Started in 2025</p>
+    </div>
+
+    <div class="intro">
+      <p>Welcome to the world of flight simulation! This comprehensive guide will take you from complete beginner to confident virtual pilot. Whether you dream of flying airliners, fighter jets, or just exploring the world from above, this guide has you covered.</p>
+    </div>
+
+    <!-- What is Flight Simulation -->
+    <section class="section">
+      <h2 class="section-title">What is Flight Simulation?</h2>
+      <div class="content">
+        <p>Flight simulation is the use of software to recreate the experience of flying an aircraft. Modern flight simulators range from highly realistic professional training tools to accessible arcade-style games, offering something for everyone.</p>
+
+        <h3 class="section-subtitle">Why Try Flight Simulation?</h3>
+        <ul>
+          <li><strong>Learn Real Aviation:</strong> Many simulators teach actual flight procedures, navigation, and aircraft systems used by real pilots</li>
+          <li><strong>Explore the World:</strong> Fly anywhere on Earth, from the Grand Canyon to the Himalayas, day or night</li>
+          <li><strong>Experience Any Aircraft:</strong> Fly everything from Cessna 172s to Boeing 747s to F-16 fighter jets</li>
+          <li><strong>Safe Practice:</strong> Learn and make mistakes without any real-world consequences</li>
+          <li><strong>Community:</strong> Join millions of virtual pilots in online events, virtual airlines, and multiplayer sessions</li>
+          <li><strong>Career Path:</strong> Many professional pilots use simulators for practice and training</li>
+        </ul>
+
+        <div class="highlight-box">
+          <h4>Did You Know?</h4>
+          <p>Professional airline pilots are required to regularly train in full-motion simulators. The technology in home flight simulators often uses the same flight models and systems!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Which Simulator Should I Start With -->
+    <section class="section">
+      <h2 class="section-title">Which Simulator Should I Start With?</h2>
+      <div class="content">
+        <p>The best simulator for you depends on your platform, budget, and goals. Here are our top recommendations for beginners:</p>
+
+        <div class="sim-recommendation">
+          <div class="sim-rec-card">
+            <h4>Microsoft Flight Simulator 2024</h4>
+            <span class="label">BEST FOR PC/CONSOLE</span>
+            <p><strong>Price:</strong> $69.99</p>
+            <p><strong>Platform:</strong> PC, Xbox, PS5</p>
+            <p><strong>Why it's great:</strong> Stunning visuals, beginner-friendly tutorials, huge aircraft selection, and works with a regular game controller. The career mode guides you through your first flights.</p>
+            <p><strong>Requirements:</strong> Gaming PC or modern console</p>
+          </div>
+
+          <div class="sim-rec-card">
+            <h4>Infinite Flight</h4>
+            <span class="label">BEST FOR MOBILE</span>
+            <p><strong>Price:</strong> Free (Pro: $9.99/month)</p>
+            <p><strong>Platform:</strong> iOS, Android</p>
+            <p><strong>Why it's great:</strong> Full-featured mobile sim with global scenery, realistic aircraft, and live ATC with real human controllers. Perfect for learning on the go.</p>
+            <p><strong>Requirements:</strong> Modern smartphone or tablet</p>
+          </div>
+
+          <div class="sim-rec-card">
+            <h4>FlightGear</h4>
+            <span class="label">BEST FREE OPTION</span>
+            <p><strong>Price:</strong> 100% Free</p>
+            <p><strong>Platform:</strong> PC (Windows, Mac, Linux)</p>
+            <p><strong>Why it's great:</strong> Completely free and open-source with solid flight physics. Great for learning aviation basics without spending money. 500+ aircraft available.</p>
+            <p><strong>Requirements:</strong> Any PC from the last 10 years</p>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>Our #1 Recommendation for Most Beginners</h4>
+          <p>Microsoft Flight Simulator 2024 offers the best balance of realism, ease of use, and visual beauty. The built-in tutorials, career mode, and massive community make it ideal for learning. If you have a gaming PC or Xbox/PS5, start here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Essential Hardware -->
+    <section class="section">
+      <h2 class="section-title">Essential Hardware for Beginners</h2>
+      <div class="content">
+        <p>Good news: you don't need expensive equipment to start! Here's what you need at different experience levels:</p>
+
+        <h3 class="section-subtitle">Starting Out (Day 1)</h3>
+        <ul>
+          <li><strong>Keyboard & Mouse:</strong> Every simulator works with keyboard and mouse. Not ideal for precision, but perfect for learning the basics</li>
+          <li><strong>Game Controller:</strong> Xbox or PlayStation controllers work great! Much better than keyboard for smooth control</li>
+          <li><strong>Cost:</strong> $0 if you already have these</li>
+        </ul>
+
+        <h3 class="section-subtitle">Getting Serious (After 1-2 months)</h3>
+        <ul>
+          <li><strong>Entry Joystick:</strong> Logitech Extreme 3D Pro ($35-50) or Thrustmaster T.Flight HOTAS X ($60-80)</li>
+          <li><strong>Why upgrade:</strong> Precise control, programmable buttons, realistic feel</li>
+          <li><strong>Perfect for:</strong> General aviation, combat sims, casual flying</li>
+        </ul>
+
+        <h3 class="section-subtitle">Advanced Setup (6+ months)</h3>
+        <ul>
+          <li><strong>Yoke & Throttle:</strong> For airliner flying - Honeycomb Alpha Yoke ($250) + Bravo Throttle ($250)</li>
+          <li><strong>HOTAS System:</strong> For combat - Thrustmaster T.16000M FCS ($120-180) or VKB Gladiator NXT ($150+)</li>
+          <li><strong>Rudder Pedals:</strong> Essential for realism - Thrustmaster TFRP ($100-150)</li>
+          <li><strong>VR Headset:</strong> Meta Quest 3 ($500) for ultimate immersion</li>
+        </ul>
+
+        <div class="highlight-box">
+          <h4>Pro Tip: Start Simple</h4>
+          <p>Don't rush to buy expensive hardware! Use a controller for your first month. Once you're sure you love flight simulation, then invest in a joystick. Many beginners buy expensive setups and realize flight simming isn't for them.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Your First Flight -->
+    <section class="section">
+      <h2 class="section-title">Your First Flight - Step by Step</h2>
+      <div class="content">
+        <p>Let's walk through your first flight in any simulator. We'll use a small Cessna 172 for this tutorial - the most common training aircraft in real aviation.</p>
+
+        <div class="step-item">
+          <span class="step-number">1</span>
+          <div class="step-content">
+            <h4>Choose Your Aircraft & Location</h4>
+            <p>Select the Cessna 172 (sometimes called C172 or Skyhawk). Pick a small, familiar airport with good weather - your local airport or somewhere like Innsbruck, Austria for beautiful scenery. Choose "Clear Skies" weather and "Noon" time for best visibility.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">2</span>
+          <div class="step-content">
+            <h4>Start on the Runway</h4>
+            <p>Most simulators let you start "on the runway" with the engine already running. Use this option! Don't worry about cold-starting or taxiing yet - that comes later.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">3</span>
+          <div class="step-content">
+            <h4>Takeoff</h4>
+            <p>Release the parking brake. Push the throttle to 100% (most sims: press and hold a button or keyboard key). Keep the nose pointed down the runway using small left/right inputs. At 60-70 knots (shown on the airspeed indicator), gently pull back to lift the nose. You're flying!</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">4</span>
+          <div class="step-content">
+            <h4>Climb & Level Off</h4>
+            <p>Keep climbing at a gentle nose-up attitude. Reduce throttle to 75% around 1,000 feet. At 3,000 feet, gently push forward to level off. Aim to keep the horizon in the middle of your windscreen.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">5</span>
+          <div class="step-content">
+            <h4>Practice Turns</h4>
+            <p>Try gentle left and right turns. Bank no more than 20 degrees. You'll need to add a little back pressure when turning to maintain altitude. Take your time - there's no hurry!</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">6</span>
+          <div class="step-content">
+            <h4>Set Up for Landing</h4>
+            <p>Turn back toward the airport. Reduce throttle to 50-60%. Extend flaps (usually assigned to a key or button). Aim to approach the runway at 70 knots, descending gently.</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">7</span>
+          <div class="step-content">
+            <h4>Landing</h4>
+            <p>This is the hardest part - don't worry if you crash! Aim for the runway numbers. Just above the runway, reduce throttle to zero and gently pull back (called the "flare"). Try to touch down on the main wheels first. Don't panic if you bounce!</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <span class="step-number">8</span>
+          <div class="step-content">
+            <h4>Celebrate!</h4>
+            <p>Whether you landed smoothly or crashed spectacularly, congratulations - you just completed your first flight! Hit "Reset to runway" and try again. Each attempt will be better than the last.</p>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>Remember: Everyone Crashes at First!</h4>
+          <p>Your first 10 landings will probably be rough. That's totally normal! Even real pilots take many hours to master landings. Use the simulator's replay feature to see what went wrong and improve.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Common Beginner Mistakes -->
+    <section class="section">
+      <h2 class="section-title">Common Beginner Mistakes</h2>
+      <div class="content">
+        <p>Avoid these common pitfalls and accelerate your learning:</p>
+
+        <div class="mistake-item">
+          <h4>Starting With Complex Aircraft</h4>
+          <p>Don't start with a Boeing 747 or F-16! Begin with simple aircraft like the Cessna 172. Learn to walk before you run. Complex aircraft have hundreds of switches and procedures that will overwhelm beginners.</p>
+        </div>
+
+        <div class="mistake-item">
+          <h4>Overcontrolling</h4>
+          <p>New pilots make huge, jerky control inputs. Real aircraft respond to small, gentle movements. Make tiny adjustments and wait for the aircraft to respond. Less is more!</p>
+        </div>
+
+        <div class="mistake-item">
+          <h4>Ignoring Tutorials</h4>
+          <p>Most simulators include excellent built-in tutorials. Don't skip them! They teach fundamental concepts and save you hours of frustration. MSFS 2024's career mode is specifically designed for beginners.</p>
+        </div>
+
+        <div class="mistake-item">
+          <h4>Flying in Bad Weather Too Soon</h4>
+          <p>Heavy rain, storms, and night flying are challenging even for experienced pilots. Start with clear skies and daylight. Add complexity gradually as you improve.</p>
+        </div>
+
+        <div class="mistake-item">
+          <h4>Not Using Autopilot</h4>
+          <p>Many beginners think using autopilot is "cheating." It's not! Real pilots use autopilot constantly. Use it to maintain altitude and heading while you learn other systems.</p>
+        </div>
+
+        <div class="mistake-item">
+          <h4>Buying Too Much Hardware Too Soon</h4>
+          <p>Don't spend $1,000 on equipment before you know if you'll stick with the hobby. Start with what you have, then upgrade gradually based on what you actually need.</p>
+        </div>
+
+        <div class="mistake-item">
+          <h4>Trying to Learn Everything at Once</h4>
+          <p>Flight simulation is deep. Focus on one thing at a time: first takeoffs, then landings, then navigation, then radio procedures. Master each skill before adding more.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learning Resources -->
+    <section class="section">
+      <h2 class="section-title">Learning Resources</h2>
+      <div class="content">
+        <p>These free resources will accelerate your learning:</p>
+
+        <h3 class="section-subtitle">YouTube Channels</h3>
+        <div class="resource-item">
+          <h4>320 Sim Pilot</h4>
+          <p>Excellent tutorials focused on airliner flying. Great production quality and clear explanations. Perfect for learning the Airbus A320.</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>Squirrel</h4>
+          <p>MSFS tutorials and live ATC flying. Very beginner-friendly with great production. Covers everything from basic controls to complex IFR flights.</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>2-Minute Tutorials</h4>
+          <p>Quick, focused tutorials on specific topics. Perfect for learning one thing at a time without long videos.</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>Airforceproud95</h4>
+          <p>Entertaining and educational content. Makes learning fun while teaching real aviation concepts.</p>
+        </div>
+
+        <h3 class="section-subtitle">Websites & Forums</h3>
+        <div class="resource-item">
+          <h4>FlightSim.com</h4>
+          <p>The largest flight sim community. Forums, downloads, reviews, and news. Active community ready to help beginners.</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>SimBrief</h4>
+          <p>Free flight planning tool. Generate professional flight plans like real airlines use. Essential for realistic airliner flying.</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>ChartFox</h4>
+          <p>Free aviation charts and airport diagrams. Learn to read real approach plates and taxi diagrams.</p>
+        </div>
+
+        <h3 class="section-subtitle">Communities</h3>
+        <div class="resource-item">
+          <h4>VATSIM / IVAO</h4>
+          <p>Free online networks with real human air traffic controllers. Fly with ATC guidance just like real pilots. Very welcoming to beginners!</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>Virtual Airlines</h4>
+          <p>Join a virtual airline to fly scheduled routes, earn promotions, and fly with others. Search for one matching your favorite real-world airline.</p>
+        </div>
+
+        <div class="resource-item">
+          <h4>r/flightsim (Reddit)</h4>
+          <p>Active Reddit community with 500k+ members. Great for asking questions, sharing screenshots, and learning from others.</p>
+        </div>
+
+        <div class="highlight-box">
+          <h4>The Best Investment: Time</h4>
+          <p>Flight simulation has a learning curve, but it's incredibly rewarding. Dedicate 30-60 minutes a few times per week. Within a month, you'll be confidently flying cross-country. Within six months, you might be flying complex airliners or dogfighting online!</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025</p>
+      <p>Updated December 2025</p>
+      <p style="margin-top: 1rem;">Ready to start your journey? Pick a simulator and take to the skies!</p>
+    </footer>
+
+  </div>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+</script>
+</body>
+</html>

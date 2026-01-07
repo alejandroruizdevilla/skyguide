@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Performance Benchmark Database</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --success: #6b9e78;
+  --warning: #d4a04a;
+  --danger: #c17070;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --success: #7fb88d;
+  --warning: #e8b87e;
+  --danger: #d89090;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.filter-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--accent-light);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.benchmark-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent);
+  transition: all 0.3s ease;
+}
+
+.benchmark-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.benchmark-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.build-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent-alt);
+}
+
+.fps-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.fps-excellent {
+  background: var(--success);
+  color: white;
+}
+
+.fps-good {
+  background: var(--warning);
+  color: white;
+}
+
+.fps-poor {
+  background: var(--danger);
+  color: white;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.spec-item {
+  font-size: 13px;
+}
+
+.spec-label {
+  color: var(--text-secondary);
+  font-weight: 600;
+  display: block;
+}
+
+.spec-value {
+  color: var(--text-main);
+}
+
+.settings-info {
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.settings-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.settings-details {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.performance-bars {
+  margin-bottom: 1rem;
+}
+
+.bar-item {
+  margin-bottom: 0.75rem;
+}
+
+.bar-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bar-container {
+  background: var(--bg-card);
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.bar-cpu {
+  background: #6b9e78;
+}
+
+.bar-gpu {
+  background: #d4a04a;
+}
+
+.bar-ram {
+  background: #8a9eb8;
+}
+
+.contributor {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background: var(--accent-light);
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--accent-alt);
+  border-bottom: 2px solid var(--accent);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+  background: var(--accent-light);
+}
+
+td {
+  padding: 1rem;
+  color: var(--text-main);
+}
+
+.submit-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .benchmark-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Performance Benchmark Database</h1>
+    <p class="subtitle">Real-World FPS Data from the Community</p>
+    <p>Find out how different PC builds perform in flight simulators. Browse user-submitted benchmarks to help plan your next upgrade or optimize your current setup.</p>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label">Filter by Simulator:</label>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All Benchmarks</button>
+      <button class="filter-btn" data-filter="msfs2024">MSFS 2024</button>
+      <button class="filter-btn" data-filter="msfs2020">MSFS 2020</button>
+      <button class="filter-btn" data-filter="xplane">X-Plane 12</button>
+      <button class="filter-btn" data-filter="dcs">DCS World</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Community Benchmarks</h2>
+    <div class="benchmark-grid">
+      <!-- High-End Build -->
+      <div class="benchmark-card" data-category="msfs2024">
+        <div class="benchmark-header">
+          <div class="build-name">High-End 4K Build</div>
+          <span class="fps-badge fps-excellent">85 FPS</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">GPU</span>
+            <span class="spec-value">RTX 4090 24GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU</span>
+            <span class="spec-value">AMD Ryzen 9 7950X3D</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">64GB DDR5-6000</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Resolution</span>
+            <span class="spec-value">3840×2160 (4K)</span>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-title">Settings & Location</div>
+          <div class="settings-details">
+            MSFS 2024 • Ultra/High Mix • New York JFK<br/>
+            A320 on ground with medium traffic
+          </div>
+        </div>
+        <div class="performance-bars">
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>CPU Usage</span>
+              <span>65%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-cpu" style="width: 65%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>GPU Usage</span>
+              <span>92%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-gpu" style="width: 92%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>RAM Usage</span>
+              <span>28GB</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-ram" style="width: 44%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="contributor">Submitted by FlightSimmer_Pro</div>
+      </div>
+
+      <!-- Mid-Range Build -->
+      <div class="benchmark-card" data-category="msfs2024">
+        <div class="benchmark-header">
+          <div class="build-name">Mid-Range 1440p Build</div>
+          <span class="fps-badge fps-good">55 FPS</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">GPU</span>
+            <span class="spec-value">RTX 4070 Ti 12GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU</span>
+            <span class="spec-value">Intel i7-13700K</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">32GB DDR5-5600</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Resolution</span>
+            <span class="spec-value">2560×1440 (1440p)</span>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-title">Settings & Location</div>
+          <div class="settings-details">
+            MSFS 2024 • High Settings • London Heathrow<br/>
+            Boeing 737 on approach
+          </div>
+        </div>
+        <div class="performance-bars">
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>CPU Usage</span>
+              <span>72%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-cpu" style="width: 72%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>GPU Usage</span>
+              <span>98%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-gpu" style="width: 98%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>RAM Usage</span>
+              <span>22GB</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-ram" style="width: 69%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="contributor">Submitted by VirtualCaptain42</div>
+      </div>
+
+      <!-- Budget Build -->
+      <div class="benchmark-card" data-category="msfs2020">
+        <div class="benchmark-header">
+          <div class="build-name">Budget 1080p Build</div>
+          <span class="fps-badge fps-good">45 FPS</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">GPU</span>
+            <span class="spec-value">RTX 3060 Ti 8GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU</span>
+            <span class="spec-value">Intel i5-12600K</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">32GB DDR4-3200</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Resolution</span>
+            <span class="spec-value">1920×1080 (1080p)</span>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-title">Settings & Location</div>
+          <div class="settings-details">
+            MSFS 2020 • Medium/High Mix • Small Regional Airport<br/>
+            Cessna 172 VFR flight
+          </div>
+        </div>
+        <div class="performance-bars">
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>CPU Usage</span>
+              <span>68%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-cpu" style="width: 68%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>GPU Usage</span>
+              <span>95%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-gpu" style="width: 95%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>RAM Usage</span>
+              <span>18GB</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-ram" style="width: 56%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="contributor">Submitted by BudgetFlyer</div>
+      </div>
+
+      <!-- X-Plane Build -->
+      <div class="benchmark-card" data-category="xplane">
+        <div class="benchmark-header">
+          <div class="build-name">X-Plane Optimized</div>
+          <span class="fps-badge fps-excellent">75 FPS</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">GPU</span>
+            <span class="spec-value">RTX 4080 16GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU</span>
+            <span class="spec-value">Intel i9-13900K</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">32GB DDR5-6400</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Resolution</span>
+            <span class="spec-value">2560×1440 (1440p)</span>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-title">Settings & Location</div>
+          <div class="settings-details">
+            X-Plane 12 • High Settings with Vulkan • Seattle KSEA<br/>
+            IXEG 737 with Ortho4XP
+          </div>
+        </div>
+        <div class="performance-bars">
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>CPU Usage</span>
+              <span>58%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-cpu" style="width: 58%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>GPU Usage</span>
+              <span>88%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-gpu" style="width: 88%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>RAM Usage</span>
+              <span>16GB</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-ram" style="width: 50%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="contributor">Submitted by XPlaneEnthusiast</div>
+      </div>
+
+      <!-- DCS Build -->
+      <div class="benchmark-card" data-category="dcs">
+        <div class="benchmark-header">
+          <div class="build-name">DCS VR Build</div>
+          <span class="fps-badge fps-good">50 FPS</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">GPU</span>
+            <span class="spec-value">RTX 4090 24GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU</span>
+            <span class="spec-value">AMD Ryzen 7 7800X3D</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">64GB DDR5-6000</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">VR Headset</span>
+            <span class="spec-value">HP Reverb G2</span>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-title">Settings & Location</div>
+          <div class="settings-details">
+            DCS World • High VR Settings • Persian Gulf Map<br/>
+            F/A-18C Hornet carrier operations
+          </div>
+        </div>
+        <div class="performance-bars">
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>CPU Usage</span>
+              <span>75%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-cpu" style="width: 75%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>GPU Usage</span>
+              <span>99%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-gpu" style="width: 99%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>RAM Usage</span>
+              <span>32GB</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-ram" style="width: 50%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="contributor">Submitted by TacticalPilot</div>
+      </div>
+
+      <!-- Another MSFS 2020 Build -->
+      <div class="benchmark-card" data-category="msfs2020">
+        <div class="benchmark-header">
+          <div class="build-name">Balanced 1440p Setup</div>
+          <span class="fps-badge fps-good">60 FPS</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">GPU</span>
+            <span class="spec-value">AMD RX 7900 XT</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CPU</span>
+            <span class="spec-value">AMD Ryzen 9 7900X</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM</span>
+            <span class="spec-value">32GB DDR5-5200</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Resolution</span>
+            <span class="spec-value">2560×1440 (1440p)</span>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-title">Settings & Location</div>
+          <div class="settings-details">
+            MSFS 2020 • High Settings • Dubai OMDB<br/>
+            A380 departure with AI traffic
+          </div>
+        </div>
+        <div class="performance-bars">
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>CPU Usage</span>
+              <span>70%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-cpu" style="width: 70%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>GPU Usage</span>
+              <span>96%</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-gpu" style="width: 96%;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>RAM Usage</span>
+              <span>20GB</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar-fill bar-ram" style="width: 63%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="contributor">Submitted by AMD_Flyer</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Recommended Specs by Simulator</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Simulator</th>
+            <th>Minimum (30+ FPS)</th>
+            <th>Recommended (60+ FPS)</th>
+            <th>Optimal (High/Ultra)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>MSFS 2024</strong></td>
+            <td>RTX 3060 Ti / RX 6700 XT<br/>i5-12600K / Ryzen 5 7600X<br/>32GB RAM</td>
+            <td>RTX 4070 Ti / RX 7900 XT<br/>i7-13700K / Ryzen 7 7800X3D<br/>32GB RAM</td>
+            <td>RTX 4090 / RX 7900 XTX<br/>i9-13900K / Ryzen 9 7950X3D<br/>64GB RAM</td>
+          </tr>
+          <tr>
+            <td><strong>MSFS 2020</strong></td>
+            <td>RTX 2060 / RX 5700 XT<br/>i5-10600K / Ryzen 5 5600X<br/>16GB RAM</td>
+            <td>RTX 3070 / RX 6800<br/>i7-12700K / Ryzen 7 5800X3D<br/>32GB RAM</td>
+            <td>RTX 4080 / RX 7900 XT<br/>i9-12900K / Ryzen 9 5950X<br/>32GB RAM</td>
+          </tr>
+          <tr>
+            <td><strong>X-Plane 12</strong></td>
+            <td>RTX 3060 / RX 6600 XT<br/>i5-11600K / Ryzen 5 5600X<br/>16GB RAM</td>
+            <td>RTX 3070 Ti / RX 6800 XT<br/>i7-12700K / Ryzen 7 5800X<br/>32GB RAM</td>
+            <td>RTX 4070 Ti / RX 7900 XT<br/>i9-13900K / Ryzen 9 7900X<br/>32GB RAM</td>
+          </tr>
+          <tr>
+            <td><strong>DCS World</strong></td>
+            <td>RTX 3060 Ti / RX 6700 XT<br/>i5-12600K / Ryzen 5 7600X<br/>32GB RAM</td>
+            <td>RTX 4070 / RX 7800 XT<br/>i7-13700K / Ryzen 7 7800X3D<br/>32GB RAM</td>
+            <td>RTX 4090 / RX 7900 XTX<br/>Ryzen 7 7800X3D<br/>64GB RAM</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Submit Your Benchmark</h2>
+    <p style="margin-bottom: 1.5rem;">Help the community by sharing your performance data! Include your specs, settings, and average FPS.</p>
+    <button class="submit-btn" onclick="alert('Benchmark submission form coming soon! For now, share your results on our Discord or Reddit community.')">Submit Benchmark</button>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Filter functionality
+const filterButtons = document.querySelectorAll('.filter-btn');
+const benchmarkCards = document.querySelectorAll('.benchmark-card');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Update active button
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    const filter = button.getAttribute('data-filter');
+
+    // Filter cards
+    benchmarkCards.forEach(card => {
+      if (filter === 'all' || card.getAttribute('data-category') === filter) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

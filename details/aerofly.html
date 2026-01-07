@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Aerofly FS 4</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--accent-alt);
+      transform: translateX(-4px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+
+    .header {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--accent-alt);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: var(--accent-alt);
+      margin: 1.5rem 0 0.75rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    ul li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .rating-section {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .rating-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .rating-label {
+      min-width: 180px;
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .rating-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border-light);
+      border-radius: 5px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .rating-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .rating-value {
+      min-width: 50px;
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    .highlight-box strong {
+      color: var(--accent);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .spec-card {
+      background: var(--bg);
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .spec-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-alt);
+      border-color: var(--accent-alt);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+    }
+
+    .sticky-header {
+      position: fixed;
+      top: -100px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: top 0.3s ease;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .sticky-header.visible {
+      top: 0;
+    }
+
+    .sticky-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 26px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rating-label {
+        min-width: auto;
+      }
+
+      .rating-bar {
+        max-width: 100%;
+      }
+
+      .sticky-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .sticky-header h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sticky-header">
+      <h2>Aerofly FS 4</h2>
+    </div>
+
+        <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+
+    <div class="header">
+      <div class="title-row">
+        <h1>Aerofly FS 4</h1>
+        <span class="tag">Smooth Performance</span>
+      </div>
+      <p class="tagline">Buttery Smooth Flight Simulation for VR and Beyond</p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Developer</span>
+          <span class="meta-value">IPACS</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Release Date</span>
+          <span class="meta-value">November 2021</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Platforms</span>
+          <span class="meta-value">PC, Mobile, Nintendo Switch</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Price</span>
+          <span class="meta-value">$49.99 (PC) / $9.99 (Mobile)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-value">General Aviation & Helicopters</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/FaJWe0f-ozA?si=jJ5hukm4ocroBWID"
+                title="Aerofly FS 4 Release Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Aerofly FS 4 is the simulator that prioritizes one thing above all else: performance. If you want a flight simulator that runs at 60+ FPS even in VR on mid-range hardware, Aerofly is your answer. Developed by IPACS, it delivers an incredibly smooth, responsive experience that makes flying feel effortless.
+      </p>
+      <p>
+        While it may not have the global coverage of MSFS or the physics depth of X-Plane, Aerofly excels at providing a beautiful, enjoyable flying experience with instant loading times, butter-smooth framerates, and some of the best VR implementation in any simulator. It's perfect for casual flight sessions and helicopter enthusiasts.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> VR enthusiasts wanting smooth performance, helicopter simulation fans, casual pilots who value quick sessions, and anyone with mid-range hardware who wants beautiful graphics without compromising framerates.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+
+      <h3>Performance Excellence</h3>
+      <ul>
+        <li>Runs at 60+ FPS even on modest hardware</li>
+        <li>Instant loading - no waiting to fly</li>
+        <li>Best-in-class VR performance (90+ FPS easily)</li>
+        <li>Optimized engine with minimal stuttering</li>
+        <li>Smooth experience even at high graphics settings</li>
+      </ul>
+
+      <h3>Photogrammetry Scenery</h3>
+      <ul>
+        <li>Beautiful photogrammetry cities (San Francisco, New York, LA, etc.)</li>
+        <li>Detailed coverage of California, Switzerland, parts of Europe</li>
+        <li>Hand-crafted airports with excellent detail</li>
+        <li>Gorgeous terrain rendering</li>
+        <li>Expanding coverage via DLC</li>
+      </ul>
+
+      <h3>Helicopter Simulation</h3>
+      <ul>
+        <li>Excellent helicopter flight models</li>
+        <li>EC135, Robinson R22, Bell 407, and more</li>
+        <li>Realistic rotor physics</li>
+        <li>Perfect for VR helicopter flying</li>
+        <li>Smooth, responsive controls</li>
+      </ul>
+
+      <h3>Aircraft Selection</h3>
+      <ul>
+        <li>20+ included aircraft (varies by platform)</li>
+        <li>Quality over quantity approach</li>
+        <li>General aviation focus (Cessna 172, Baron, etc.)</li>
+        <li>Some jets and airliners (737, A320)</li>
+        <li>Additional aircraft available as DLC</li>
+      </ul>
+
+      <h3>Cross-Platform</h3>
+      <ul>
+        <li>Available on PC, iOS, Android, Nintendo Switch</li>
+        <li>Mobile version exceptionally polished</li>
+        <li>Great for casual flying on tablets</li>
+        <li>Controller support excellent</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Technical Requirements</h2>
+
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-title">Minimum Specs (PC)</div>
+          <ul>
+            <li>GPU: GTX 970 / RX 570</li>
+            <li>CPU: Intel i5-6600 / Ryzen 3 1200</li>
+            <li>RAM: 8GB</li>
+            <li>Storage: 40GB</li>
+            <li>OS: Windows 10/11</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">Recommended Specs</div>
+          <ul>
+            <li>GPU: GTX 1660 / RX 5600 XT</li>
+            <li>CPU: Intel i5-9400 / Ryzen 5 3600</li>
+            <li>RAM: 16GB</li>
+            <li>Storage: 60GB+ SSD</li>
+            <li>OS: Windows 11</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">VR Requirements</div>
+          <ul>
+            <li>GPU: GTX 1070 or higher</li>
+            <li>CPU: Any modern 6-core</li>
+            <li>RAM: 16GB</li>
+            <li>Runs smoothly on most VR setups</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Performance Ratings</h2>
+
+      <div class="rating-section">
+        <div class="rating-item">
+          <span class="rating-label">Performance/FPS</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">VR Experience</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 98%"></div>
+          </div>
+          <span class="rating-value">9.8/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Graphics Quality</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 85%"></div>
+          </div>
+          <span class="rating-value">8.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Helicopter Simulation</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 88%"></div>
+          </div>
+          <span class="rating-value">8.8/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Ease of Use</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 92%"></div>
+          </div>
+          <span class="rating-value">9.2/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Content Coverage</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 60%"></div>
+          </div>
+          <span class="rating-value">6/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Loading Times</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+
+      <h3>Strengths</h3>
+      <ul>
+        <li>Exceptional performance - runs smoothly on almost anything</li>
+        <li>Best VR experience of any simulator (performance-wise)</li>
+        <li>Instant loading - be flying in seconds</li>
+        <li>Beautiful photogrammetry in covered areas</li>
+        <li>Excellent helicopter models and physics</li>
+        <li>No stutters or hitching</li>
+        <li>Great for quick casual sessions</li>
+        <li>Mobile version is outstanding</li>
+        <li>Perfect for VR helicopter flying</li>
+        <li>Easy to pick up and fly</li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <ul>
+        <li>Limited geographic coverage (mainly US West, Switzerland)</li>
+        <li>Smaller aircraft selection</li>
+        <li>DLC can be expensive for region coverage</li>
+        <li>No global scenery like MSFS</li>
+        <li>Limited weather system</li>
+        <li>Systems depth not as advanced as X-Plane/PMDG</li>
+        <li>Smaller community and add-on ecosystem</li>
+        <li>No multiplayer currently</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+
+      <h3>For New Pilots</h3>
+      <p>Aerofly is very beginner-friendly. Start with the Cessna 172 or Baron 58. The quick loading means you can practice takeoffs and landings repeatedly without frustration. Use a controller or joystick for best experience.</p>
+
+      <h3>Recommended First Flight</h3>
+      <ul>
+        <li>Aircraft: Cessna 172 or Baron 58</li>
+        <li>Location: KSFO (San Francisco) for beautiful scenery</li>
+        <li>Weather: Clear day</li>
+        <li>Activity: Sightseeing over the Bay Area</li>
+        <li>Time: 15-30 minute flight</li>
+      </ul>
+
+      <h3>For VR Users</h3>
+      <ul>
+        <li>Try the EC135 helicopter in VR</li>
+        <li>Fly through San Francisco's photogrammetry</li>
+        <li>Experience butter-smooth 90+ FPS</li>
+        <li>Use hand controllers for switches (if supported)</li>
+        <li>Enjoy no motion sickness due to high framerates</li>
+      </ul>
+
+      <h3>Recommended DLC</h3>
+      <ul>
+        <li>Switzerland region (stunning Alps scenery)</li>
+        <li>Additional US regions if you want more coverage</li>
+        <li>Helicopter bundles if you like rotorcraft</li>
+        <li>Wait for sales - DLC goes on discount regularly</li>
+      </ul>
+
+      <h3>Best Scenarios</h3>
+      <ul>
+        <li>VR flight sessions - unmatched smoothness</li>
+        <li>Helicopter training and practice</li>
+        <li>Quick casual flights</li>
+        <li>Sightseeing in photogrammetry areas</li>
+        <li>Mobile flying on tablets</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Who Should Choose Aerofly FS 4?</h2>
+
+      <h3>VR Enthusiasts</h3>
+      <p>If you want the absolute smoothest VR flight experience, Aerofly is unbeatable. 90+ FPS in VR even on modest hardware makes it the go-to choice for virtual reality flying.</p>
+
+      <h3>Helicopter Pilots</h3>
+      <p>The helicopter models in Aerofly are exceptional, with great physics and perfect VR integration. If you want to fly helicopters smoothly, this is a top choice.</p>
+
+      <h3>Casual Flyers</h3>
+      <p>Quick loading, easy controls, and great performance make Aerofly perfect for short flying sessions when you don't want to wait.</p>
+
+      <h3>Budget PC Users</h3>
+      <p>If you have mid-range or older hardware but still want beautiful graphics and smooth flying, Aerofly delivers where other sims struggle.</p>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://www.aerofly.com/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://store.steampowered.com/app/1593020/Aerofly_FS_4_Flight_Simulator/" target="_blank" class="btn btn-secondary">Buy on Steam</a>
+        <a href="https://www.ipacs.de/forum/" target="_blank" class="btn btn-secondary">Community Forums</a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

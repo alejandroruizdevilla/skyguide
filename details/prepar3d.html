@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Prepar3D v6</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--accent-alt);
+      transform: translateX(-4px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+
+    .header {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--accent-alt);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: var(--accent-alt);
+      margin: 1.5rem 0 0.75rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    ul li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .rating-section {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .rating-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .rating-label {
+      min-width: 180px;
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .rating-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border-light);
+      border-radius: 5px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .rating-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .rating-value {
+      min-width: 50px;
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    .highlight-box strong {
+      color: var(--accent);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .spec-card {
+      background: var(--bg);
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .spec-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-alt);
+      border-color: var(--accent-alt);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+    }
+
+    .sticky-header {
+      position: fixed;
+      top: -100px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: top 0.3s ease;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .sticky-header.visible {
+      top: 0;
+    }
+
+    .sticky-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 26px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rating-label {
+        min-width: auto;
+      }
+
+      .rating-bar {
+        max-width: 100%;
+      }
+
+      .sticky-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .sticky-header h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sticky-header">
+      <h2>Prepar3D v6</h2>
+    </div>
+
+        <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+
+    <div class="header">
+      <div class="title-row">
+        <h1>Prepar3D v6</h1>
+        <span class="tag">Professional</span>
+      </div>
+      <p class="tagline">The Professional Training Platform</p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Developer</span>
+          <span class="meta-value">Lockheed Martin</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Release Date</span>
+          <span class="meta-value">April 2022 (v6)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Platforms</span>
+          <span class="meta-value">Windows</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Price</span>
+          <span class="meta-value">$59.95 Academic / $199.95 Professional</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Type</span>
+          <span class="meta-value">Professional Training Simulation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/I2ddPdJDINM?si=llm9Vjyu4McuiOO_"
+                title="Prepar3D v6 Announcement"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Prepar3D (pronounced "prepared") is a professional-grade flight simulation platform developed by Lockheed Martin, primarily designed for training, education, and research. Built on the legacy of Microsoft Flight Simulator, it has evolved into a sophisticated platform used by airlines, military organizations, and serious simulation enthusiasts.
+      </p>
+      <p>
+        Unlike consumer-focused simulators, Prepar3D prioritizes accuracy, stability, and professional features over accessibility. It's the platform of choice for commercial pilot training programs, corporate flight departments, and simulation professionals who need reliable, repeatable results for certification and training purposes.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> Professional pilots, flight schools, serious simulation enthusiasts with legacy FSX add-ons, and anyone requiring professional-grade simulation features. Academic license offers excellent value for students.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+
+      <h3>Professional Platform</h3>
+      <ul>
+        <li>Used by airlines and military for actual crew training</li>
+        <li>Comprehensive SDK for custom training scenarios</li>
+        <li>Multi-channel display support for simulators</li>
+        <li>Network simulation for multi-crew training</li>
+        <li>Scenario-based training tools</li>
+      </ul>
+
+      <h3>TrueSky Weather Engine</h3>
+      <ul>
+        <li>Advanced volumetric cloud rendering</li>
+        <li>Real-time atmospheric simulation</li>
+        <li>Accurate weather phenomena modeling</li>
+        <li>Dynamic weather depiction</li>
+        <li>Professional weather injection tools</li>
+      </ul>
+
+      <h3>Legacy Compatibility</h3>
+      <ul>
+        <li>Compatible with many FSX add-ons</li>
+        <li>Massive library of available aircraft and scenery</li>
+        <li>Proven third-party developer support</li>
+        <li>PMDG, Majestic, Flight1, and more</li>
+        <li>Decades of accumulated content</li>
+      </ul>
+
+      <h3>Advanced Features</h3>
+      <ul>
+        <li>64-bit architecture for stability</li>
+        <li>DirectX 11 graphics</li>
+        <li>Dynamic lighting system</li>
+        <li>Robust failure modeling</li>
+        <li>Professional instructor station capabilities</li>
+        <li>Recorder and analysis tools</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Technical Requirements</h2>
+
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-title">Minimum Specs</div>
+          <ul>
+            <li>GPU: GTX 1060 / RX 580</li>
+            <li>CPU: Intel i5-8400 / Ryzen 5 2600</li>
+            <li>RAM: 16GB</li>
+            <li>Storage: 30GB base + add-ons</li>
+            <li>OS: Windows 10/11 64-bit</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">Recommended Specs</div>
+          <ul>
+            <li>GPU: RTX 3060 / RX 6700 XT</li>
+            <li>CPU: Intel i7-11700 / Ryzen 7 5800X</li>
+            <li>RAM: 32GB</li>
+            <li>Storage: 200GB+ SSD</li>
+            <li>OS: Windows 11 64-bit</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-title">Professional Setup</div>
+          <ul>
+            <li>Multi-GPU support available</li>
+            <li>Multi-monitor configurations</li>
+            <li>Network simulation support</li>
+            <li>Hardware simulator integration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Performance Ratings</h2>
+
+      <div class="rating-section">
+        <div class="rating-item">
+          <span class="rating-label">Professional Features</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 95%"></div>
+          </div>
+          <span class="rating-value">9.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Flight Model Accuracy</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 85%"></div>
+          </div>
+          <span class="rating-value">8.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Graphics Quality</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 75%"></div>
+          </div>
+          <span class="rating-value">7.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Stability</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 95%"></div>
+          </div>
+          <span class="rating-value">9.5/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Content Library</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 90%"></div>
+          </div>
+          <span class="rating-value">9/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Training Tools</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 100%"></div>
+          </div>
+          <span class="rating-value">10/10</span>
+        </div>
+
+        <div class="rating-item">
+          <span class="rating-label">Beginner Friendly</span>
+          <div class="rating-bar">
+            <div class="rating-fill" style="width: 60%"></div>
+          </div>
+          <span class="rating-value">6/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+
+      <h3>Strengths</h3>
+      <ul>
+        <li>Professional-grade platform used by real training organizations</li>
+        <li>Excellent stability and reliability</li>
+        <li>Comprehensive SDK and customization options</li>
+        <li>FSX add-on compatibility (huge library)</li>
+        <li>Multi-channel and network simulation support</li>
+        <li>Scenario and training tools</li>
+        <li>Academic pricing very reasonable ($59.95)</li>
+        <li>Professional support available</li>
+        <li>Proven track record over many years</li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <ul>
+        <li>Graphics dated compared to MSFS</li>
+        <li>Windows only (no Mac/Linux)</li>
+        <li>Professional license expensive ($199.95)</li>
+        <li>Steeper learning curve</li>
+        <li>Default scenery basic</li>
+        <li>Requires licensing restrictions compliance</li>
+        <li>No VR support in current version</li>
+        <li>Less active development than MSFS or X-Plane</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+
+      <h3>Licensing</h3>
+      <p>Prepar3D has specific license types. Academic ($59.95) is for educational use and hobbyists. Professional ($199.95) is for commercial training. Ensure you select the appropriate license. Academic license is NOT for commercial use.</p>
+
+      <h3>For New Users</h3>
+      <p>Prepar3D assumes aviation knowledge. Start with default aircraft and build your way up. The interface is similar to FSX if you're familiar with it. Study the comprehensive documentation before diving in.</p>
+
+      <h3>Essential Add-ons</h3>
+      <ul>
+        <li>PMDG 737/777 (study-level airliners)</li>
+        <li>Majestic Q400 (regional turboprop)</li>
+        <li>ORBX scenery packages</li>
+        <li>Active Sky for weather</li>
+        <li>REX Skyforce for textures</li>
+        <li>GSX for ground services</li>
+      </ul>
+
+      <h3>Recommended First Flight</h3>
+      <ul>
+        <li>Aircraft: Default Boeing 737-800</li>
+        <li>Location: KLAX Los Angeles or familiar airport</li>
+        <li>Weather: Clear preset</li>
+        <li>Activity: IFR flight with autopilot</li>
+        <li>Focus: Systems familiarization</li>
+      </ul>
+
+      <h3>For Professional Training</h3>
+      <ul>
+        <li>Review SDK documentation</li>
+        <li>Set up scenario-based training</li>
+        <li>Configure instructor station if applicable</li>
+        <li>Utilize recording and playback features</li>
+        <li>Integrate with professional hardware</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Who Should Choose Prepar3D?</h2>
+
+      <h3>Professional Pilots</h3>
+      <p>If you're a commercial pilot looking to practice procedures at home, Prepar3D offers the stability and accuracy needed for serious training.</p>
+
+      <h3>Flight Schools</h3>
+      <p>Training organizations benefit from the professional SDK, multi-station support, and proven reliability for curriculum development.</p>
+
+      <h3>FSX Veterans</h3>
+      <p>If you have extensive FSX add-ons, Prepar3D lets you continue using them in a modern 64-bit platform with better graphics and stability.</p>
+
+      <h3>Serious Simmers</h3>
+      <p>Enthusiasts who value simulation depth over graphics and want access to proven professional-grade aircraft like PMDG will appreciate Prepar3D.</p>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://www.prepar3d.com/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://www.prepar3d.com/purchase/" target="_blank" class="btn btn-secondary">Buy Now</a>
+        <a href="https://www.prepar3d.com/support-center/" target="_blank" class="btn btn-secondary">Support Center</a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

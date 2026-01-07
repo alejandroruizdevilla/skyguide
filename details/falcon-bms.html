@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Falcon BMS</title>
+  <style>
+    :root {
+      --bg: #faf8f6; --bg-card: #ffffff; --accent: #c17a4a; --accent-alt: #a66843; --accent-light: #f4e8df;
+      --text-main: #2d2520; --text-secondary: #6b5d54; --text-muted: #9b8a7f; --border-light: #e8dfd6;
+      --danger: #d97757; --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg); color: var(--text-main); line-height: 1.7; padding: 2rem 1rem; font-size: 16px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent);
+      text-decoration: none; margin-bottom: 2rem; font-size: 14px; transition: all 0.2s ease;
+    }
+    .back-link:hover { color: var(--accent-alt); transform: translateX(-4px); }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .header { background: var(--bg-card); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-soft); }
+    .title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    h1 { font-size: 32px; color: var(--accent-alt); font-weight: 600; line-height: 1.2; }
+    .tag { font-size: 11px; padding: 0.4rem 0.8rem; border-radius: 4px; border: none; background: #6b9e78; color: #fff; white-space: nowrap; font-weight: 600; text-transform: uppercase; }
+    .tagline { font-size: 20px; color: var(--accent); margin-bottom: 1.5rem; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+    .meta-label { font-size: 12px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-value { font-size: 15px; color: var(--text-main); }
+    .section { background: var(--bg-card); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-soft); }
+    h2 { font-size: 24px; color: var(--accent); margin-bottom: 1rem; font-weight: 600; }
+    h3 { font-size: 18px; color: var(--accent-alt); margin: 1.5rem 0 0.75rem; font-weight: 600; }
+    p { margin-bottom: 1rem; line-height: 1.7; }
+    ul { list-style: none; padding-left: 0; }
+    ul li { padding-left: 1.5rem; position: relative; margin-bottom: 0.75rem; line-height: 1.6; }
+    ul li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+    .highlight-box { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 1.25rem; margin: 1.5rem 0; border-radius: 4px; }
+    .highlight-box strong { color: var(--accent); }
+    .links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 15px; transition: all 0.2s ease; }
+    .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+    .btn-primary:hover { background: var(--accent-alt); border-color: var(--accent-alt); }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .btn-secondary:hover { background: var(--accent-light); }
+
+    .sticky-header {
+      position: fixed;
+      top: -100px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: top 0.3s ease;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .sticky-header.visible {
+      top: 0;
+    }
+
+    .sticky-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 60px;
+      background: var(--bg-card);
+      padding: 1rem 0;
+      margin: -2rem -2rem 1rem -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      z-index: 50;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .section:first-of-type h2 {
+      top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .sticky-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .sticky-header h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sticky-header">
+      <h2>Falcon BMS</h2>
+    </div>
+
+        <a href="../index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+<a href="../index.html" class="back-link">← Back to Guide</a>
+<a href="../minigames.html" class="back-link">Mini Games</a>
+    <div class="header">
+      <div class="title-row">
+        <h1>Falcon BMS</h1>
+        <span class="tag">Free</span>
+      </div>
+      <p class="tagline">The Most Detailed F-16 Simulator - Completely Free</p>
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">Developer</span><span class="meta-value">Benchmark Sims (Community)</span></div>
+        <div class="meta-item"><span class="meta-label">Release Date</span><span class="meta-value">Ongoing (Based on Falcon 4.0)</span></div>
+        <div class="meta-item"><span class="meta-label">Platforms</span><span class="meta-value">Windows</span></div>
+        <div class="meta-item"><span class="meta-label">Price</span><span class="meta-value">FREE (requires Falcon 4.0 base)</span></div>
+        <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">F-16C Viper Simulation</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Official Trailer</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/658ax0y8KHs"
+                title="Falcon BMS 4.37 Official Trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Falcon BMS (Benchmark Sims) is a community-driven modification of the legendary Falcon 4.0 that has evolved into the most realistic F-16C Viper simulator available to civilians. This is not just a game - it's a professional-grade training tool that models the F-16 with incredible depth and accuracy, completely free.
+      </p>
+      <p>
+        What makes BMS special is its legendary dynamic campaign engine that generates living, breathing wars where your actions have real consequences. Combined with modern avionics (Link-16, JHMCS, advanced weapons), it offers the most complete F-16 experience possible.
+      </p>
+      <div class="highlight-box">
+        <strong>Perfect for:</strong> F-16 enthusiasts, serious simulation fans on a budget, anyone who wants the most detailed single aircraft study-level sim, and players who love dynamic campaigns.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <h3>Ultimate F-16C Simulation</h3>
+      <ul>
+        <li>Most detailed F-16C Block 50/52 simulation available</li>
+        <li>Every system modeled: radar, targeting pod, EW suite</li>
+        <li>Full clickable cockpit</li>
+        <li>Modern avionics: Link-16 datalink, JHMCS helmet sight</li>
+        <li>Realistic weapons: AMRAAMs, JDAMs, HARMs, Mavericks</li>
+      </ul>
+
+      <h3>Dynamic Campaign</h3>
+      <ul>
+        <li>Legendary Falcon 4.0 campaign engine</li>
+        <li>Living world that reacts to player actions</li>
+        <li>Hundred-mission campaigns</li>
+        <li>Allied and enemy AI make strategic decisions</li>
+        <li>War outcome depends on player performance</li>
+      </ul>
+
+      <h3>Modern Updates</h3>
+      <ul>
+        <li>HD graphics and terrain</li>
+        <li>TrackIR and VR support</li>
+        <li>Updated flight model</li>
+        <li>Modern weapons and systems</li>
+        <li>Regular community updates</li>
+      </ul>
+
+      <h3>Multiplayer</h3>
+      <ul>
+        <li>Cooperative campaigns</li>
+        <li>Up to 100+ players</li>
+        <li>IVC (Integrated Voice Comms)</li>
+        <li>Full combined arms simulation</li>
+        <li>Active dedicated servers</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Pros & Cons</h2>
+      <h3>Strengths</h3>
+      <ul>
+        <li>Completely FREE after base game purchase</li>
+        <li>Most realistic F-16 simulation available</li>
+        <li>Legendary dynamic campaign system</li>
+        <li>Modern systems and weapons</li>
+        <li>Active, passionate community</li>
+        <li>Regular updates and improvements</li>
+        <li>Professional-grade simulation depth</li>
+        <li>Used by real F-16 pilots for procedures practice</li>
+      </ul>
+      <h3>Limitations</h3>
+      <ul>
+        <li>Only F-16 (and some basic allied aircraft)</li>
+        <li>Installation can be complex</li>
+        <li>Graphics dated compared to DCS/MSFS</li>
+        <li>Extremely steep learning curve</li>
+        <li>Requires original Falcon 4.0 (cheap on GOG)</li>
+        <li>Interface not beginner-friendly</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Getting Started</h2>
+      <h3>Installation</h3>
+      <ul>
+        <li>Purchase Falcon 4.0 on GOG or Steam (~$5-10)</li>
+        <li>Download latest Falcon BMS from benchmark sims website</li>
+        <li>Install BMS over Falcon 4.0</li>
+        <li>Apply alternative launchers for easier setup</li>
+      </ul>
+
+      <h3>For New Pilots</h3>
+      <p>Expect 50-100 hours to become proficient. Start with training missions. Learn basic startup, navigation, and landing before weapons. Use the comprehensive manual and online tutorials.</p>
+
+      <h3>Essential Learning</h3>
+      <ul>
+        <li>IFF setup (critical for avoiding fratricide)</li>
+        <li>Basic radar operation</li>
+        <li>Datalink usage (Link-16)</li>
+        <li>Weapon employment procedures</li>
+        <li>Emergency procedures</li>
+      </ul>
+
+      <h3>Hardware Needed</h3>
+      <ul>
+        <li>HOTAS strongly recommended (Thrustmaster Warthog ideal)</li>
+        <li>Head tracking essential (TrackIR or alternative)</li>
+        <li>Rudder pedals recommended</li>
+        <li>MFD couplers enhance immersion</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Official Links</h2>
+      <div class="links">
+        <a href="https://www.benchmarksims.org/" target="_blank" class="btn btn-primary">Official Website</a>
+        <a href="https://www.benchmarksims.org/forum/" target="_blank" class="btn btn-secondary">Community Forums</a>
+        <a href="https://www.gog.com/game/falcon_collection" target="_blank" class="btn btn-secondary">Buy Falcon 4.0</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Sticky header on scroll
+  const stickyHeader = document.querySelector('.sticky-header');
+  const mainHeader = document.querySelector('.header');
+
+  window.addEventListener('scroll', () => {
+    const headerBottom = mainHeader.offsetTop + mainHeader.offsetHeight;
+
+    if (window.scrollY > headerBottom) {
+      stickyHeader.classList.add('visible');
+    } else {
+      stickyHeader.classList.remove('visible');
+    }
+  });
+
+  // Dark Mode Toggle with automatic system preference detection
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const html = document.documentElement;
+
+  // Detect system preference
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Check for saved theme preference, or use system preference
+  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+  html.setAttribute('data-theme', savedTheme);
+  if (darkModeToggle) {
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  // Toggle function
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't manually set a preference
+    if (!localStorage.getItem('theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      if (darkModeToggle) {
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    }
+  });
+</script>
+<script src="/livereload.js"></script>
+</body>
+</html>

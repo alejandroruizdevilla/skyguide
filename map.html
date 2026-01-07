@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Simulator Coverage Map</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+      --coverage-full: #6b9e78;
+      --coverage-partial: #e8b87e;
+      --coverage-none: #d97757;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --coverage-full: #8bc79f;
+      --coverage-partial: #e8b87e;
+      --coverage-none: #ff9575;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .intro {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Legend */
+    .legend {
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .legend-color {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--border-light);
+    }
+
+    .legend-full {
+      background: var(--coverage-full);
+    }
+
+    .legend-partial {
+      background: var(--coverage-partial);
+    }
+
+    .legend-none {
+      background: var(--coverage-none);
+    }
+
+    /* Coverage Table */
+    .coverage-table-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+      overflow-x: auto;
+      margin-bottom: 3rem;
+    }
+
+    .coverage-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    .coverage-table thead {
+      background: var(--accent-light);
+    }
+
+    .coverage-table th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent-alt);
+      border-bottom: 2px solid var(--border-light);
+      font-size: 14px;
+    }
+
+    .coverage-table th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .coverage-table th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    .coverage-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 14px;
+    }
+
+    .coverage-table tbody tr:hover {
+      background: var(--accent-light);
+    }
+
+    .sim-name-cell {
+      font-weight: 600;
+      color: var(--text-main);
+      min-width: 200px;
+    }
+
+    .coverage-cell {
+      text-align: center;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+
+    .coverage-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-full {
+      background: var(--coverage-full);
+    }
+
+    .badge-partial {
+      background: var(--coverage-partial);
+    }
+
+    .badge-none {
+      background: var(--coverage-none);
+    }
+
+    /* Simulator Details */
+    .sim-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .sim-detail-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.3s ease;
+    }
+
+    .sim-detail-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .sim-detail-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .sim-detail-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .sim-detail-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .detail-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-content {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .detail-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .detail-list li {
+      padding-left: 1.2rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .detail-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--coverage-full);
+      font-weight: bold;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .stat-box {
+      background: var(--accent-light);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Section Headers */
+    .section-header {
+      text-align: center;
+      margin: 4rem 0 2rem;
+    }
+
+    .section-title {
+      font-size: 28px;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .section-description {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 28px;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .legend {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .coverage-table-container {
+        padding: 1rem;
+      }
+
+      .sim-details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="sys-req-calc.html" class="nav-link">System Checker</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+        <a href="addons.html" class="nav-link">Add-ons</a>
+        <a href="map.html" class="nav-link">Coverage Map</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">Simulator Coverage Map</h1>
+      <p class="subtitle">Compare Global Coverage Across Flight Simulators</p>
+    </div>
+
+    <div class="intro">
+      <p>Not all flight simulators cover the same regions. This guide shows which simulators offer the best coverage for different parts of the world, helping you choose the right platform for your flying preferences.</p>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color legend-full"></div>
+        <span>Full Coverage</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color legend-partial"></div>
+        <span>Partial/DLC Required</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color legend-none"></div>
+        <span>Not Available</span>
+      </div>
+    </div>
+
+    <!-- Coverage Table -->
+    <div class="coverage-table-container">
+      <table class="coverage-table">
+        <thead>
+          <tr>
+            <th>Simulator</th>
+            <th>North America</th>
+            <th>Europe</th>
+            <th>Asia</th>
+            <th>Middle East</th>
+            <th>Africa</th>
+            <th>South America</th>
+            <th>Pacific</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sim-name-cell">MSFS 2024</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">MSFS 2020</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">X-Plane 12</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">Prepar3D v6</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">Aerofly FS 4</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Partial</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">DCS World</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">DLC</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">DLC</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">DLC</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">DLC</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">IL-2 Sturmovik</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">WW2</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">None</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">WW2</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">FlightGear</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Full</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Detailed Simulator Coverage -->
+    <div class="section-header">
+      <h2 class="section-title">Detailed Coverage Information</h2>
+      <p class="section-description">In-depth look at each simulator's global coverage and features</p>
+    </div>
+
+    <div class="sim-details-grid">
+
+      <!-- MSFS 2024 -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">Microsoft Flight Simulator 2024</h3>
+          <p class="sim-detail-subtitle">Complete Global Coverage</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Entire planet with Bing satellite imagery</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Photogrammetry Cities</div>
+          <ul class="detail-list">
+            <li>500+ cities with 3D photogrammetry</li>
+            <li>New York, London, Tokyo, Paris, Dubai</li>
+            <li>Regional landmarks worldwide</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">37,000+</div>
+            <div class="stat-label">Airports</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">World Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Real-time weather and traffic</li>
+            <li>Living world with wildlife</li>
+            <li>Streaming technology (minimal install)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- MSFS 2020 -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">Microsoft Flight Simulator 2020</h3>
+          <p class="sim-detail-subtitle">Complete Global Coverage</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Entire planet with Bing satellite imagery</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Photogrammetry Cities</div>
+          <ul class="detail-list">
+            <li>400+ cities with 3D photogrammetry</li>
+            <li>Major world capitals and landmarks</li>
+            <li>Regular World Updates adding regions</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">37,000+</div>
+            <div class="stat-label">Airports</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">World Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Real-time weather</li>
+            <li>Live air traffic</li>
+            <li>Extensive add-on ecosystem</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- X-Plane 12 -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">X-Plane 12</h3>
+          <p class="sim-detail-subtitle">Complete Global Coverage</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Entire world with procedural generation</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Detailed Regions</div>
+          <ul class="detail-list">
+            <li>Enhanced detail in major cities</li>
+            <li>Quality varies by region</li>
+            <li>Community scenery widely available</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">17,000+</div>
+            <div class="stat-label">Airports</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">World Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Ortho4XP for photorealism</li>
+            <li>Excellent add-on support</li>
+            <li>Cross-platform (Win/Mac/Linux)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Prepar3D -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">Prepar3D v6</h3>
+          <p class="sim-detail-subtitle">Global - Add-on Dependent</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Global base scenery requires extensive add-ons for quality</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Best Regions</div>
+          <ul class="detail-list">
+            <li>North America (extensive add-ons)</li>
+            <li>Europe (strong developer support)</li>
+            <li>Requires third-party scenery</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">24,000+</div>
+            <div class="stat-label">Airports</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Base Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Professional training focus</li>
+            <li>FSX add-on compatibility</li>
+            <li>TrueSky weather engine</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aerofly FS 4 -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">Aerofly FS 4</h3>
+          <p class="sim-detail-subtitle">Regional Focus</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Highly detailed specific regions only</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Available Regions</div>
+          <ul class="detail-list">
+            <li>USA (Complete coverage)</li>
+            <li>Central Europe (Germany, Switzerland)</li>
+            <li>Switzerland (Ultra-detailed)</li>
+            <li>Netherlands (DLC)</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">200+</div>
+            <div class="stat-label">Airports</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">~15%</div>
+            <div class="stat-label">World Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Photogrammetry in covered areas</li>
+            <li>Exceptional VR performance</li>
+            <li>Ultra-detailed terrain</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- DCS World -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">DCS World</h3>
+          <p class="sim-detail-subtitle">Specific Theater Maps</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Individual map purchases required</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Available Maps</div>
+          <ul class="detail-list">
+            <li>Caucasus (FREE - Georgia region)</li>
+            <li>Nevada Test Range ($49.99)</li>
+            <li>Persian Gulf ($49.99)</li>
+            <li>Syria ($59.99)</li>
+            <li>Marianas Islands ($49.99)</li>
+            <li>Normandy 1944 ($49.99)</li>
+            <li>The Channel ($49.99)</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">7</div>
+            <div class="stat-label">Theater Maps</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">~5%</div>
+            <div class="stat-label">World Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Ultra-detailed military airfields</li>
+            <li>Accurate terrain for combat</li>
+            <li>Regular map updates</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- IL-2 Sturmovik -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">IL-2 Sturmovik</h3>
+          <p class="sim-detail-subtitle">WW2 Historical Theaters</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Historical WW2 battle theaters only</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Available Theaters</div>
+          <ul class="detail-list">
+            <li>Eastern Front (Stalingrad, Moscow, Kuban)</li>
+            <li>Western Europe (Normandy, Rhine, Bodenplatte)</li>
+            <li>Pacific (New Guinea)</li>
+            <li>North Africa (Desert Wings - Tobruk)</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Map Packs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">WW2</div>
+            <div class="stat-label">Era Only</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Historically accurate terrain</li>
+            <li>Period-accurate airfields</li>
+            <li>Dynamic campaign mode</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- FlightGear -->
+      <div class="sim-detail-card">
+        <div class="sim-detail-header">
+          <h3 class="sim-detail-title">FlightGear</h3>
+          <p class="sim-detail-subtitle">Complete Global Coverage</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Coverage Type</div>
+          <div class="detail-content">Entire world with varying quality</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Quality Notes</div>
+          <ul class="detail-list">
+            <li>Complete global terrain</li>
+            <li>Quality varies significantly</li>
+            <li>Community-developed scenery</li>
+            <li>Some regions very detailed</li>
+          </ul>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">20,000+</div>
+            <div class="stat-label">Airports</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">World Coverage</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Special Features</div>
+          <ul class="detail-list">
+            <li>Completely free</li>
+            <li>Open source development</li>
+            <li>Custom scenery support</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Online Multiplayer Comparison -->
+    <div class="section-header">
+      <h2 class="section-title">Online Multiplayer Availability</h2>
+      <p class="section-description">Which simulators support online flying with other pilots</p>
+    </div>
+
+    <div class="coverage-table-container">
+      <table class="coverage-table">
+        <thead>
+          <tr>
+            <th>Simulator</th>
+            <th>Built-in Multiplayer</th>
+            <th>VATSIM/IVAO Support</th>
+            <th>Max Players</th>
+            <th>Live ATC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sim-name-cell">MSFS 2024</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell">50+ per session</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">MSFS 2020</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell">50+ per session</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">X-Plane 12</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Limited</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell">8-20 per session</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">Prepar3D</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">Limited</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell">Varies</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">DCS World</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">No</span></td>
+            <td class="coverage-cell">50+ per server</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-partial">SRS</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">IL-2 Sturmovik</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">No</span></td>
+            <td class="coverage-cell">84 per server</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">No</span></td>
+          </tr>
+          <tr>
+            <td class="sim-name-cell">FlightGear</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-full">Yes</span></td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">No</span></td>
+            <td class="coverage-cell">Unlimited</td>
+            <td class="coverage-cell"><span class="coverage-badge badge-none">No</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025 - Coverage Map</p>
+      <p>Coverage information is approximate and subject to updates. Check official sources for latest details.</p>
+      <p style="margin-top: 1rem;">Happy Flying!</p>
+    </footer>
+
+  </div>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+</script>
+</body>
+</html>

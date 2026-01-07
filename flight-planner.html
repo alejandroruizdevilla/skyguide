@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Flight Planner</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --success: #6b9e78;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --success: #7fb88d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 15px;
+  background: var(--bg);
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.calculate-btn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calculate-btn:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.result-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--accent);
+}
+
+.result-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.result-value {
+  font-size: 24px;
+  color: var(--accent-alt);
+  font-weight: 700;
+}
+
+.result-unit {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.waypoint-list {
+  list-style: none;
+  padding: 0;
+}
+
+.waypoint-item {
+  background: var(--accent-light);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.waypoint-name {
+  font-weight: 600;
+  color: var(--accent-alt);
+}
+
+.waypoint-distance {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.route-summary {
+  background: var(--success);
+  color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.route-summary h3 {
+  font-size: 18px;
+  margin-bottom: 1rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-value {
+  font-size: 20px;
+  font-weight: 700;
+  display: block;
+}
+
+.summary-label {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.quick-routes {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.routes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.route-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--accent);
+}
+
+.route-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.route-title {
+  font-weight: 600;
+  color: var(--accent-alt);
+  margin-bottom: 0.5rem;
+}
+
+.route-info {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 968px) {
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .routes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Flight Planner</h1>
+    <p class="subtitle">Plan Your Virtual Flights with Distance, Time, and Fuel Calculations</p>
+  </div>
+
+  <div class="quick-routes">
+    <h2>Popular Routes</h2>
+    <div class="routes-grid">
+      <div class="route-card" onclick="loadRoute('KJFK', 'EGLL', 3451)">
+        <div class="route-title">New York → London</div>
+        <div class="route-info">KJFK - EGLL • 3,451 nm • ~7h 15m</div>
+      </div>
+      <div class="route-card" onclick="loadRoute('KSFO', 'RJTT', 4594)">
+        <div class="route-title">San Francisco → Tokyo</div>
+        <div class="route-info">KSFO - RJTT • 4,594 nm • ~10h 30m</div>
+      </div>
+      <div class="route-card" onclick="loadRoute('KLAX', 'YSSY', 6509)">
+        <div class="route-title">Los Angeles → Sydney</div>
+        <div class="route-info">KLAX - YSSY • 6,509 nm • ~14h 45m</div>
+      </div>
+      <div class="route-card" onclick="loadRoute('EDDF', 'OMDB', 2732)">
+        <div class="route-title">Frankfurt → Dubai</div>
+        <div class="route-info">EDDF - OMDB • 2,732 nm • ~6h</div>
+      </div>
+      <div class="route-card" onclick="loadRoute('LFPG', 'KJFK', 3628)">
+        <div class="route-title">Paris → New York</div>
+        <div class="route-info">LFPG - KJFK • 3,628 nm • ~7h 30m</div>
+      </div>
+      <div class="route-card" onclick="loadRoute('WSSS', 'YSSY', 3919)">
+        <div class="route-title">Singapore → Sydney</div>
+        <div class="route-info">WSSS - YSSY • 3,919 nm • ~8h 15m</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="planner-grid">
+    <div class="section">
+      <h2>Flight Details</h2>
+      <form id="flightPlanForm">
+        <div class="form-group">
+          <label for="departure">Departure Airport (ICAO)</label>
+          <input type="text" id="departure" placeholder="e.g., KJFK" maxlength="4" required>
+        </div>
+
+        <div class="form-group">
+          <label for="arrival">Arrival Airport (ICAO)</label>
+          <input type="text" id="arrival" placeholder="e.g., EGLL" maxlength="4" required>
+        </div>
+
+        <div class="form-group">
+          <label for="distance">Distance (Nautical Miles)</label>
+          <input type="number" id="distance" placeholder="Auto-calculated or enter manually" min="1">
+        </div>
+
+        <div class="form-group">
+          <label for="aircraft">Aircraft Type</label>
+          <select id="aircraft">
+            <option value="150">Cessna 172 (150 kts)</option>
+            <option value="180">Piper PA-28 (180 kts)</option>
+            <option value="250">King Air 350 (250 kts)</option>
+            <option value="400">Boeing 737 (400 kts)</option>
+            <option value="450" selected>Airbus A320 (450 kts)</option>
+            <option value="470">Boeing 777 (470 kts)</option>
+            <option value="490">Airbus A350 (490 kts)</option>
+            <option value="500">Boeing 787 (500 kts)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cruiseSpeed">Cruise Speed (knots)</label>
+          <input type="number" id="cruiseSpeed" value="450" min="50" max="600">
+        </div>
+
+        <div class="form-group">
+          <label for="fuelBurn">Fuel Burn (lbs/hour or kg/hour)</label>
+          <input type="number" id="fuelBurn" value="4500" min="10">
+        </div>
+
+        <button type="submit" class="calculate-btn">Calculate Flight Plan</button>
+      </form>
+    </div>
+
+    <div class="section">
+      <h2>Flight Plan Results</h2>
+      <div id="results">
+        <div class="result-card">
+          <div class="result-label">Flight Time</div>
+          <div class="result-value">
+            <span id="flightTime">--</span>
+            <span class="result-unit">hours</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Total Distance</div>
+          <div class="result-value">
+            <span id="totalDistance">--</span>
+            <span class="result-unit">nm</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Fuel Required</div>
+          <div class="result-value">
+            <span id="fuelRequired">--</span>
+            <span class="result-unit">lbs/kg</span>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Reserve Fuel (30 min)</div>
+          <div class="result-value">
+            <span id="reserveFuel">--</span>
+            <span class="result-unit">lbs/kg</span>
+          </div>
+        </div>
+
+        <div class="route-summary" id="routeSummary" style="display: none;">
+          <h3>Route Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-value" id="summaryRoute">---</span>
+              <span class="summary-label">Route</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-value" id="summaryAircraft">---</span>
+              <span class="summary-label">Aircraft</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-value" id="summaryTotalFuel">---</span>
+              <span class="summary-label">Total Fuel</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-value" id="summaryETA">---</span>
+              <span class="summary-label">ETA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>External Flight Planning Tools</h2>
+    <p style="margin-bottom: 1.5rem;">For more advanced flight planning with real navigation data, weather, and procedures:</p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="https://www.simbrief.com/" target="_blank" class="calculate-btn" style="width: auto; display: inline-block; text-decoration: none; text-align: center;">SimBrief (Professional)</a>
+      <a href="https://skyvector.com/" target="_blank" class="calculate-btn" style="width: auto; display: inline-block; text-decoration: none; text-align: center;">SkyVector (Charts)</a>
+      <a href="https://albar965.github.io/littlenavmap.html" target="_blank" class="calculate-btn" style="width: auto; display: inline-block; text-decoration: none; text-align: center;">Little Navmap (Free)</a>
+      <a href="https://www.fltplan.com/" target="_blank" class="calculate-btn" style="width: auto; display: inline-block; text-decoration: none; text-align: center;">FltPlan.com</a>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Aircraft selection handler
+document.getElementById('aircraft').addEventListener('change', function() {
+  document.getElementById('cruiseSpeed').value = this.value;
+});
+
+// Load popular route
+function loadRoute(dep, arr, dist) {
+  document.getElementById('departure').value = dep;
+  document.getElementById('arrival').value = arr;
+  document.getElementById('distance').value = dist;
+}
+
+// Flight plan calculator
+document.getElementById('flightPlanForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const departure = document.getElementById('departure').value.toUpperCase();
+  const arrival = document.getElementById('arrival').value.toUpperCase();
+  const distance = parseFloat(document.getElementById('distance').value);
+  const cruiseSpeed = parseFloat(document.getElementById('cruiseSpeed').value);
+  const fuelBurn = parseFloat(document.getElementById('fuelBurn').value);
+  const aircraftSelect = document.getElementById('aircraft');
+  const aircraftName = aircraftSelect.options[aircraftSelect.selectedIndex].text;
+
+  if (!distance || !cruiseSpeed || !fuelBurn) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  // Calculate flight time (in hours)
+  const flightTimeHours = distance / cruiseSpeed;
+  const hours = Math.floor(flightTimeHours);
+  const minutes = Math.round((flightTimeHours - hours) * 60);
+
+  // Calculate fuel required
+  const fuelRequired = Math.round(fuelBurn * flightTimeHours);
+  const reserveFuel = Math.round(fuelBurn * 0.5); // 30 min reserve
+  const totalFuel = fuelRequired + reserveFuel;
+
+  // Update results
+  document.getElementById('flightTime').textContent = `${hours}h ${minutes}m`;
+  document.getElementById('totalDistance').textContent = distance.toLocaleString();
+  document.getElementById('fuelRequired').textContent = fuelRequired.toLocaleString();
+  document.getElementById('reserveFuel').textContent = reserveFuel.toLocaleString();
+
+  // Update summary
+  document.getElementById('summaryRoute').textContent = `${departure} → ${arrival}`;
+  document.getElementById('summaryAircraft').textContent = aircraftName.split('(')[0].trim();
+  document.getElementById('summaryTotalFuel').textContent = totalFuel.toLocaleString();
+  document.getElementById('summaryETA').textContent = `${hours}h ${minutes}m`;
+
+  // Show summary
+  document.getElementById('routeSummary').style.display = 'block';
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Live Flight Sim Streamers</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --live-red: #e74c3c;
+  --twitch-purple: #9146ff;
+  --youtube-red: #ff0000;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.filter-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--accent-light);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.streamers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.streamer-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.streamer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.streamer-card.live {
+  border: 2px solid var(--live-red);
+}
+
+.streamer-thumbnail {
+  width: 100%;
+  height: 200px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 48px;
+}
+
+.live-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: var(--live-red);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+}
+
+.streamer-info {
+  padding: 1.25rem;
+}
+
+.streamer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  gap: 0.75rem;
+}
+
+.streamer-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.platform-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+}
+
+.platform-twitch {
+  background: var(--twitch-purple);
+}
+
+.platform-youtube {
+  background: var(--youtube-red);
+}
+
+.streamer-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.streamer-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 0.3rem 0.6rem;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.streamer-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.watch-btn {
+  display: block;
+  text-align: center;
+  padding: 0.75rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.watch-btn:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.streamer-card.live .watch-btn {
+  background: var(--live-red);
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .streamers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Live Flight Sim Streamers</h1>
+    <p class="subtitle">Watch & Learn from Top Flight Simulation Content Creators</p>
+    <p>Discover popular streamers flying everything from Cessnas to fighter jets. Learn techniques, enjoy virtual tourism, and connect with the community.</p>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label">Filter by Simulator:</label>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All Streamers</button>
+      <button class="filter-btn" data-filter="msfs">MSFS</button>
+      <button class="filter-btn" data-filter="xplane">X-Plane</button>
+      <button class="filter-btn" data-filter="dcs">DCS World</button>
+      <button class="filter-btn" data-filter="mixed">Mixed Content</button>
+    </div>
+  </div>
+
+  <div class="streamers-grid" id="streamersGrid">
+    <!-- Live Streamer Example -->
+    <div class="streamer-card live" data-category="msfs">
+      <div class="streamer-thumbnail">
+        <div class="live-badge">
+          <span class="live-dot"></span>
+          LIVE
+        </div>
+        🎮
+      </div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">FlightDeck2Sim</div>
+          <span class="platform-badge platform-twitch">Twitch</span>
+        </div>
+        <p class="streamer-description">
+          Professional pilot flying realistic airline operations. VATSIM flights, procedures tutorials, and career advice.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">MSFS 2024</span>
+          <span class="tag">Airline Ops</span>
+          <span class="tag">VATSIM</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>👥</span>
+            <span>2.5K viewers</span>
+          </div>
+          <div class="stat-item">
+            <span>❤️</span>
+            <span>45K followers</span>
+          </div>
+        </div>
+        <a href="https://www.twitch.tv/directory/game/Microsoft%20Flight%20Simulator" target="_blank" class="watch-btn">Watch Live Now</a>
+      </div>
+    </div>
+
+    <!-- MSFS Streamers -->
+    <div class="streamer-card" data-category="msfs">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">A330 Captain</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          Long-haul flights in wide-body aircraft. Detailed tutorials on FMC programming, autopilot, and airline procedures.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Wide-Body</span>
+          <span class="tag">Tutorials</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>120K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@320SimPilot" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="msfs">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">VR Flight Sim Guy</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          VR flight simulation specialist. Hardware reviews, performance guides, and immersive cockpit tours.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">MSFS 2024</span>
+          <span class="tag">VR</span>
+          <span class="tag">Reviews</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>85K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@VRFlightSimGuy" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="msfs">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Sim Hangar</div>
+          <span class="platform-badge platform-twitch">Twitch</span>
+        </div>
+        <p class="streamer-description">
+          Bush flying adventures, backcountry landings, and scenic tours. Relaxed streams with beautiful locations.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Bush Flying</span>
+          <span class="tag">Scenic</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>❤️</span>
+            <span>32K followers</span>
+          </div>
+        </div>
+        <a href="https://www.twitch.tv/directory/game/Microsoft%20Flight%20Simulator" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <!-- X-Plane Streamers -->
+    <div class="streamer-card" data-category="xplane">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">X-Plane Aviation</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          X-Plane tutorials and high-quality cinematic flights. Focus on realism, weather, and third-party addons.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">X-Plane 12</span>
+          <span class="tag">Tutorials</span>
+          <span class="tag">Add-ons</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>65K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/results?search_query=x-plane+12" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="xplane">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Austin's Flight Deck</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          Advanced X-Plane systems, weather engine deep-dives, and professional-level flying techniques.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">X-Plane 12</span>
+          <span class="tag">Advanced</span>
+          <span class="tag">Systems</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>42K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/results?search_query=x-plane+12" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <!-- DCS World Streamers -->
+    <div class="streamer-card" data-category="dcs">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Grim Reapers</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          Large-scale DCS combat missions, tutorials for all modules, and entertaining multiplayer battles.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">DCS World</span>
+          <span class="tag">Combat</span>
+          <span class="tag">Tutorials</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>380K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@GrimReapers" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="dcs">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Growling Sidewinder</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          High-quality dogfight footage, BVR engagements, and carrier operations. Focus on air-to-air combat.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">DCS World</span>
+          <span class="tag">Air Combat</span>
+          <span class="tag">F/A-18</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>750K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@GrowlingSidewinder" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="dcs">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Tactical Pascale</div>
+          <span class="platform-badge platform-twitch">Twitch</span>
+        </div>
+        <p class="streamer-description">
+          Tactical mission planning, A-10C CAS operations, and realistic combat procedures. Educational streams.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">DCS World</span>
+          <span class="tag">A-10C</span>
+          <span class="tag">Tactical</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>❤️</span>
+            <span>28K followers</span>
+          </div>
+        </div>
+        <a href="https://www.twitch.tv/directory/game/DCS%20World%20Steam%20Edition" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <!-- Mixed Content Streamers -->
+    <div class="streamer-card" data-category="mixed">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Airforceproud95</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          Hilarious flight sim content across multiple platforms. ATC trolling, multiplayer chaos, and entertainment-focused streams.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">Multiple Sims</span>
+          <span class="tag">Comedy</span>
+          <span class="tag">Multiplayer</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>1.2M subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@airforceproud95" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="mixed">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Swiss001</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          Aviation memes, flight sim experiments, and entertaining challenges across different simulators.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">Multiple Sims</span>
+          <span class="tag">Entertainment</span>
+          <span class="tag">Challenges</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>950K subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@Swiss001" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+
+    <div class="streamer-card" data-category="mixed">
+      <div class="streamer-thumbnail">📺</div>
+      <div class="streamer-info">
+        <div class="streamer-header">
+          <div class="streamer-name">Captain Joe</div>
+          <span class="platform-badge platform-youtube">YouTube</span>
+        </div>
+        <p class="streamer-description">
+          Real-world 747 pilot sharing aviation knowledge through flight sim. Educational and professional content.
+        </p>
+        <div class="streamer-tags">
+          <span class="tag">Multiple Sims</span>
+          <span class="tag">Educational</span>
+          <span class="tag">Professional</span>
+        </div>
+        <div class="streamer-stats">
+          <div class="stat-item">
+            <span>📺</span>
+            <span>2.1M subscribers</span>
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@CaptainJoeVideos" target="_blank" class="watch-btn">Visit Channel</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>How to Find Live Streams</h2>
+    <p style="margin-bottom: 1rem;">Looking for streams happening right now? Check these platforms:</p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="https://www.twitch.tv/directory/game/Microsoft%20Flight%20Simulator" target="_blank" class="watch-btn" style="display: inline-block;">Twitch - MSFS Directory</a>
+      <a href="https://www.twitch.tv/directory/game/DCS%20World%20Steam%20Edition" target="_blank" class="watch-btn" style="display: inline-block;">Twitch - DCS Directory</a>
+      <a href="https://www.youtube.com/results?search_query=flight+simulator+live&sp=EgJAAQ%253D%253D" target="_blank" class="watch-btn" style="display: inline-block;">YouTube - Live Streams</a>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Filter functionality
+const filterButtons = document.querySelectorAll('.filter-btn');
+const streamerCards = document.querySelectorAll('.streamer-card');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Update active button
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    const filter = button.getAttribute('data-filter');
+
+    // Filter cards
+    streamerCards.forEach(card => {
+      if (filter === 'all' || card.getAttribute('data-category') === filter) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Hardware Compatibility Matrix</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --success: #6b9e78;
+  --warning: #d4a04a;
+  --error: #c17070;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --success: #7fb88d;
+  --warning: #e8b87e;
+  --error: #d89090;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.legend {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 13px;
+}
+
+.legend-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background: var(--accent-light);
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--accent-alt);
+  border-bottom: 2px solid var(--accent);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+  background: var(--accent-light);
+}
+
+td {
+  padding: 1rem;
+  color: var(--text-main);
+}
+
+.device-name {
+  font-weight: 600;
+}
+
+.device-type {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.price {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.compat-icon {
+  text-align: center;
+  font-size: 18px;
+}
+
+.supported {
+  color: var(--success);
+}
+
+.partial {
+  color: var(--warning);
+}
+
+.not-supported {
+  color: var(--error);
+}
+
+.device-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--accent);
+}
+
+.device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.device-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent-alt);
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.features-list li {
+  padding: 0.4rem 0;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.features-list li::before {
+  content: "▸ ";
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .header, .section {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Hardware Compatibility Matrix</h1>
+    <p class="subtitle">Complete Guide to Flight Sim Hardware Compatibility</p>
+    <div class="legend">
+      <div class="legend-item">
+        <span class="legend-icon supported">✓</span>
+        <span>Full Support</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon partial">◐</span>
+        <span>Partial Support</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-icon not-supported">✗</span>
+        <span>Not Supported</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>HOTAS (Hands On Throttle And Stick)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Price</th>
+            <th>MSFS 2024</th>
+            <th>MSFS 2020</th>
+            <th>X-Plane 12</th>
+            <th>DCS World</th>
+            <th>Prepar3D</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="device-name">Thrustmaster T.16000M FCS HOTAS</div>
+              <div class="device-type">Entry Level • Popular</div>
+            </td>
+            <td class="price">$120</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Logitech X56 HOTAS</div>
+              <div class="device-type">Mid-Range • RGB</div>
+            </td>
+            <td class="price">$250</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Thrustmaster HOTAS Warthog</div>
+              <div class="device-type">High-End • Metal Construction</div>
+            </td>
+            <td class="price">$450</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Virpil VPC MongoosT-50CM3</div>
+              <div class="device-type">Premium • Combat Focus</div>
+            </td>
+            <td class="price">$600+</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">VKB Gladiator NXT EVO</div>
+              <div class="device-type">Mid-Range • High Quality</div>
+            </td>
+            <td class="price">$180</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Yokes & Throttle Quadrants</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Price</th>
+            <th>MSFS 2024</th>
+            <th>MSFS 2020</th>
+            <th>X-Plane 12</th>
+            <th>DCS World</th>
+            <th>Prepar3D</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="device-name">Logitech Flight Yoke System</div>
+              <div class="device-type">Entry Level • Bundle</div>
+            </td>
+            <td class="price">$150</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon partial">◐</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Honeycomb Alpha Flight Yoke</div>
+              <div class="device-type">Mid-Range • Realistic</div>
+            </td>
+            <td class="price">$250</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon partial">◐</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Honeycomb Bravo Throttle Quadrant</div>
+              <div class="device-type">Mid-Range • Autopilot Panel</div>
+            </td>
+            <td class="price">$280</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon partial">◐</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Thrustmaster TCA Quadrant Boeing</div>
+              <div class="device-type">Mid-Range • Boeing Replica</div>
+            </td>
+            <td class="price">$200</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon not-supported">✗</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Thrustmaster TCA Sidestick Airbus</div>
+              <div class="device-type">Mid-Range • Airbus Replica</div>
+            </td>
+            <td class="price">$130</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon not-supported">✗</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Rudder Pedals</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Price</th>
+            <th>MSFS 2024</th>
+            <th>MSFS 2020</th>
+            <th>X-Plane 12</th>
+            <th>DCS World</th>
+            <th>Prepar3D</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="device-name">Logitech Flight Rudder Pedals</div>
+              <div class="device-type">Entry Level</div>
+            </td>
+            <td class="price">$120</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Thrustmaster TFRP Rudder</div>
+              <div class="device-type">Entry Level • Compact</div>
+            </td>
+            <td class="price">$100</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">MFG Crosswind V3</div>
+              <div class="device-type">High-End • Metal</div>
+            </td>
+            <td class="price">$450</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">VKB T-Rudder Mk.V</div>
+              <div class="device-type">Mid-Range • Adjustable</div>
+            </td>
+            <td class="price">$250</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>VR Headsets</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Price</th>
+            <th>MSFS 2024</th>
+            <th>MSFS 2020</th>
+            <th>X-Plane 12</th>
+            <th>DCS World</th>
+            <th>IL-2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="device-name">Meta Quest 3</div>
+              <div class="device-type">Standalone/PCVR • Wireless</div>
+            </td>
+            <td class="price">$500</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Valve Index</div>
+              <div class="device-type">High-End PCVR • 144Hz</div>
+            </td>
+            <td class="price">$1000</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">HP Reverb G2</div>
+              <div class="device-type">High-End • High Resolution</div>
+            </td>
+            <td class="price">$600</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Pimax Crystal</div>
+              <div class="device-type">Premium • Ultra-Wide FOV</div>
+            </td>
+            <td class="price">$1600</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">Varjo Aero</div>
+              <div class="device-type">Professional • Highest Clarity</div>
+            </td>
+            <td class="price">$2000</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+            <td class="compat-icon supported">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Recommended Setups by Budget</h2>
+
+    <div class="device-card">
+      <div class="device-header">
+        <div class="device-title">Budget Setup ($250-400)</div>
+        <div class="price">~$370 Total</div>
+      </div>
+      <ul class="features-list">
+        <li>Thrustmaster T.16000M FCS HOTAS ($120)</li>
+        <li>Thrustmaster TFRP Rudder Pedals ($100)</li>
+        <li>TrackIR 5 or DelanClip ($150)</li>
+        <li>Best for: Beginners wanting full controls</li>
+      </ul>
+    </div>
+
+    <div class="device-card">
+      <div class="device-header">
+        <div class="device-title">Mid-Range GA Setup ($600-900)</div>
+        <div class="price">~$750 Total</div>
+      </div>
+      <ul class="features-list">
+        <li>Honeycomb Alpha Yoke ($250)</li>
+        <li>Honeycomb Bravo Throttle Quadrant ($280)</li>
+        <li>Logitech Rudder Pedals ($120)</li>
+        <li>Meta Quest 3 or TrackIR ($150-500)</li>
+        <li>Best for: Serious civilian flight simulation</li>
+      </ul>
+    </div>
+
+    <div class="device-card">
+      <div class="device-header">
+        <div class="device-title">High-End Combat Setup ($1200-2000)</div>
+        <div class="price">~$1500 Total</div>
+      </div>
+      <ul class="features-list">
+        <li>Virpil MongoosT-50CM3 Stick ($400)</li>
+        <li>Virpil Throttle ($400)</li>
+        <li>MFG Crosswind V3 Pedals ($450)</li>
+        <li>HP Reverb G2 VR Headset ($600)</li>
+        <li>Best for: DCS World and IL-2 enthusiasts</li>
+      </ul>
+    </div>
+
+    <div class="device-card">
+      <div class="device-header">
+        <div class="device-title">Premium Airliner Setup ($2000+)</div>
+        <div class="price">~$2500 Total</div>
+      </div>
+      <ul class="features-list">
+        <li>Honeycomb Alpha & Bravo Bundle ($530)</li>
+        <li>MFG Crosswind V3 Pedals ($450)</li>
+        <li>Thrustmaster TCA Boeing Pack ($350)</li>
+        <li>Varjo Aero or Pimax Crystal ($1600-2000)</li>
+        <li>Stream Deck for MCP controls ($150)</li>
+        <li>Best for: Professional airline simulation</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

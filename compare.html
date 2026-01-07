@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Compare Flight Simulators</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .selector-section {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .selector-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+    }
+
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .selector-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .selector-label {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    select {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .compare-btn {
+      padding: 0.85rem 2rem;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .compare-btn:hover {
+      background: var(--accent-alt);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(193, 122, 74, 0.3);
+    }
+
+    .comparison-table {
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    th {
+      background: var(--accent-light);
+      font-weight: 600;
+      color: var(--text-main);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    td {
+      color: var(--text-secondary);
+    }
+
+    tr:hover {
+      background: var(--accent-light);
+    }
+
+    .feature-name {
+      font-weight: 600;
+      color: var(--accent);
+      min-width: 150px;
+    }
+
+    .sim-header-cell {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--bg);
+    }
+
+    .check-mark {
+      color: #6b9e78;
+      font-weight: bold;
+    }
+
+    .cross-mark {
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+    .rating {
+      font-weight: 600;
+    }
+
+    .rating-excellent {
+      color: #6b9e78;
+    }
+
+    .rating-good {
+      color: var(--accent);
+    }
+
+    .rating-average {
+      color: var(--text-muted);
+    }
+
+    .rating-poor {
+      color: var(--danger);
+    }
+
+    .pros-cons {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .pros-cons ul {
+      margin: 0.5rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .pros-cons li {
+      margin-bottom: 0.25rem;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 28px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .selector-grid {
+        grid-template-columns: 1fr;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link active">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="sys-req-calc.html" class="nav-link">System Checker</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">Compare Flight Simulators</h1>
+      <p class="subtitle">Side-by-Side Comparison Tool</p>
+    </div>
+
+    <div class="intro">
+      <p>Select 2-3 simulators below to see a detailed side-by-side comparison of features, pricing, platforms, and more. This will help you make an informed decision about which simulator is right for you.</p>
+    </div>
+
+    <!-- Selector Section -->
+    <div class="selector-section">
+      <div class="selector-title">Select Simulators to Compare</div>
+      <div class="selector-grid">
+        <div class="selector-item">
+          <label class="selector-label">Simulator 1</label>
+          <select id="sim1">
+            <option value="">-- Choose a simulator --</option>
+            <option value="msfs2024" selected>Microsoft Flight Simulator 2024</option>
+            <option value="msfs2020">Microsoft Flight Simulator 2020</option>
+            <option value="xplane12">X-Plane 12</option>
+            <option value="prepar3d">Prepar3D v6</option>
+            <option value="aerofly">Aerofly FS 4</option>
+            <option value="dcs">DCS World</option>
+            <option value="il2">IL-2 Sturmovik</option>
+            <option value="falcon-bms">Falcon BMS</option>
+            <option value="flightgear">FlightGear</option>
+            <option value="ysflight">YSFlight</option>
+            <option value="infinite-flight">Infinite Flight</option>
+            <option value="rfs">RFS - Real Flight Simulator</option>
+            <option value="war-thunder">War Thunder</option>
+            <option value="ace-combat-7">Ace Combat 7</option>
+            <option value="roblox">Roblox Flight Sims</option>
+            <option value="condor2">Condor 2</option>
+            <option value="fsx">Microsoft FSX</option>
+          </select>
+        </div>
+
+        <div class="selector-item">
+          <label class="selector-label">Simulator 2</label>
+          <select id="sim2">
+            <option value="">-- Choose a simulator --</option>
+            <option value="msfs2024">Microsoft Flight Simulator 2024</option>
+            <option value="msfs2020">Microsoft Flight Simulator 2020</option>
+            <option value="xplane12" selected>X-Plane 12</option>
+            <option value="prepar3d">Prepar3D v6</option>
+            <option value="aerofly">Aerofly FS 4</option>
+            <option value="dcs">DCS World</option>
+            <option value="il2">IL-2 Sturmovik</option>
+            <option value="falcon-bms">Falcon BMS</option>
+            <option value="flightgear">FlightGear</option>
+            <option value="ysflight">YSFlight</option>
+            <option value="infinite-flight">Infinite Flight</option>
+            <option value="rfs">RFS - Real Flight Simulator</option>
+            <option value="war-thunder">War Thunder</option>
+            <option value="ace-combat-7">Ace Combat 7</option>
+            <option value="roblox">Roblox Flight Sims</option>
+            <option value="condor2">Condor 2</option>
+            <option value="fsx">Microsoft FSX</option>
+          </select>
+        </div>
+
+        <div class="selector-item">
+          <label class="selector-label">Simulator 3 (Optional)</label>
+          <select id="sim3">
+            <option value="" selected>-- Choose a simulator --</option>
+            <option value="msfs2024">Microsoft Flight Simulator 2024</option>
+            <option value="msfs2020">Microsoft Flight Simulator 2020</option>
+            <option value="xplane12">X-Plane 12</option>
+            <option value="prepar3d">Prepar3D v6</option>
+            <option value="aerofly">Aerofly FS 4</option>
+            <option value="dcs">DCS World</option>
+            <option value="il2">IL-2 Sturmovik</option>
+            <option value="falcon-bms">Falcon BMS</option>
+            <option value="flightgear">FlightGear</option>
+            <option value="ysflight">YSFlight</option>
+            <option value="infinite-flight">Infinite Flight</option>
+            <option value="rfs">RFS - Real Flight Simulator</option>
+            <option value="war-thunder">War Thunder</option>
+            <option value="ace-combat-7">Ace Combat 7</option>
+            <option value="roblox">Roblox Flight Sims</option>
+            <option value="condor2">Condor 2</option>
+            <option value="fsx">Microsoft FSX</option>
+          </select>
+        </div>
+      </div>
+      <button class="compare-btn" onclick="updateComparison()">Compare Simulators</button>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="comparison-table">
+      <div class="table-container">
+        <table id="comparisonTable">
+          <thead>
+            <tr>
+              <th class="feature-name">Feature</th>
+              <th class="sim-header-cell" id="header1">Microsoft Flight Simulator 2024</th>
+              <th class="sim-header-cell" id="header2">X-Plane 12</th>
+              <th class="sim-header-cell" id="header3" style="display: none;"></th>
+            </tr>
+          </thead>
+          <tbody id="comparisonBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025</p>
+      <p>Updated December 2025</p>
+      <p style="margin-top: 1rem;">Happy Flying!</p>
+    </footer>
+
+  </div>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+
+// Simulator Data
+const simulatorData = {
+  'msfs2024': {
+    name: 'Microsoft Flight Simulator 2024',
+    price: '$69.99',
+    platforms: 'PC, Xbox, PS5',
+    graphics: 'Excellent',
+    realism: 'Very High',
+    vr: 'Yes',
+    beginner: 'Friendly',
+    features: 'Photorealistic scenery, 65+ aircraft, Career mode, Real-time weather',
+    pros: ['Stunning visuals', 'Active community', 'Regular updates', 'Console support'],
+    cons: ['High system requirements', 'Expensive', 'Large download size', 'Some bugs at launch']
+  },
+  'msfs2020': {
+    name: 'Microsoft Flight Simulator 2020',
+    price: '$59.99',
+    platforms: 'PC, Xbox',
+    graphics: 'Excellent',
+    realism: 'Very High',
+    vr: 'Yes',
+    beginner: 'Friendly',
+    features: 'Global scenery, 30+ aircraft, Massive addon library, Live weather',
+    pros: ['Proven stability', 'Huge addon ecosystem', 'Lower requirements than 2024', 'Excellent VR'],
+    cons: ['Older than 2024', 'Still demanding', 'Requires internet for best experience']
+  },
+  'xplane12': {
+    name: 'X-Plane 12',
+    price: '$59.99',
+    platforms: 'Windows, macOS, Linux',
+    graphics: 'Very Good',
+    realism: 'Excellent',
+    vr: 'Yes',
+    beginner: 'Moderate',
+    features: 'Blade element theory physics, FAA-certified, Study-level aircraft',
+    pros: ['Best flight physics', 'Cross-platform', 'Professional training use', 'Great add-ons'],
+    cons: ['Learning curve', 'Less visually stunning than MSFS', 'Smaller default aircraft selection']
+  },
+  'prepar3d': {
+    name: 'Prepar3D v6',
+    price: '$59.95-$199.95',
+    platforms: 'Windows',
+    graphics: 'Good',
+    realism: 'Very High',
+    vr: 'Yes',
+    beginner: 'Advanced',
+    features: 'Professional SDK, FSX compatibility, Multi-channel displays',
+    pros: ['Professional training platform', 'Extensive add-on support', 'Military use', 'Stable'],
+    cons: ['Expensive', 'Complex licensing', 'Dated graphics', 'Academic/professional license required']
+  },
+  'aerofly': {
+    name: 'Aerofly FS 4',
+    price: '$49.99',
+    platforms: 'PC, Mobile, Switch',
+    graphics: 'Very Good',
+    realism: 'Good',
+    vr: 'Excellent',
+    beginner: 'Very Friendly',
+    features: 'Buttery smooth performance, Instant loading, Great VR',
+    pros: ['Amazing performance', 'Best VR experience', 'Quick to load', 'Great for helicopters'],
+    cons: ['Limited scenery coverage', 'Fewer aircraft', 'Less realistic systems', 'Smaller community']
+  },
+  'dcs': {
+    name: 'DCS World',
+    price: 'Free + modules ($19-$80)',
+    platforms: 'Windows',
+    graphics: 'Excellent',
+    realism: 'Excellent',
+    vr: 'Yes',
+    beginner: 'Very Advanced',
+    features: 'Study-level combat aircraft, Full clickable cockpits, Advanced weapons',
+    pros: ['Most realistic combat sim', 'Free base game', 'Active multiplayer', 'Military accuracy'],
+    cons: ['Extremely steep learning curve', 'Expensive modules', 'Performance intensive', 'Time commitment required']
+  },
+  'il2': {
+    name: 'IL-2 Sturmovik',
+    price: '$49.99/pack',
+    platforms: 'Windows',
+    graphics: 'Excellent',
+    realism: 'Excellent',
+    vr: 'Yes',
+    beginner: 'Advanced',
+    features: '100+ WW2 aircraft, Dynamic campaigns, Realistic damage',
+    pros: ['Best WW2 combat', 'Beautiful graphics', 'Great VR', 'Active multiplayer'],
+    cons: ['Expensive for full content', 'WW2 focus only', 'Learning curve', 'Requires good PC']
+  },
+  'falcon-bms': {
+    name: 'Falcon BMS',
+    price: 'Free',
+    platforms: 'Windows',
+    graphics: 'Average',
+    realism: 'Excellent',
+    vr: 'Limited',
+    beginner: 'Very Advanced',
+    features: 'Most detailed F-16, Dynamic campaign, Modern avionics',
+    pros: ['100% free', 'Most realistic F-16', 'Amazing campaign', 'Active community'],
+    cons: ['Dated graphics', 'Extremely complex', 'Steep learning curve', 'F-16 only']
+  },
+  'flightgear': {
+    name: 'FlightGear',
+    price: 'Free',
+    platforms: 'Windows, macOS, Linux',
+    graphics: 'Average',
+    realism: 'Good',
+    vr: 'No',
+    beginner: 'Moderate',
+    features: '500+ aircraft, Global scenery, Full IFR capabilities',
+    pros: ['Completely free', 'Open source', 'Cross-platform', 'Large aircraft selection'],
+    cons: ['Dated graphics', 'Complex setup', 'Inconsistent quality', 'No VR']
+  },
+  'ysflight': {
+    name: 'YSFlight',
+    price: 'Free',
+    platforms: 'Windows, macOS, Linux',
+    graphics: 'Basic',
+    realism: 'Low',
+    vr: 'No',
+    beginner: 'Very Friendly',
+    features: '1000+ aircraft, Extremely low requirements, Multiplayer',
+    pros: ['100% free', 'Runs on anything', 'Fun arcade gameplay', 'Easy to learn'],
+    cons: ['Very dated graphics', 'Not realistic', 'Limited features', 'Old interface']
+  },
+  'infinite-flight': {
+    name: 'Infinite Flight',
+    price: 'Free/$9.99/mo',
+    platforms: 'iOS, Android',
+    graphics: 'Very Good',
+    realism: 'Good',
+    vr: 'No',
+    beginner: 'Friendly',
+    features: '60+ aircraft, Live ATC, Global scenery, Virtual airlines',
+    pros: ['Best mobile sim', 'Live human ATC', 'Great community', 'Regular updates'],
+    cons: ['Subscription required for full features', 'Mobile only', 'Limited compared to PC', 'Requires good device']
+  },
+  'rfs': {
+    name: 'RFS - Real Flight Simulator',
+    price: 'Free + IAP',
+    platforms: 'iOS, Android',
+    graphics: 'Good',
+    realism: 'Moderate',
+    vr: 'No',
+    beginner: 'Very Friendly',
+    features: 'Realistic systems, Weather simulation, Flight planning',
+    pros: ['Free to play', 'Good for mobile', 'Easy controls', 'Accessible'],
+    cons: ['IAP heavy', 'Less realistic than Infinite Flight', 'Limited aircraft', 'Mobile limitations']
+  },
+  'war-thunder': {
+    name: 'War Thunder',
+    price: 'Free',
+    platforms: 'PC, PlayStation, Xbox',
+    graphics: 'Excellent',
+    realism: 'Variable (3 modes)',
+    vr: 'Limited',
+    beginner: 'Moderate',
+    features: '2000+ vehicles, Three difficulty modes, Combined arms',
+    pros: ['Free to play', '800+ aircraft', 'Multiple game modes', 'Regular updates'],
+    cons: ['Grindy progression', 'Pay-to-win elements', 'Not pure sim', 'Competitive focus']
+  },
+  'ace-combat-7': {
+    name: 'Ace Combat 7',
+    price: '$59.99',
+    platforms: 'PC, PS4/5, Xbox',
+    graphics: 'Excellent',
+    realism: 'Low',
+    vr: 'PSVR only',
+    beginner: 'Very Friendly',
+    features: 'Story campaign, 28 aircraft, Arcade action, VR missions',
+    pros: ['Amazing story', 'Easy to play', 'Beautiful graphics', 'Great soundtrack'],
+    cons: ['Not realistic', 'Limited aircraft', 'Arcade only', 'Short campaign']
+  },
+  'roblox': {
+    name: 'Roblox Flight Sims',
+    price: 'Free',
+    platforms: 'Roblox (multi-platform)',
+    graphics: 'Basic',
+    realism: 'Low',
+    vr: 'No',
+    beginner: 'Very Friendly',
+    features: 'PTFS with 100+ aircraft, Social gameplay, Easy controls',
+    pros: ['100% free', 'Perfect for kids', 'Social experience', 'Very accessible'],
+    cons: ['Not realistic', 'Basic graphics', 'Simplified gameplay', 'Limited features']
+  },
+  'condor2': {
+    name: 'Condor 2',
+    price: '$49.99',
+    platforms: 'Windows',
+    graphics: 'Good',
+    realism: 'Excellent',
+    vr: 'No',
+    beginner: 'Advanced',
+    features: 'Realistic soaring, 25+ gliders, Online competitions',
+    pros: ['Best glider sim', 'Used for real training', 'Great physics', 'Active community'],
+    cons: ['Gliders only', 'Niche appeal', 'No VR', 'Learning curve']
+  },
+  'fsx': {
+    name: 'Microsoft FSX',
+    price: '$24.99',
+    platforms: 'Windows',
+    graphics: 'Dated',
+    realism: 'Good',
+    vr: 'No',
+    beginner: 'Friendly',
+    features: 'Massive addon library, Low requirements, Study-level add-ons',
+    pros: ['Huge freeware library', 'Runs on old PCs', 'Proven and stable', 'Cheap'],
+    cons: ['2006 graphics', 'Dated interface', 'No modern features', 'No official support']
+  }
+};
+
+function updateComparison() {
+  const sim1Id = document.getElementById('sim1').value;
+  const sim2Id = document.getElementById('sim2').value;
+  const sim3Id = document.getElementById('sim3').value;
+
+  if (!sim1Id || !sim2Id) {
+    alert('Please select at least 2 simulators to compare');
+    return;
+  }
+
+  const sim1 = simulatorData[sim1Id];
+  const sim2 = simulatorData[sim2Id];
+  const sim3 = sim3Id ? simulatorData[sim3Id] : null;
+
+  // Update headers
+  document.getElementById('header1').textContent = sim1.name;
+  document.getElementById('header2').textContent = sim2.name;
+  const header3 = document.getElementById('header3');
+  if (sim3) {
+    header3.textContent = sim3.name;
+    header3.style.display = 'table-cell';
+  } else {
+    header3.style.display = 'none';
+  }
+
+  // Build comparison rows
+  const tbody = document.getElementById('comparisonBody');
+  tbody.innerHTML = '';
+
+  const features = [
+    { label: 'Price', key: 'price' },
+    { label: 'Platforms', key: 'platforms' },
+    { label: 'Graphics Quality', key: 'graphics' },
+    { label: 'Realism', key: 'realism' },
+    { label: 'VR Support', key: 'vr' },
+    { label: 'Beginner Friendly', key: 'beginner' },
+    { label: 'Key Features', key: 'features' }
+  ];
+
+  features.forEach(feature => {
+    const row = tbody.insertRow();
+    const cell1 = row.insertCell();
+    cell1.className = 'feature-name';
+    cell1.textContent = feature.label;
+
+    const cell2 = row.insertCell();
+    cell2.textContent = sim1[feature.key];
+
+    const cell3 = row.insertCell();
+    cell3.textContent = sim2[feature.key];
+
+    const cell4 = row.insertCell();
+    if (sim3) {
+      cell4.textContent = sim3[feature.key];
+    } else {
+      cell4.style.display = 'none';
+    }
+  });
+
+  // Add Pros row
+  const prosRow = tbody.insertRow();
+  const prosLabel = prosRow.insertCell();
+  prosLabel.className = 'feature-name';
+  prosLabel.textContent = 'Pros';
+
+  const pros1 = prosRow.insertCell();
+  pros1.className = 'pros-cons';
+  pros1.innerHTML = '<ul>' + sim1.pros.map(p => `<li>${p}</li>`).join('') + '</ul>';
+
+  const pros2 = prosRow.insertCell();
+  pros2.className = 'pros-cons';
+  pros2.innerHTML = '<ul>' + sim2.pros.map(p => `<li>${p}</li>`).join('') + '</ul>';
+
+  const pros3 = prosRow.insertCell();
+  if (sim3) {
+    pros3.className = 'pros-cons';
+    pros3.innerHTML = '<ul>' + sim3.pros.map(p => `<li>${p}</li>`).join('') + '</ul>';
+  } else {
+    pros3.style.display = 'none';
+  }
+
+  // Add Cons row
+  const consRow = tbody.insertRow();
+  const consLabel = consRow.insertCell();
+  consLabel.className = 'feature-name';
+  consLabel.textContent = 'Cons';
+
+  const cons1 = consRow.insertCell();
+  cons1.className = 'pros-cons';
+  cons1.innerHTML = '<ul>' + sim1.cons.map(c => `<li>${c}</li>`).join('') + '</ul>';
+
+  const cons2 = consRow.insertCell();
+  cons2.className = 'pros-cons';
+  cons2.innerHTML = '<ul>' + sim2.cons.map(c => `<li>${c}</li>`).join('') + '</ul>';
+
+  const cons3 = consRow.insertCell();
+  if (sim3) {
+    cons3.className = 'pros-cons';
+    cons3.innerHTML = '<ul>' + sim3.cons.map(c => `<li>${c}</li>`).join('') + '</ul>';
+  } else {
+    cons3.style.display = 'none';
+  }
+}
+
+// Initialize comparison on page load
+updateComparison();
+
+// Update comparison when selectors change
+document.getElementById('sim1').addEventListener('change', updateComparison);
+document.getElementById('sim2').addEventListener('change', updateComparison);
+document.getElementById('sim3').addEventListener('change', updateComparison);
+</script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Addon Marketplace Directory</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --success: #6b9e78;
+  --premium: #d4a04a;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --success: #7fb88d;
+  --premium: #e8b87e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.filter-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-row {
+  margin-bottom: 1rem;
+}
+
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--accent-light);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.addon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.addon-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent);
+  transition: all 0.3s ease;
+}
+
+.addon-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.addon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.addon-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent-alt);
+}
+
+.price-tag {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.price-free {
+  background: var(--success);
+  color: white;
+}
+
+.price-paid {
+  background: var(--premium);
+  color: white;
+}
+
+.addon-developer {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.addon-description {
+  color: var(--text-main);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.stars {
+  color: #f4b942;
+  font-size: 16px;
+}
+
+.rating-text {
+  color: var(--text-secondary);
+}
+
+.addon-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 0.3rem 0.6rem;
+  background: var(--bg-card);
+  color: var(--accent);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.addon-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.addon-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.addon-link:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .addon-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Addon Marketplace Directory</h1>
+    <p class="subtitle">Curated Collection of the Best Flight Sim Add-ons</p>
+    <p>Discover high-quality aircraft, scenery, utilities, and enhancements to elevate your flight simulation experience. Browse by category and find the perfect add-ons for your simulator.</p>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-row">
+      <label class="filter-label">Filter by Type:</label>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all" data-type="category">All Add-ons</button>
+        <button class="filter-btn" data-filter="aircraft" data-type="category">Aircraft</button>
+        <button class="filter-btn" data-filter="scenery" data-type="category">Scenery</button>
+        <button class="filter-btn" data-filter="utilities" data-type="category">Utilities</button>
+        <button class="filter-btn" data-filter="weather" data-type="category">Weather</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <label class="filter-label">Filter by Price:</label>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all" data-type="price">All Prices</button>
+        <button class="filter-btn" data-filter="free" data-type="price">Free Only</button>
+        <button class="filter-btn" data-filter="paid" data-type="price">Paid Only</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Aircraft Add-ons</h2>
+    <div class="addon-grid">
+      <div class="addon-card" data-category="aircraft" data-price="free">
+        <div class="addon-header">
+          <div class="addon-title">FlyByWire A32NX</div>
+          <span class="price-tag price-free">FREE</span>
+        </div>
+        <div class="addon-developer">by FlyByWire Simulations</div>
+        <p class="addon-description">
+          The most popular freeware aircraft for MSFS. Ultra-realistic Airbus A320neo with custom systems, flight model, and continuous updates. Study-level quality at no cost.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(10,000+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020/2024</span>
+          <span class="tag">Airliner</span>
+          <span class="tag">Study Level</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://flybywiresim.com/" target="_blank" class="addon-link">Download</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="aircraft" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">PMDG 737-800</div>
+          <span class="price-tag price-paid">$69.99</span>
+        </div>
+        <div class="addon-developer">by PMDG Simulations</div>
+        <p class="addon-description">
+          Industry-leading Boeing 737-800 with unmatched system depth. Professional-grade simulation used by real-world pilots for training.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(5,200+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Airliner</span>
+          <span class="tag">Premium</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://www.precisionmanuals.com/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="aircraft" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">Fenix A320</div>
+          <span class="price-tag price-paid">$59.99</span>
+        </div>
+        <div class="addon-developer">by Fenix Simulations</div>
+        <p class="addon-description">
+          Revolutionary Airbus A320 with real-time weather radar, custom sound engine, and unprecedented system accuracy. The new gold standard.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(8,500+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Airliner</span>
+          <span class="tag">Premium</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://fenixsim.com/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="aircraft" data-price="free">
+        <div class="addon-header">
+          <div class="addon-title">Zibo Mod 737-800</div>
+          <span class="price-tag price-free">FREE</span>
+        </div>
+        <div class="addon-developer">by Zibo (X-Plane)</div>
+        <p class="addon-description">
+          Legendary freeware enhancement of the default X-Plane 737. Transforms it into a study-level aircraft with systems depth rivaling payware.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(12,000+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">X-Plane 11/12</span>
+          <span class="tag">Airliner</span>
+          <span class="tag">Mod</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://forums.x-plane.org/" target="_blank" class="addon-link">Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Scenery & Airports</h2>
+    <div class="addon-grid">
+      <div class="addon-card" data-category="scenery" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">FlyTampa Dubai (OMDB)</div>
+          <span class="price-tag price-paid">$29.99</span>
+        </div>
+        <div class="addon-developer">by FlyTampa</div>
+        <p class="addon-description">
+          Stunning recreation of Dubai International Airport with custom terminals, animated ground traffic, and performance-optimized design.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(3,400+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Airport</span>
+          <span class="tag">Middle East</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://www.flytampa.org/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="scenery" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">Orbx London City Pack</div>
+          <span class="price-tag price-paid">$34.99</span>
+        </div>
+        <div class="addon-developer">by Orbx</div>
+        <p class="addon-description">
+          Complete London cityscape with hundreds of iconic landmarks, photorealistic textures, and seamless integration with MSFS scenery.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★☆</span>
+          <span class="rating-text">(2,100+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020/2024</span>
+          <span class="tag">City Scenery</span>
+          <span class="tag">Europe</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://orbxdirect.com/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="scenery" data-price="free">
+        <div class="addon-header">
+          <div class="addon-title">fsdreamteam GSX Pro</div>
+          <span class="price-tag price-paid">$29.99</span>
+        </div>
+        <div class="addon-developer">by FSDreamTeam</div>
+        <p class="addon-description">
+          Ground services expansion bringing animated jetways, custom vehicles, passengers, and realistic ground operations to any airport.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(4,800+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Ground Services</span>
+          <span class="tag">Utility</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://www.fsdreamteam.com/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Utilities & Tools</h2>
+    <div class="addon-grid">
+      <div class="addon-card" data-category="utilities" data-price="free">
+        <div class="addon-header">
+          <div class="addon-title">Little Navmap</div>
+          <span class="price-tag price-free">FREE</span>
+        </div>
+        <div class="addon-developer">by Alex Wolf</div>
+        <p class="addon-description">
+          Comprehensive flight planning and navigation tool with moving map, airport information, procedures, and performance calculations.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(15,000+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">All Simulators</span>
+          <span class="tag">Flight Planning</span>
+          <span class="tag">Essential</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://albar965.github.io/littlenavmap.html" target="_blank" class="addon-link">Download</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="utilities" data-price="free">
+        <div class="addon-header">
+          <div class="addon-title">SimBrief</div>
+          <span class="price-tag price-free">FREE</span>
+        </div>
+        <div class="addon-developer">by Navigraph</div>
+        <p class="addon-description">
+          Professional flight planning system generating realistic flight plans, fuel calculations, and weather briefings for virtual airlines.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(25,000+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">Web-Based</span>
+          <span class="tag">Flight Planning</span>
+          <span class="tag">Professional</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://www.simbrief.com/" target="_blank" class="addon-link">Visit Site</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="utilities" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">Navigraph Charts</div>
+          <span class="price-tag price-paid">$8.99/mo</span>
+        </div>
+        <div class="addon-developer">by Navigraph</div>
+        <p class="addon-description">
+          Real-world Jeppesen charts with moving map integration. Essential for IFR flying with worldwide airport diagrams and approach plates.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(18,000+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">All Simulators</span>
+          <span class="tag">Charts</span>
+          <span class="tag">Subscription</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://navigraph.com/" target="_blank" class="addon-link">Subscribe</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="utilities" data-price="free">
+        <div class="addon-header">
+          <div class="addon-title">FSUIPC7</div>
+          <span class="price-tag price-free">FREE</span>
+        </div>
+        <div class="addon-developer">by Pete Dowson</div>
+        <p class="addon-description">
+          Essential interface for external applications and hardware. Enables advanced button mapping, macros, and third-party tool integration.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★☆</span>
+          <span class="rating-text">(8,200+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Interface</span>
+          <span class="tag">Advanced</span>
+        </div>
+        <div class="addon-links">
+          <a href="http://www.fsuipc.com/" target="_blank" class="addon-link">Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Weather & Environment</h2>
+    <div class="addon-grid">
+      <div class="addon-card" data-category="weather" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">Active Sky (XP)</div>
+          <span class="price-tag price-paid">$39.99</span>
+        </div>
+        <div class="addon-developer">by HiFi Technologies</div>
+        <p class="addon-description">
+          Premium weather engine for X-Plane with real-time weather injection, turbulence, clouds, and atmospheric effects for maximum realism.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-text">(6,500+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">X-Plane 11/12</span>
+          <span class="tag">Weather</span>
+          <span class="tag">Premium</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://hifisimtech.com/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="addon-card" data-category="weather" data-price="paid">
+        <div class="addon-header">
+          <div class="addon-title">REX Weather Force</div>
+          <span class="price-tag price-paid">$24.95</span>
+        </div>
+        <div class="addon-developer">by REX Game Studios</div>
+        <p class="addon-description">
+          Enhanced weather with improved cloud textures, precipitation effects, and atmospheric phenomena for MSFS 2020.
+        </p>
+        <div class="rating">
+          <span class="stars">★★★★☆</span>
+          <span class="rating-text">(3,800+ reviews)</span>
+        </div>
+        <div class="addon-tags">
+          <span class="tag">MSFS 2020</span>
+          <span class="tag">Weather</span>
+          <span class="tag">Graphics</span>
+        </div>
+        <div class="addon-links">
+          <a href="https://www.rexsimulations.com/" target="_blank" class="addon-link">Buy Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Where to Buy Add-ons</h2>
+    <p style="margin-bottom: 1rem;">Popular marketplaces for flight sim add-ons:</p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="https://www.flightsim.to/" target="_blank" class="addon-link">Flightsim.to (Free)</a>
+      <a href="https://secure.simmarket.com/" target="_blank" class="addon-link">SimMarket</a>
+      <a href="https://orbxdirect.com/" target="_blank" class="addon-link">Orbx Direct</a>
+      <a href="https://www.justflight.com/" target="_blank" class="addon-link">Just Flight</a>
+      <a href="https://store.x-plane.org/" target="_blank" class="addon-link">X-Plane.org Store</a>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Filter functionality
+const filterButtons = document.querySelectorAll('.filter-btn');
+const addonCards = document.querySelectorAll('.addon-card');
+
+let activeCategory = 'all';
+let activePrice = 'all';
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const filterType = button.getAttribute('data-type');
+    const filter = button.getAttribute('data-filter');
+
+    // Update active button for this filter type
+    filterButtons.forEach(btn => {
+      if (btn.getAttribute('data-type') === filterType) {
+        btn.classList.remove('active');
+      }
+    });
+    button.classList.add('active');
+
+    // Update active filters
+    if (filterType === 'category') {
+      activeCategory = filter;
+    } else if (filterType === 'price') {
+      activePrice = filter;
+    }
+
+    // Filter cards
+    addonCards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      const cardPrice = card.getAttribute('data-price');
+
+      const categoryMatch = activeCategory === 'all' || cardCategory === activeCategory;
+      const priceMatch = activePrice === 'all' || cardPrice === activePrice;
+
+      if (categoryMatch && priceMatch) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

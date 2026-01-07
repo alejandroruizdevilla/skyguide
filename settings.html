@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Settings</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+  --success: #6b9e78;
+  --error: #c75d5d;
+  --warning: #d4a84b;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --success: #7fb88d;
+  --error: #e07a7a;
+  --warning: #e8c06a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Settings Sections */
+.settings-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-light);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.section-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.section-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Form Elements */
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-light);
+  gap: 1rem;
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-label {
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 0.25rem;
+}
+
+.setting-hint {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.setting-control {
+  flex-shrink: 0;
+}
+
+/* Select Dropdown */
+select {
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-main);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b5d54' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  min-width: 180px;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(193, 122, 74, 0.1);
+}
+
+/* Time Inputs */
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="time"] {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+input[type="time"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(193, 122, 74, 0.1);
+}
+
+.time-separator {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  width: 56px;
+  height: 30px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border-light);
+  transition: 0.3s;
+  border-radius: 30px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--accent);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Text Input */
+input[type="text"],
+input[type="email"],
+input[type="url"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(193, 122, 74, 0.1);
+}
+
+/* Git Setup Form */
+.git-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.form-group .hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.btn-secondary:hover {
+  background: var(--border-light);
+}
+
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Status Messages */
+.status-message {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.status-message.show {
+  display: block;
+}
+
+.status-message.success {
+  background: rgba(107, 158, 120, 0.1);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.status-message.error {
+  background: rgba(199, 93, 93, 0.1);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+/* Language Preview */
+.language-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--accent-light);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.language-preview strong {
+  color: var(--text-main);
+}
+
+/* Schedule Preview */
+.schedule-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--accent-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.schedule-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.schedule-icon {
+  font-size: 1.5rem;
+}
+
+.schedule-time {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.schedule-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Git Status */
+.git-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent-light);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.git-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.git-status-dot.configured {
+  background: var(--success);
+}
+
+.git-status-dot.not-configured {
+  background: var(--warning);
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-main);
+  transition: all 0.2s;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .setting-control {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  .time-inputs {
+    flex-wrap: wrap;
+  }
+
+  .schedule-preview {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+</head>
+<body>
+  <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
+
+  <div class="container">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="back-link">← Back to Guide</a>
+      <a href="minigames.html" class="back-link">Mini Games</a>
+    </div>
+
+    <div class="header">
+      <h1 data-i18n="settings.title">Settings</h1>
+      <p class="subtitle" data-i18n="settings.subtitle">Customize your SkyGuide experience</p>
+    </div>
+
+    <!-- Language Section -->
+    <section class="settings-section">
+      <div class="section-header">
+        <div class="section-icon">🌐</div>
+        <div>
+          <h2 class="section-title" data-i18n="settings.language.title">Language</h2>
+          <p class="section-description" data-i18n="settings.language.description">Choose your preferred language for the interface</p>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-label" data-i18n="settings.language.select">Display Language</div>
+          <div class="setting-hint" data-i18n="settings.language.selectHint">This will change all text throughout the application</div>
+        </div>
+        <div class="setting-control">
+          <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+            <option value="ko">한국어</option>
+            <option value="ru">Русский</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="language-preview" id="languagePreview">
+        <strong data-i18n="settings.language.preview">Preview:</strong>
+        <span id="previewText">Welcome to SkyGuide - Your Complete Flight Simulator Guide</span>
+      </div>
+    </section>
+
+    <!-- Day/Night Schedule Section -->
+    <section class="settings-section">
+      <div class="section-header">
+        <div class="section-icon">🌓</div>
+        <div>
+          <h2 class="section-title" data-i18n="settings.theme.title">Theme Schedule</h2>
+          <p class="section-description" data-i18n="settings.theme.description">Automatically switch between light and dark mode based on time</p>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-label" data-i18n="settings.theme.autoSwitch">Automatic Theme Switching</div>
+          <div class="setting-hint" data-i18n="settings.theme.autoSwitchHint">Enable scheduled day/night mode changes</div>
+        </div>
+        <div class="setting-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoThemeToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-row" id="scheduleSettings" style="display: none;">
+        <div class="setting-info">
+          <div class="setting-label" data-i18n="settings.theme.schedule">Schedule Times</div>
+          <div class="setting-hint" data-i18n="settings.theme.scheduleHint">Set when to switch to light (day) and dark (night) mode</div>
+        </div>
+        <div class="setting-control">
+          <div class="time-inputs">
+            <span>☀️</span>
+            <input type="time" id="dayStartTime" value="07:00">
+            <span class="time-separator">to</span>
+            <span>🌙</span>
+            <input type="time" id="nightStartTime" value="19:00">
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-label" data-i18n="settings.theme.useSystem">Use System Preference</div>
+          <div class="setting-hint" data-i18n="settings.theme.useSystemHint">Follow your operating system's dark mode setting</div>
+        </div>
+        <div class="setting-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="useSystemTheme">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="schedule-preview" id="schedulePreview">
+        <div class="schedule-item">
+          <span class="schedule-icon">☀️</span>
+          <div>
+            <div class="schedule-time" id="dayTimeDisplay">7:00 AM</div>
+            <div class="schedule-label" data-i18n="settings.theme.lightMode">Light Mode</div>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <span class="schedule-icon">🌙</span>
+          <div>
+            <div class="schedule-time" id="nightTimeDisplay">7:00 PM</div>
+            <div class="schedule-label" data-i18n="settings.theme.darkMode">Dark Mode</div>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <span class="schedule-icon">⏰</span>
+          <div>
+            <div class="schedule-time" id="currentTimeDisplay">--:--</div>
+            <div class="schedule-label" data-i18n="settings.theme.currentTime">Current Time</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Git Setup Section -->
+    <section class="settings-section">
+      <div class="section-header">
+        <div class="section-icon">📦</div>
+        <div>
+          <h2 class="section-title" data-i18n="settings.git.title">Git Configuration</h2>
+          <p class="section-description" data-i18n="settings.git.description">Configure your Git settings for version control</p>
+        </div>
+      </div>
+
+      <div class="git-status" id="gitStatus">
+        <span class="git-status-dot not-configured" id="gitStatusDot"></span>
+        <span id="gitStatusText" data-i18n="settings.git.notConfigured">Not configured</span>
+      </div>
+
+      <div class="git-form">
+        <div class="form-group">
+          <label for="gitName" data-i18n="settings.git.name">Your Name</label>
+          <input type="text" id="gitName" placeholder="John Doe">
+          <span class="hint" data-i18n="settings.git.nameHint">This will be used for commit author information</span>
+        </div>
+
+        <div class="form-group">
+          <label for="gitEmail" data-i18n="settings.git.email">Email Address</label>
+          <input type="email" id="gitEmail" placeholder="john@example.com">
+          <span class="hint" data-i18n="settings.git.emailHint">Use the email associated with your Git hosting service</span>
+        </div>
+
+        <div class="form-group">
+          <label for="gitRemote" data-i18n="settings.git.remote">Remote Repository URL (Optional)</label>
+          <input type="url" id="gitRemote" placeholder="https://github.com/username/repo.git">
+          <span class="hint" data-i18n="settings.git.remoteHint">GitHub, GitLab, or Bitbucket repository URL</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label" data-i18n="settings.git.autoCommit">Auto-commit Progress</div>
+            <div class="setting-hint" data-i18n="settings.git.autoCommitHint">Automatically commit your learning progress to Git</div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="autoCommitToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label" data-i18n="settings.git.defaultBranch">Default Branch</div>
+            <div class="setting-hint" data-i18n="settings.git.defaultBranchHint">The main branch to use for commits</div>
+          </div>
+          <div class="setting-control">
+            <select id="gitDefaultBranch">
+              <option value="main">main</option>
+              <option value="master">master</option>
+              <option value="develop">develop</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" id="saveGitConfig">
+            <span>💾</span> Save Configuration
+          </button>
+          <button class="btn btn-secondary" id="testGitConfig">
+            <span>🔍</span> Test Connection
+          </button>
+        </div>
+
+        <div class="status-message" id="gitStatusMessage"></div>
+      </div>
+    </section>
+
+    <!-- Save All Settings -->
+    <div class="btn-group" style="justify-content: center; margin-top: 2rem;">
+      <button class="btn btn-primary" id="saveAllSettings" style="padding: 1rem 2rem; font-size: 1.1rem;">
+        <span>✓</span> <span data-i18n="settings.saveAll">Save All Settings</span>
+      </button>
+      <button class="btn btn-secondary" id="resetSettings" style="padding: 1rem 2rem; font-size: 1.1rem;">
+        <span>↺</span> <span data-i18n="settings.reset">Reset to Defaults</span>
+      </button>
+    </div>
+
+    <div class="status-message" id="globalStatusMessage" style="text-align: center; margin-top: 1rem;"></div>
+  </div>
+
+<script>
+// Translations
+const translations = {
+  en: {
+    'settings.title': 'Settings',
+    'settings.subtitle': 'Customize your SkyGuide experience',
+    'settings.language.title': 'Language',
+    'settings.language.description': 'Choose your preferred language for the interface',
+    'settings.language.select': 'Display Language',
+    'settings.language.selectHint': 'This will change all text throughout the application',
+    'settings.language.preview': 'Preview:',
+    'settings.theme.title': 'Theme Schedule',
+    'settings.theme.description': 'Automatically switch between light and dark mode based on time',
+    'settings.theme.autoSwitch': 'Automatic Theme Switching',
+    'settings.theme.autoSwitchHint': 'Enable scheduled day/night mode changes',
+    'settings.theme.schedule': 'Schedule Times',
+    'settings.theme.scheduleHint': 'Set when to switch to light (day) and dark (night) mode',
+    'settings.theme.useSystem': 'Use System Preference',
+    'settings.theme.useSystemHint': "Follow your operating system's dark mode setting",
+    'settings.theme.lightMode': 'Light Mode',
+    'settings.theme.darkMode': 'Dark Mode',
+    'settings.theme.currentTime': 'Current Time',
+    'settings.git.title': 'Git Configuration',
+    'settings.git.description': 'Configure your Git settings for version control',
+    'settings.git.notConfigured': 'Not configured',
+    'settings.git.configured': 'Configured',
+    'settings.git.name': 'Your Name',
+    'settings.git.nameHint': 'This will be used for commit author information',
+    'settings.git.email': 'Email Address',
+    'settings.git.emailHint': 'Use the email associated with your Git hosting service',
+    'settings.git.remote': 'Remote Repository URL (Optional)',
+    'settings.git.remoteHint': 'GitHub, GitLab, or Bitbucket repository URL',
+    'settings.git.autoCommit': 'Auto-commit Progress',
+    'settings.git.autoCommitHint': 'Automatically commit your learning progress to Git',
+    'settings.git.defaultBranch': 'Default Branch',
+    'settings.git.defaultBranchHint': 'The main branch to use for commits',
+    'settings.saveAll': 'Save All Settings',
+    'settings.reset': 'Reset to Defaults',
+    'preview.welcome': 'Welcome to SkyGuide - Your Complete Flight Simulator Guide'
+  },
+  es: {
+    'settings.title': 'Configuración',
+    'settings.subtitle': 'Personaliza tu experiencia en SkyGuide',
+    'settings.language.title': 'Idioma',
+    'settings.language.description': 'Elige tu idioma preferido para la interfaz',
+    'settings.language.select': 'Idioma de visualización',
+    'settings.language.selectHint': 'Esto cambiará todo el texto de la aplicación',
+    'settings.language.preview': 'Vista previa:',
+    'settings.theme.title': 'Programación del Tema',
+    'settings.theme.description': 'Cambiar automáticamente entre modo claro y oscuro según la hora',
+    'settings.theme.autoSwitch': 'Cambio Automático de Tema',
+    'settings.theme.autoSwitchHint': 'Activar cambios programados de día/noche',
+    'settings.theme.schedule': 'Horarios',
+    'settings.theme.scheduleHint': 'Configura cuándo cambiar a modo claro (día) y oscuro (noche)',
+    'settings.theme.useSystem': 'Usar Preferencia del Sistema',
+    'settings.theme.useSystemHint': 'Seguir la configuración de modo oscuro de tu sistema operativo',
+    'settings.theme.lightMode': 'Modo Claro',
+    'settings.theme.darkMode': 'Modo Oscuro',
+    'settings.theme.currentTime': 'Hora Actual',
+    'settings.git.title': 'Configuración de Git',
+    'settings.git.description': 'Configura tus ajustes de Git para control de versiones',
+    'settings.git.notConfigured': 'No configurado',
+    'settings.git.configured': 'Configurado',
+    'settings.git.name': 'Tu Nombre',
+    'settings.git.nameHint': 'Se usará para la información del autor en los commits',
+    'settings.git.email': 'Correo Electrónico',
+    'settings.git.emailHint': 'Usa el correo asociado a tu servicio de hosting Git',
+    'settings.git.remote': 'URL del Repositorio Remoto (Opcional)',
+    'settings.git.remoteHint': 'URL del repositorio en GitHub, GitLab o Bitbucket',
+    'settings.git.autoCommit': 'Auto-commit del Progreso',
+    'settings.git.autoCommitHint': 'Hacer commit automático de tu progreso de aprendizaje',
+    'settings.git.defaultBranch': 'Rama Predeterminada',
+    'settings.git.defaultBranchHint': 'La rama principal para los commits',
+    'settings.saveAll': 'Guardar Toda la Configuración',
+    'settings.reset': 'Restablecer Valores',
+    'preview.welcome': 'Bienvenido a SkyGuide - Tu Guía Completa de Simuladores de Vuelo'
+  },
+  fr: {
+    'settings.title': 'Paramètres',
+    'settings.subtitle': 'Personnalisez votre expérience SkyGuide',
+    'settings.language.title': 'Langue',
+    'settings.language.description': "Choisissez votre langue préférée pour l'interface",
+    'settings.language.select': "Langue d'affichage",
+    'settings.language.selectHint': "Cela changera tout le texte de l'application",
+    'settings.language.preview': 'Aperçu:',
+    'settings.theme.title': 'Programmation du Thème',
+    'settings.theme.description': "Basculer automatiquement entre le mode clair et sombre selon l'heure",
+    'settings.theme.autoSwitch': 'Changement Automatique de Thème',
+    'settings.theme.autoSwitchHint': 'Activer les changements jour/nuit programmés',
+    'settings.theme.schedule': 'Horaires',
+    'settings.theme.scheduleHint': 'Définir quand passer en mode clair (jour) et sombre (nuit)',
+    'settings.theme.useSystem': 'Utiliser les Préférences Système',
+    'settings.theme.useSystemHint': "Suivre le paramètre de mode sombre de votre système d'exploitation",
+    'settings.theme.lightMode': 'Mode Clair',
+    'settings.theme.darkMode': 'Mode Sombre',
+    'settings.theme.currentTime': 'Heure Actuelle',
+    'settings.git.title': 'Configuration Git',
+    'settings.git.description': 'Configurez vos paramètres Git pour le contrôle de version',
+    'settings.git.notConfigured': 'Non configuré',
+    'settings.git.configured': 'Configuré',
+    'settings.git.name': 'Votre Nom',
+    'settings.git.nameHint': "Sera utilisé pour les informations d'auteur des commits",
+    'settings.git.email': 'Adresse Email',
+    'settings.git.emailHint': "Utilisez l'email associé à votre service d'hébergement Git",
+    'settings.git.remote': 'URL du Dépôt Distant (Optionnel)',
+    'settings.git.remoteHint': 'URL du dépôt GitHub, GitLab ou Bitbucket',
+    'settings.git.autoCommit': 'Auto-commit du Progrès',
+    'settings.git.autoCommitHint': "Commit automatique de votre progression d'apprentissage",
+    'settings.git.defaultBranch': 'Branche par Défaut',
+    'settings.git.defaultBranchHint': 'La branche principale pour les commits',
+    'settings.saveAll': 'Enregistrer Tous les Paramètres',
+    'settings.reset': 'Réinitialiser',
+    'preview.welcome': 'Bienvenue sur SkyGuide - Votre Guide Complet des Simulateurs de Vol'
+  },
+  de: {
+    'settings.title': 'Einstellungen',
+    'settings.subtitle': 'Passen Sie Ihre SkyGuide-Erfahrung an',
+    'settings.language.title': 'Sprache',
+    'settings.language.description': 'Wählen Sie Ihre bevorzugte Sprache für die Benutzeroberfläche',
+    'settings.language.select': 'Anzeigesprache',
+    'settings.language.selectHint': 'Dies ändert den gesamten Text in der Anwendung',
+    'settings.language.preview': 'Vorschau:',
+    'settings.theme.title': 'Thema-Zeitplan',
+    'settings.theme.description': 'Automatisch zwischen Hell- und Dunkelmodus basierend auf der Uhrzeit wechseln',
+    'settings.theme.autoSwitch': 'Automatischer Themawechsel',
+    'settings.theme.autoSwitchHint': 'Geplante Tag/Nacht-Modusänderungen aktivieren',
+    'settings.theme.schedule': 'Zeitplan',
+    'settings.theme.scheduleHint': 'Festlegen, wann auf Hell (Tag) und Dunkel (Nacht) gewechselt wird',
+    'settings.theme.useSystem': 'Systemeinstellung verwenden',
+    'settings.theme.useSystemHint': 'Der Dunkelmodus-Einstellung Ihres Betriebssystems folgen',
+    'settings.theme.lightMode': 'Hellmodus',
+    'settings.theme.darkMode': 'Dunkelmodus',
+    'settings.theme.currentTime': 'Aktuelle Zeit',
+    'settings.git.title': 'Git-Konfiguration',
+    'settings.git.description': 'Konfigurieren Sie Ihre Git-Einstellungen für die Versionskontrolle',
+    'settings.git.notConfigured': 'Nicht konfiguriert',
+    'settings.git.configured': 'Konfiguriert',
+    'settings.git.name': 'Ihr Name',
+    'settings.git.nameHint': 'Wird für Commit-Autoreninformationen verwendet',
+    'settings.git.email': 'E-Mail-Adresse',
+    'settings.git.emailHint': 'Verwenden Sie die E-Mail, die mit Ihrem Git-Hosting-Dienst verbunden ist',
+    'settings.git.remote': 'Remote-Repository-URL (Optional)',
+    'settings.git.remoteHint': 'GitHub-, GitLab- oder Bitbucket-Repository-URL',
+    'settings.git.autoCommit': 'Auto-Commit Fortschritt',
+    'settings.git.autoCommitHint': 'Lernfortschritt automatisch committen',
+    'settings.git.defaultBranch': 'Standard-Branch',
+    'settings.git.defaultBranchHint': 'Der Hauptbranch für Commits',
+    'settings.saveAll': 'Alle Einstellungen Speichern',
+    'settings.reset': 'Zurücksetzen',
+    'preview.welcome': 'Willkommen bei SkyGuide - Ihr Kompletter Flugsimulator-Leitfaden'
+  },
+  it: {
+    'settings.title': 'Impostazioni',
+    'settings.subtitle': 'Personalizza la tua esperienza SkyGuide',
+    'preview.welcome': 'Benvenuto su SkyGuide - La Tua Guida Completa ai Simulatori di Volo'
+  },
+  pt: {
+    'settings.title': 'Configurações',
+    'settings.subtitle': 'Personalize sua experiência no SkyGuide',
+    'preview.welcome': 'Bem-vindo ao SkyGuide - Seu Guia Completo de Simuladores de Voo'
+  },
+  ja: {
+    'settings.title': '設定',
+    'settings.subtitle': 'SkyGuideのエクスペリエンスをカスタマイズ',
+    'preview.welcome': 'SkyGuideへようこそ - あなたの完全なフライトシミュレーターガイド'
+  },
+  zh: {
+    'settings.title': '设置',
+    'settings.subtitle': '自定义您的SkyGuide体验',
+    'preview.welcome': '欢迎来到SkyGuide - 您的完整飞行模拟器指南'
+  },
+  ko: {
+    'settings.title': '설정',
+    'settings.subtitle': 'SkyGuide 경험을 사용자 정의하세요',
+    'preview.welcome': 'SkyGuide에 오신 것을 환영합니다 - 완벽한 비행 시뮬레이터 가이드'
+  },
+  ru: {
+    'settings.title': 'Настройки',
+    'settings.subtitle': 'Настройте ваш опыт работы с SkyGuide',
+    'preview.welcome': 'Добро пожаловать в SkyGuide - Ваш Полный Гид по Авиасимуляторам'
+  }
+};
+
+// Current language
+let currentLanguage = localStorage.getItem('skyguide-language') || 'en';
+
+// Apply translations
+function applyTranslations(lang) {
+  const langData = translations[lang] || translations['en'];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (langData[key]) {
+      el.textContent = langData[key];
+    } else if (translations['en'][key]) {
+      el.textContent = translations['en'][key];
+    }
+  });
+
+  // Update preview text
+  const previewText = document.getElementById('previewText');
+  if (previewText) {
+    previewText.textContent = langData['preview.welcome'] || translations['en']['preview.welcome'];
+  }
+
+  // Update HTML lang attribute
+  document.documentElement.lang = lang;
+}
+
+// Dark mode functionality
+function initDarkMode() {
+  const savedTheme = localStorage.getItem('skyguide-theme');
+  const useSystem = localStorage.getItem('skyguide-use-system-theme') === 'true';
+  const autoTheme = localStorage.getItem('skyguide-auto-theme') === 'true';
+
+  if (useSystem) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  } else if (autoTheme) {
+    applyScheduledTheme();
+  } else if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+
+  updateDarkModeButton();
+}
+
+function updateDarkModeButton() {
+  const btn = document.getElementById('darkModeToggle');
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  btn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+function toggleDarkMode() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const newTheme = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('skyguide-theme', newTheme);
+  localStorage.setItem('skyguide-manual-theme', 'true');
+  updateDarkModeButton();
+}
+
+// Theme scheduling
+function applyScheduledTheme() {
+  const dayStart = localStorage.getItem('skyguide-day-start') || '07:00';
+  const nightStart = localStorage.getItem('skyguide-night-start') || '19:00';
+
+  const now = new Date();
+  const currentTime = now.getHours() * 60 + now.getMinutes();
+
+  const [dayHour, dayMin] = dayStart.split(':').map(Number);
+  const [nightHour, nightMin] = nightStart.split(':').map(Number);
+
+  const dayStartMinutes = dayHour * 60 + dayMin;
+  const nightStartMinutes = nightHour * 60 + nightMin;
+
+  let theme;
+  if (currentTime >= dayStartMinutes && currentTime < nightStartMinutes) {
+    theme = 'light';
+  } else {
+    theme = 'dark';
+  }
+
+  document.documentElement.setAttribute('data-theme', theme);
+  updateDarkModeButton();
+}
+
+function formatTime12h(time24) {
+  const [hours, minutes] = time24.split(':').map(Number);
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const hours12 = hours % 12 || 12;
+  return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+}
+
+function updateTimeDisplays() {
+  const dayTime = document.getElementById('dayStartTime').value;
+  const nightTime = document.getElementById('nightStartTime').value;
+
+  document.getElementById('dayTimeDisplay').textContent = formatTime12h(dayTime);
+  document.getElementById('nightTimeDisplay').textContent = formatTime12h(nightTime);
+
+  const now = new Date();
+  document.getElementById('currentTimeDisplay').textContent =
+    `${now.getHours() % 12 || 12}:${now.getMinutes().toString().padStart(2, '0')} ${now.getHours() >= 12 ? 'PM' : 'AM'}`;
+}
+
+// Git configuration
+function loadGitConfig() {
+  const gitName = localStorage.getItem('skyguide-git-name') || '';
+  const gitEmail = localStorage.getItem('skyguide-git-email') || '';
+  const gitRemote = localStorage.getItem('skyguide-git-remote') || '';
+  const gitBranch = localStorage.getItem('skyguide-git-branch') || 'main';
+  const autoCommit = localStorage.getItem('skyguide-git-auto-commit') === 'true';
+
+  document.getElementById('gitName').value = gitName;
+  document.getElementById('gitEmail').value = gitEmail;
+  document.getElementById('gitRemote').value = gitRemote;
+  document.getElementById('gitDefaultBranch').value = gitBranch;
+  document.getElementById('autoCommitToggle').checked = autoCommit;
+
+  updateGitStatus();
+}
+
+function updateGitStatus() {
+  const gitName = document.getElementById('gitName').value;
+  const gitEmail = document.getElementById('gitEmail').value;
+  const statusDot = document.getElementById('gitStatusDot');
+  const statusText = document.getElementById('gitStatusText');
+  const langData = translations[currentLanguage] || translations['en'];
+
+  if (gitName && gitEmail) {
+    statusDot.className = 'git-status-dot configured';
+    statusText.textContent = langData['settings.git.configured'] || 'Configured';
+  } else {
+    statusDot.className = 'git-status-dot not-configured';
+    statusText.textContent = langData['settings.git.notConfigured'] || 'Not configured';
+  }
+}
+
+function saveGitConfig() {
+  const gitName = document.getElementById('gitName').value;
+  const gitEmail = document.getElementById('gitEmail').value;
+  const gitRemote = document.getElementById('gitRemote').value;
+  const gitBranch = document.getElementById('gitDefaultBranch').value;
+  const autoCommit = document.getElementById('autoCommitToggle').checked;
+
+  localStorage.setItem('skyguide-git-name', gitName);
+  localStorage.setItem('skyguide-git-email', gitEmail);
+  localStorage.setItem('skyguide-git-remote', gitRemote);
+  localStorage.setItem('skyguide-git-branch', gitBranch);
+  localStorage.setItem('skyguide-git-auto-commit', autoCommit);
+
+  updateGitStatus();
+  showStatusMessage('gitStatusMessage', 'Git configuration saved successfully!', 'success');
+}
+
+function testGitConfig() {
+  const gitRemote = document.getElementById('gitRemote').value;
+
+  if (!gitRemote) {
+    showStatusMessage('gitStatusMessage', 'Please enter a remote repository URL to test.', 'error');
+    return;
+  }
+
+  // Simulate connection test
+  showStatusMessage('gitStatusMessage', 'Testing connection...', 'success');
+
+  setTimeout(() => {
+    if (gitRemote.includes('github.com') || gitRemote.includes('gitlab.com') || gitRemote.includes('bitbucket.org')) {
+      showStatusMessage('gitStatusMessage', 'Connection test simulated successfully! (Note: Actual Git operations require a backend server)', 'success');
+    } else {
+      showStatusMessage('gitStatusMessage', 'URL format appears valid. (Note: Actual Git operations require a backend server)', 'success');
+    }
+  }, 1000);
+}
+
+function showStatusMessage(elementId, message, type) {
+  const element = document.getElementById(elementId);
+  element.textContent = message;
+  element.className = `status-message show ${type}`;
+
+  setTimeout(() => {
+    element.className = 'status-message';
+  }, 5000);
+}
+
+// Load all settings
+function loadSettings() {
+  // Language
+  const savedLanguage = localStorage.getItem('skyguide-language') || 'en';
+  document.getElementById('languageSelect').value = savedLanguage;
+  currentLanguage = savedLanguage;
+  applyTranslations(savedLanguage);
+
+  // Theme schedule
+  const autoTheme = localStorage.getItem('skyguide-auto-theme') === 'true';
+  const useSystem = localStorage.getItem('skyguide-use-system-theme') === 'true';
+  const dayStart = localStorage.getItem('skyguide-day-start') || '07:00';
+  const nightStart = localStorage.getItem('skyguide-night-start') || '19:00';
+
+  document.getElementById('autoThemeToggle').checked = autoTheme;
+  document.getElementById('useSystemTheme').checked = useSystem;
+  document.getElementById('dayStartTime').value = dayStart;
+  document.getElementById('nightStartTime').value = nightStart;
+  document.getElementById('scheduleSettings').style.display = autoTheme ? 'flex' : 'none';
+
+  updateTimeDisplays();
+
+  // Git
+  loadGitConfig();
+}
+
+// Save all settings
+function saveAllSettings() {
+  // Language
+  const language = document.getElementById('languageSelect').value;
+  localStorage.setItem('skyguide-language', language);
+  currentLanguage = language;
+  applyTranslations(language);
+
+  // Theme schedule
+  const autoTheme = document.getElementById('autoThemeToggle').checked;
+  const useSystem = document.getElementById('useSystemTheme').checked;
+  const dayStart = document.getElementById('dayStartTime').value;
+  const nightStart = document.getElementById('nightStartTime').value;
+
+  localStorage.setItem('skyguide-auto-theme', autoTheme);
+  localStorage.setItem('skyguide-use-system-theme', useSystem);
+  localStorage.setItem('skyguide-day-start', dayStart);
+  localStorage.setItem('skyguide-night-start', nightStart);
+
+  // Apply theme settings
+  if (useSystem) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  } else if (autoTheme) {
+    applyScheduledTheme();
+  }
+
+  // Save git config
+  saveGitConfig();
+
+  showStatusMessage('globalStatusMessage', 'All settings saved successfully!', 'success');
+}
+
+// Reset to defaults
+function resetSettings() {
+  if (!confirm('Are you sure you want to reset all settings to defaults?')) {
+    return;
+  }
+
+  // Clear localStorage
+  localStorage.removeItem('skyguide-language');
+  localStorage.removeItem('skyguide-auto-theme');
+  localStorage.removeItem('skyguide-use-system-theme');
+  localStorage.removeItem('skyguide-day-start');
+  localStorage.removeItem('skyguide-night-start');
+  localStorage.removeItem('skyguide-git-name');
+  localStorage.removeItem('skyguide-git-email');
+  localStorage.removeItem('skyguide-git-remote');
+  localStorage.removeItem('skyguide-git-branch');
+  localStorage.removeItem('skyguide-git-auto-commit');
+  localStorage.removeItem('skyguide-theme');
+  localStorage.removeItem('skyguide-manual-theme');
+
+  // Reload settings
+  loadSettings();
+  document.documentElement.setAttribute('data-theme', 'light');
+  updateDarkModeButton();
+
+  showStatusMessage('globalStatusMessage', 'Settings reset to defaults.', 'success');
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  initDarkMode();
+  loadSettings();
+
+  // Dark mode toggle
+  document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+
+  // Language change
+  document.getElementById('languageSelect').addEventListener('change', (e) => {
+    currentLanguage = e.target.value;
+    applyTranslations(currentLanguage);
+  });
+
+  // Auto theme toggle
+  document.getElementById('autoThemeToggle').addEventListener('change', (e) => {
+    document.getElementById('scheduleSettings').style.display = e.target.checked ? 'flex' : 'none';
+    if (e.target.checked) {
+      document.getElementById('useSystemTheme').checked = false;
+    }
+  });
+
+  // Use system theme toggle
+  document.getElementById('useSystemTheme').addEventListener('change', (e) => {
+    if (e.target.checked) {
+      document.getElementById('autoThemeToggle').checked = false;
+      document.getElementById('scheduleSettings').style.display = 'none';
+    }
+  });
+
+  // Time inputs
+  document.getElementById('dayStartTime').addEventListener('change', updateTimeDisplays);
+  document.getElementById('nightStartTime').addEventListener('change', updateTimeDisplays);
+
+  // Git buttons
+  document.getElementById('saveGitConfig').addEventListener('click', saveGitConfig);
+  document.getElementById('testGitConfig').addEventListener('click', testGitConfig);
+
+  // Git inputs for status update
+  document.getElementById('gitName').addEventListener('input', updateGitStatus);
+  document.getElementById('gitEmail').addEventListener('input', updateGitStatus);
+
+  // Save all and reset buttons
+  document.getElementById('saveAllSettings').addEventListener('click', saveAllSettings);
+  document.getElementById('resetSettings').addEventListener('click', resetSettings);
+
+  // Update current time every minute
+  setInterval(updateTimeDisplays, 60000);
+
+  // Check and apply scheduled theme every minute
+  setInterval(() => {
+    const autoTheme = localStorage.getItem('skyguide-auto-theme') === 'true';
+    if (autoTheme) {
+      applyScheduledTheme();
+    }
+  }, 60000);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flight Simulators - Ultimate Guide 2025</title>
+
+  <style>
+    :root {
+      --bg: #1a1614;
+      --bg-card: #2a2420;
+      --accent: #d4a574;
+      --accent-alt: #e8b87e;
+      --accent-warn: #f4d19b;
+      --text-main: #e8d5c4;
+      --text-alt: #e8b87e;
+      --text-warn: #f4d19b;
+      --danger: #d97757;
+      --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .ascii-title {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--accent-alt);
+      margin-bottom: 3rem;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .terminal-box {
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .terminal-header {
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    .cursor {
+      display: none;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: var(--accent-alt);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    h2 {
+      font-size: 22px;
+      color: var(--accent);
+      margin: 2.5rem 0 1.5rem 0;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-size: 20px;
+      color: var(--accent-alt);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .sim-card {
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--bg-card);
+      transition: all 0.2s ease;
+    }
+
+    .sim-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-soft);
+      transform: translateY(-2px);
+    }
+
+    .sim-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+      border: 1px solid currentColor;
+      background: rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .tag-recommended {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(212, 165, 116, 0.1);
+    }
+
+    .tag-combat {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: rgba(217, 119, 87, 0.1);
+    }
+
+    .tag-free {
+      color: var(--accent-alt);
+      border-color: var(--accent-alt);
+      background: rgba(232, 184, 126, 0.1);
+    }
+
+    .tag-classic {
+      color: var(--text-warn);
+      border-color: var(--text-warn);
+      background: rgba(244, 209, 155, 0.1);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      margin: 1rem 0;
+      font-size: 15px;
+    }
+
+    .info-label {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .info-value {
+      color: var(--text-main);
+    }
+
+    .spec-list {
+      list-style: none;
+      margin: 1rem 0;
+      padding-left: 1rem;
+    }
+
+    .spec-list li {
+      margin: 0.5rem 0;
+      position: relative;
+    }
+
+    .spec-list li::before {
+      content: "▶ ";
+      color: var(--accent);
+      position: absolute;
+      left: -1rem;
+    }
+
+    .detail-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .detail-title {
+      color: var(--accent);
+      font-size: 16px;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rating-bar {
+      display: flex;
+      gap: 1rem;
+      margin: 0.75rem 0;
+      align-items: center;
+    }
+
+    .rating-label {
+      color: var(--text-main);
+      min-width: 170px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .bar {
+      height: 8px;
+      background: rgba(212, 165, 116, 0.15);
+      border-radius: 4px;
+      flex: 1;
+      max-width: 300px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .links {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(212, 165, 116, 0.2);
+    }
+
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+      margin-right: 1.5rem;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+
+    .links a:hover {
+      color: var(--accent-alt);
+      text-decoration: underline;
+    }
+
+    .links a::before {
+      content: "→ ";
+      margin-right: 4px;
+    }
+
+    .links a::after {
+      content: "";
+    }
+
+    .tip-box {
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      background: rgba(212, 165, 116, 0.05);
+    }
+
+    .tip-box::before {
+      content: "💡 ";
+      margin-right: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid rgba(212, 165, 116, 0.2);
+      color: var(--accent);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+        padding: 1rem;
+      }
+
+      .ascii-title {
+        font-size: 22px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      .tag {
+        font-size: 11px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+        font-size: 14px;
+      }
+
+      .rating-label {
+        min-width: auto;
+        font-size: 13px;
+      }
+
+      .rating-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+
+      .bar {
+        max-width: 100%;
+      }
+
+      .sim-card:hover {
+        transform: translateY(-2px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="ascii-title">
+      Flight Simulator Guide 2025
+    </div>
+
+    <div class="subtitle">
+      The Ultimate Guide to Flight Simulators
+    </div>
+
+    <div class="terminal-box">
+      <h1>Welcome to the comprehensive flight simulator guide. Whether you're a beginner pilot or a seasoned veteran, this guide contains detailed information about the best flight simulators available in 2025.</h1>
+    </div>
+
+    <!-- SECTION 1: PROFESSIONAL SIMULATORS -->
+    <div class="terminal-box">
+      <h2>Professional Flight Simulators</h2>
+
+      <!-- Microsoft Flight Simulator 2024 -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Microsoft Flight Simulator 2024</h3>
+          <span class="tag tag-recommended">BEST GRAPHICS</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Asobo Studio / Xbox Game Studios</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">November 2024</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">PC (Windows), Xbox Series X|S, PS5</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$69.99 Standard / $99.99 Premium / Game Pass</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Civilian aviation - General aviation to airliners</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>The latest iteration of Microsoft's legendary flight simulator series. MSFS 2024 sets the gold standard for visual fidelity and real-world accuracy. Features the entire planet with satellite imagery, real-time weather, and living world with AI-generated traffic.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Photorealistic satellite-based scenery covering the entire Earth (2+ petabytes)</li>
+            <li>Real-time weather with live METAR data integration</li>
+            <li>65+ highly detailed aircraft (from ultralights to A320neo)</li>
+            <li>Career mode with missions spanning bush flying, cargo ops, aerial firefighting</li>
+            <li>Full VR support with incredible immersion</li>
+            <li>Multiplayer with shared cockpit capability</li>
+            <li>Cloud streaming technology for reduced storage requirements</li>
+            <li>Massive add-on ecosystem with study-level aircraft available</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">TECHNICAL SPECS:</div>
+          <ul class="spec-list">
+            <li>ENGINE: Proprietary Asobo engine with DirectX 12</li>
+            <li>MIN REQUIREMENTS: RTX 2060 / Ryzen 5 2600 / 16GB RAM</li>
+            <li>RECOMMENDED: RTX 4070 / Ryzen 7 5800X / 32GB RAM</li>
+            <li>STORAGE: 50GB base + optional streaming</li>
+            <li>INTERNET: Required for full features (offline mode available)</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 90%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 100%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">SYSTEM DEMANDS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Sightseeing, VFR flying, casual to serious simulation. Perfect for experiencing flight over your hometown or traveling the world virtually.
+        </div>
+
+        <div class="links">
+          <a href="https://www.flightsimulator.com/microsoft-flight-simulator-2024/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://www.flightsimulator.com/store/" target="_blank">STORE</a>
+          <a href="https://forums.flightsimulator.com/" target="_blank">COMMUNITY</a>
+        </div>
+      </div>
+
+      <!-- X-Plane 12 -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>X-Plane 12</h3>
+          <span class="tag tag-recommended">BEST PHYSICS</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Laminar Research</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">November 2022 (actively updated)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows, macOS, Linux</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$59.99 Digital / Free demo available</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Professional-grade civilian flight simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>X-Plane 12 is renowned for its physically accurate flight model using blade element theory. FAA-certified versions are used for actual pilot training. The go-to choice for serious simmers and student pilots who demand authentic aerodynamics.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Blade element theory flight model (each wing section calculated independently)</li>
+            <li>FAA-approved training device when used with certified hardware</li>
+            <li>Seasonal textures and improved weather modeling</li>
+            <li>3D volumetric clouds and new lighting system</li>
+            <li>Advanced ATC system with realistic phraseology</li>
+            <li>Detailed aircraft systems including full IFR capabilities</li>
+            <li>Huge add-on community (FlightFactor, ToLiss, ZIBO 737)</li>
+            <li>Powerful built-in aircraft editor (Plane Maker)</li>
+            <li>VR support with excellent performance</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">TECHNICAL SPECS:</div>
+          <ul class="spec-list">
+            <li>ENGINE: Custom X-Plane engine with Vulkan/Metal support</li>
+            <li>MIN REQUIREMENTS: GTX 1070 / i5-8400 / 16GB RAM</li>
+            <li>RECOMMENDED: RTX 3060 / Ryzen 7 5700X / 32GB RAM</li>
+            <li>STORAGE: 100GB+ with scenery</li>
+            <li>INTERNET: Optional (scenery downloads recommended)</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 98%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 80%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">SYSTEM DEMANDS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 70%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Student pilots, IFR training, systems study, professional simulation. If you're training for a real pilot's license, this is your best bet.
+        </div>
+
+        <div class="links">
+          <a href="https://www.x-plane.com/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://store.x-plane.org/" target="_blank">OFFICIAL STORE</a>
+          <a href="https://forums.x-plane.org/" target="_blank">FORUMS</a>
+        </div>
+      </div>
+
+      <!-- Prepar3D -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Lockheed Martin Prepar3D v6</h3>
+          <span class="tag tag-recommended">PROFESSIONAL</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Lockheed Martin</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2024 (v6.0)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows only</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$59.95 Academic / $199.95 Professional</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Professional training platform (civilian use allowed)</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Based on the Microsoft ESP engine, Prepar3D is developed for professional training organizations but available for academic/personal use. Successor to FSX with modern graphics and systems. Used by airlines and military for actual crew training.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Compatible with many FSX add-ons (huge existing library)</li>
+            <li>Active Sky weather engine integration for ultra-realistic conditions</li>
+            <li>Professional-grade SDK for custom development</li>
+            <li>Multi-channel display support for simulator setups</li>
+            <li>Dynamic lighting with TrueSky technology</li>
+            <li>Study-level aircraft available (PMDG, Aerosoft, Majestic)</li>
+            <li>Excellent VR implementation</li>
+            <li>Professional user base provides quality add-ons</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 92%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 75%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 55%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Professional training, airline procedure practice, study-level aircraft enthusiasts. Requires academic/professional qualification for purchase.
+        </div>
+
+        <div class="links">
+          <a href="https://www.prepar3d.com/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://www.prepar3d.com/store/" target="_blank">PURCHASE</a>
+        </div>
+      </div>
+
+      <!-- Aerofly FS 4 -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Aerofly FS 4</h3>
+          <span class="tag tag-free">SMOOTH PERFORMANCE</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">IPACS</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2023</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows, macOS, Linux, iOS, Android, Nintendo Switch</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$49.99 PC / $9.99 Mobile</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Casual to mid-core flight simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Aerofly FS 4 excels at providing smooth, buttery performance even on mid-range systems. Features beautiful VR implementation and quick loading times. Perfect for pilots who want to jump in and fly without extensive setup.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Exceptional VR performance (90+ fps on medium hardware)</li>
+            <li>Instant loading - fly within seconds of launching</li>
+            <li>Photogrammetry cities (San Francisco, New York, etc.)</li>
+            <li>Realistic flight physics without complexity overload</li>
+            <li>Interactive 3D cockpits with working systems</li>
+            <li>Available on mobile devices with full simulation</li>
+            <li>Great for helicopter simulation</li>
+            <li>Low system requirements compared to MSFS/X-Plane</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 75%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 95%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">PERFORMANCE:</span>
+          <div class="bar"><div class="bar-fill" style="width: 98%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: VR enthusiasts, quick casual flights, mobile simulation, users with lower-end PCs. Great for helicopter flying!
+        </div>
+
+        <div class="links">
+          <a href="https://www.aerofly.com/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://www.aerofly.com/shop/" target="_blank">STORE</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 2: COMBAT SIMULATORS -->
+    <div class="terminal-box">
+      <h2>Military & Combat Simulators</h2>
+
+      <!-- DCS World -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>DCS World (Digital Combat Simulator)</h3>
+          <span class="tag tag-combat">BEST COMBAT SIM</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Eagle Dynamics</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2008 (continuously updated)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows PC only</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">FREE base + $49.99-$79.99 per aircraft module</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Hardcore combat flight simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>DCS World is THE definitive combat flight simulator. Each aircraft is a study-level module requiring dozens of hours to master. From Cold War jets to modern 4th-gen fighters, DCS offers unprecedented depth in weapons systems and tactics simulation.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Study-level aircraft (F-16C, F/A-18C, A-10C, F-14B, Mirage 2000C, etc.)</li>
+            <li>Full clickable cockpits with every switch functional</li>
+            <li>Advanced radar simulation and countermeasures</li>
+            <li>Realistic weapons employment (A-A and A-G)</li>
+            <li>Mission editor for creating complex scenarios</li>
+            <li>Dynamic campaign with combined arms</li>
+            <li>Multiplayer with dedicated servers and persistent wars</li>
+            <li>Free base includes Su-25T and TF-51D</li>
+            <li>Carrier operations with catapult launches and arrested landings</li>
+            <li>Professional-grade flight model and damage modeling</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">POPULAR AIRCRAFT MODULES:</div>
+          <ul class="spec-list">
+            <li>F-16C Viper - Modern multirole fighter</li>
+            <li>F/A-18C Hornet - Navy's workhorse (HIGHLY recommended)</li>
+            <li>A-10C II Tank Killer - Close air support beast</li>
+            <li>F-14B Tomcat - Classic naval interceptor with Jester AI</li>
+            <li>AH-64D Apache - Full systems simulation helicopter</li>
+            <li>F-15E Strike Eagle - Dual-role strike fighter</li>
+            <li>MiG-21bis - Cold War interceptor challenge</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">TECHNICAL SPECS:</div>
+          <ul class="spec-list">
+            <li>ENGINE: Eagle Dynamics proprietary</li>
+            <li>MIN REQUIREMENTS: GTX 1060 6GB / i5-8400 / 16GB RAM</li>
+            <li>RECOMMENDED: RTX 3070+ / i7-10700K / 32GB RAM</li>
+            <li>STORAGE: 120GB+ (grows with modules)</li>
+            <li>PERIPHERALS: HOTAS highly recommended, rudder pedals ideal</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 100%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 20%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">LEARNING CURVE:</span>
+          <div class="bar"><div class="bar-fill" style="width: 95%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Military aviation enthusiasts, those who want authentic combat procedures. Start with F/A-18C for best learning experience. Expect 30+ hours to become proficient with one aircraft.
+        </div>
+
+        <div class="links">
+          <a href="https://www.digitalcombatsimulator.com/en/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://www.digitalcombatsimulator.com/en/downloads/world/" target="_blank">DOWNLOAD FREE</a>
+          <a href="https://www.digitalcombatsimulator.com/en/shop/" target="_blank">MODULE STORE</a>
+        </div>
+      </div>
+
+      <!-- IL-2 Sturmovik -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>IL-2 Sturmovik: Great Battles</h3>
+          <span class="tag tag-combat">WW2 COMBAT</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">1C Game Studios / 777 Studios</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2013-present (multiple expansions)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows PC</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$49.99 per battle pack (frequent sales)</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">WW2 & WW1 combat simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>IL-2 Sturmovik is the premier World War 2 flight combat simulator. Featuring meticulously researched aircraft from all major nations, dynamic campaigns, and intense multiplayer dogfights. The Great Battles series covers Eastern Front, Western Front, and more.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>100+ flyable WW2 aircraft (including WW1 in Flying Circus)</li>
+            <li>Realistic damage model with detailed component failures</li>
+            <li>Career mode with dynamic progression</li>
+            <li>Tank crew module (ground combat simulation)</li>
+            <li>Excellent VR support</li>
+            <li>Active multiplayer community with dedicated servers</li>
+            <li>Mission editor and scripted campaigns</li>
+            <li>Authentic flight models based on historical documents</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 95%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 88%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 50%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: WW2 history buffs, those who prefer propeller aircraft to jets. Start with Battle of Stalingrad or Battle of Bodenplatte.
+        </div>
+
+        <div class="links">
+          <a href="https://il2sturmovik.com/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://store.steampowered.com/app/307960/" target="_blank">STEAM</a>
+        </div>
+      </div>
+
+      <!-- Falcon BMS -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Falcon BMS (Benchmark Sims)</h3>
+          <span class="tag tag-free">FREE MOD</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Benchmark Sims (community)</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">Ongoing (latest: BMS 4.37)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows (requires Falcon 4.0 base)</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">FREE (need Falcon 4.0 for ~$5)</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">F-16 focused combat simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>A community-developed overhaul of the classic Falcon 4.0. BMS is considered one of the most realistic F-16 simulators available, rivaling DCS in systems depth but with superior dynamic campaign engine. Free and actively developed.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Most detailed F-16C simulation available (block 50/52)</li>
+            <li>Legendary dynamic campaign (theater-wide war simulation)</li>
+            <li>Advanced avionics including Link-16, JHMCS, modern weapons</li>
+            <li>Realistic IFF, radar modes, and SEAD operations</li>
+            <li>Complete with AWACS, tankers, and ground-based command</li>
+            <li>Multiplayer tactical coordination</li>
+            <li>Regular updates from dedicated community</li>
+            <li>Steep but rewarding learning curve</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 98%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 15%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Hardcore F-16 enthusiasts who want dynamic campaign. Graphics are dated but systems simulation is second to none.
+        </div>
+
+        <div class="links">
+          <a href="https://www.benchmarksims.org/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://www.benchmarksims.org/forum/" target="_blank">FORUMS</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 3: FREE & OPEN SOURCE -->
+    <div class="terminal-box">
+      <h2>Free & Open Source Simulators</h2>
+
+      <!-- FlightGear -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>FlightGear</h3>
+          <span class="tag tag-free">100% FREE</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">FlightGear Community (open source)</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">1997 (latest: 2024.1)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows, macOS, Linux</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">FREE (GPL licensed)</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">General aviation simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>FlightGear is a completely free, open-source flight simulator with a solid flight model and active development community. While graphics don't match commercial sims, it's perfect for learning aviation fundamentals without spending money.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>500+ aircraft available for download</li>
+            <li>Realistic flight dynamics using JSBSim engine</li>
+            <li>Global scenery (generated from real elevation data)</li>
+            <li>Full IFR capabilities with working navigation aids</li>
+            <li>Multi-monitor and multi-computer setup support</li>
+            <li>Active modding community</li>
+            <li>Educational use in schools and universities</li>
+            <li>Multiplayer flying capability</li>
+            <li>Can interface with real aviation hardware</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 75%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">GRAPHICS:</span>
+          <div class="bar"><div class="bar-fill" style="width: 50%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">COST:</span>
+          <div class="bar"><div class="bar-fill" style="width: 100%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Budget-conscious beginners, Linux users, students, tinkerers who enjoy customization. Great for learning Cessna 172 fundamentals.
+        </div>
+
+        <div class="links">
+          <a href="https://www.flightgear.org/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://www.flightgear.org/download/" target="_blank">DOWNLOAD</a>
+          <a href="https://wiki.flightgear.org/" target="_blank">WIKI</a>
+        </div>
+      </div>
+
+      <!-- YSFlight -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>YSFlight</h3>
+          <span class="tag tag-free">RETRO CLASSIC</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Soji Yamakawa (individual developer)</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">1999 (still updated!)</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows, macOS, Linux</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">FREE</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Arcade-sim hybrid</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>A charming, lightweight flight simulator that runs on anything. Perfect for casual flying fun with simplified controls. Massive library of user-created aircraft. Great for aerobatics and formation flying without system stress.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>1000+ downloadable aircraft from community</li>
+            <li>Runs on extremely low-end hardware</li>
+            <li>Simple but satisfying flight model</li>
+            <li>Mission editor for custom scenarios</li>
+            <li>Multiplayer dogfights and co-op</li>
+            <li>Great for aerobatic practice</li>
+            <li>Nostalgic retro graphics</li>
+            <li>Perfect introduction to flight sims for kids</li>
+          </ul>
+        </div>
+
+        <div class="rating-bar">
+          <span class="rating-label">REALISM:</span>
+          <div class="bar"><div class="bar-fill" style="width: 40%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">FUN FACTOR:</span>
+          <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+        </div>
+        <div class="rating-bar">
+          <span class="rating-label">BEGINNER FRIENDLY:</span>
+          <div class="bar"><div class="bar-fill" style="width: 95%"></div></div>
+        </div>
+
+        <div class="tip-box">
+          Best for: Absolute beginners, kids, low-end computers, quick casual flying fun. Perfect gateway drug to flight simulation!
+        </div>
+
+        <div class="links">
+          <a href="http://www.ysflight.com/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://ysflight.org/" target="_blank">COMMUNITY</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 4: MOBILE & CASUAL -->
+    <div class="terminal-box">
+      <h2>Mobile & Casual Simulators</h2>
+
+      <!-- Infinite Flight -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Infinite Flight</h3>
+          <span class="tag tag-recommended">BEST MOBILE</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Infinite Flight LLC</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">iOS, Android</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">Free basic / $9.99/month Pro subscription</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Mobile commercial aviation sim</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>60+ aircraft including A350, 787, 777, A320 family</li>
+            <li>Global high-definition scenery</li>
+            <li>Live ATC with human controllers</li>
+            <li>Multiplayer with 1000+ concurrent pilots</li>
+            <li>Virtual Airlines and events</li>
+            <li>Real-world navigation charts</li>
+            <li>Working autopilot and VNAV</li>
+            <li>Best graphics on mobile platform</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Best for: Mobile flight sim enthusiasts, airline operations practice on the go. Pro subscription required for full features.
+        </div>
+
+        <div class="links">
+          <a href="https://infiniteflight.com/" target="_blank">OFFICIAL SITE</a>
+          <a href="https://community.infiniteflight.com/" target="_blank">COMMUNITY</a>
+        </div>
+      </div>
+
+      <!-- RFS Real Flight Simulator -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>RFS - Real Flight Simulator</h3>
+          <span class="tag tag-free">MOBILE</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">RORTOS</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">iOS, Android</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">Free with IAP</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Realistic aircraft systems and procedures</li>
+            <li>Weather simulation</li>
+            <li>Multiplayer capability</li>
+            <li>High-detail airports</li>
+            <li>Flight planning tools</li>
+            <li>More arcade-friendly than Infinite Flight</li>
+          </ul>
+        </div>
+
+        <div class="links">
+          <a href="https://rortos.com/rfs/" target="_blank">OFFICIAL SITE</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 5: ARCADE & GAMING -->
+    <div class="terminal-box">
+      <h2>Arcade & Gaming Platforms</h2>
+
+      <!-- Roblox -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Roblox Flight Simulators</h3>
+          <span class="tag tag-free">KIDS FRIENDLY</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">PLATFORM:</span>
+          <span class="info-value">Roblox</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">Free (optional Robux purchases)</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Casual/educational games</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">POPULAR TITLES:</div>
+          <ul class="spec-list">
+            <li><strong>Pilot Training Flight Simulator (PTFS)</strong> - Most popular, 100+ aircraft, career mode</li>
+            <li><strong>Airplane Simulator</strong> - Progression system, routes, economy</li>
+            <li><strong>Aeronautica</strong> - More realistic controls for Roblox</li>
+            <li><strong>Flight Simulator</strong> - Simple controls, good for young kids</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Best for: Kids 8-14, introducing aviation concepts through play. Not realistic but fun and accessible.
+        </div>
+
+        <div class="links">
+          <a href="https://ptfs.app/" target="_blank">PTFS SITE</a>
+          <a href="https://www.roblox.com/games/20321167/" target="_blank">PTFS GAME</a>
+        </div>
+      </div>
+
+      <!-- War Thunder -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>War Thunder (Sim Mode)</h3>
+          <span class="tag tag-free">FREE-TO-PLAY</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Gaijin Entertainment</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">PC, PlayStation, Xbox</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">Free (with premium options)</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>War Thunder features three modes: Arcade (easy), Realistic (balanced), and Simulator (full sim). Simulator mode offers cockpit-only view, realistic flight models, and authentic combat. Massive selection of historical aircraft from all nations.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>2000+ vehicles including 800+ aircraft</li>
+            <li>WW1 biplanes to modern jets (F-16, MiG-29, etc.)</li>
+            <li>Simulator mode with full controls</li>
+            <li>Historical matchmaking</li>
+            <li>Combined arms battles (planes, tanks, ships)</li>
+            <li>Regular updates and new content</li>
+            <li>Active competitive scene</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Simulator mode requires joystick. Free progression but can be grindy. Great middle ground between arcade and hardcore sims.
+        </div>
+
+        <div class="links">
+          <a href="https://warthunder.com/" target="_blank">OFFICIAL SITE</a>
+        </div>
+      </div>
+
+      <!-- Ace Combat 7 -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Ace Combat 7: Skies Unknown</h3>
+          <span class="tag tag-classic">ARCADE</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Bandai Namco</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">PC, PS4/5, Xbox</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$59.99 (frequent sales)</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Pure arcade action with cinematic flair. Ace Combat focuses on fun over realism with epic storylines, incredible soundtracks, and spectacular combat. VR missions available on PlayStation.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Campaign with Hollywood-style storytelling</li>
+            <li>28 aircraft from F-16 to experimental fighters</li>
+            <li>Simplified controls - easy to pick up</li>
+            <li>Stunning graphics and weather effects</li>
+            <li>VR missions (PSVR)</li>
+            <li>Multiplayer dogfights</li>
+            <li>Best played with controller</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Best for: Action fans who want flight combat without complexity. Perfect couch gaming experience.
+        </div>
+
+        <div class="links">
+          <a href="https://www.bandainamcoent.com/games/ace-combat-7" target="_blank">OFFICIAL SITE</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 6: CLASSIC & RETRO -->
+    <div class="terminal-box">
+      <h2>Classic & Retro Simulators</h2>
+
+      <!-- Microsoft Flight Simulator X -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Microsoft Flight Simulator X (FSX)</h3>
+          <span class="tag tag-classic">LEGENDARY</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Microsoft / Aces Game Studio</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2006</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows PC</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$24.99 Steam Edition</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>The legendary simulator that defined a generation. While outdated graphically, FSX still has the largest add-on library in history. Thousands of freeware aircraft and scenery available. Runs perfectly on modern low-end PCs.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">WHY STILL RELEVANT:</div>
+          <ul class="spec-list">
+            <li>Massive freeware add-on library (decades of content)</li>
+            <li>Runs on potato PCs</li>
+            <li>Study-level aircraft (PMDG, A2A, Carenado legacy)</li>
+            <li>Complete mission creator</li>
+            <li>Nostalgic value for veteran simmers</li>
+            <li>Still used in some training applications</li>
+            <li>Great for learning fundamentals</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Despite being 19 years old, FSX remains playable and educational. Consider it if you have a weak PC or want access to massive freeware library.
+        </div>
+
+        <div class="links">
+          <a href="https://store.steampowered.com/app/314160/" target="_blank">STEAM</a>
+        </div>
+      </div>
+
+      <!-- Microsoft Combat Flight Simulator -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Microsoft Combat Flight Simulator Series</h3>
+          <span class="tag tag-classic">RETRO</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">GAMES:</span>
+          <span class="info-value">CFS1 (WW2 Europe), CFS2 (Pacific), CFS3 (Europe)</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">1998-2002</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Classic WW2 combat sims from Microsoft. While primitive by today's standards, they offer nostalgic value and run on absolutely anything. CFS3 had dynamic campaign ahead of its time.</p>
+        </div>
+
+        <div class="tip-box">
+          Historical interest only. For WW2 combat, play IL-2 Sturmovik instead.
+        </div>
+      </div>
+
+      <!-- Fly! and Fly! 2K -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Fly! / Fly! 2K</h3>
+          <span class="tag tag-classic">CULT CLASSIC</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Terminal Reality</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">1999-2000</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Revolutionary for its time with accurate systems simulation and advanced weather. Featured detailed Cessna 182, Learjet 45, and Boeing 737. Beloved by retro sim enthusiasts but hard to find/run today.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">HISTORICAL SIGNIFICANCE:</div>
+          <ul class="spec-list">
+            <li>First sim with proper GPS simulation</li>
+            <li>Advanced weather modeling for the era</li>
+            <li>Realistic IFR procedures</li>
+            <li>Pioneered many features now standard</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 7: SPECIALTY SIMULATORS -->
+    <div class="terminal-box">
+      <h2>Specialty Simulators</h2>
+
+      <!-- Condor 2 -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Condor 2 Soaring Simulator</h3>
+          <span class="tag tag-recommended">GLIDING</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">IPACS</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows PC</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$49.99</span>
+
+          <span class="info-label">TYPE:</span>
+          <span class="info-value">Glider / Sailplane simulation</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>THE definitive glider/sailplane simulator. Used by real glider pilots for training. Features realistic thermal modeling, ridge lift, wave lift, and weather systems. Participate in online competitions and multiplayer soaring.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Realistic soaring physics and thermal modeling</li>
+            <li>25+ gliders from training to competition class</li>
+            <li>Real-world scenery for popular soaring locations</li>
+            <li>Online multiplayer competitions</li>
+            <li>Task and race systems</li>
+            <li>Used for actual glider pilot training</li>
+            <li>Detailed aerotow and winch launch</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Best for: Glider enthusiasts, energy management practice, peaceful soaring. Completely different experience from powered flight.
+        </div>
+
+        <div class="links">
+          <a href="https://www.condorsoaring.com/" target="_blank">OFFICIAL SITE</a>
+        </div>
+      </div>
+
+      <!-- Take On Helicopters -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>Take On Helicopters</h3>
+          <span class="tag tag-classic">HELICOPTER</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">DEVELOPER:</span>
+          <span class="info-value">Bohemia Interactive</span>
+
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2011</span>
+
+          <span class="info-label">PLATFORMS:</span>
+          <span class="info-value">Windows PC</span>
+
+          <span class="info-label">PRICE:</span>
+          <span class="info-value">$9.99</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Civilian helicopter simulation with campaign mode. Based on Arma engine. Features authentic helicopter flight models and various civilian missions like cargo transport, search and rescue, firefighting.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">KEY FEATURES:</div>
+          <ul class="spec-list">
+            <li>Multiple helicopters (Robinson R22, Bell 206, MD 500, etc.)</li>
+            <li>Campaign with business management</li>
+            <li>Realistic flight model with advanced mode</li>
+            <li>Seattle environs scenery</li>
+            <li>Mission editor</li>
+            <li>Good introduction to rotary wing</li>
+          </ul>
+        </div>
+
+        <div class="tip-box">
+          Good for learning helicopter basics before jumping into DCS Apache/Huey. Dated but functional.
+        </div>
+
+        <div class="links">
+          <a href="https://store.steampowered.com/app/65730/" target="_blank">STEAM</a>
+        </div>
+      </div>
+
+      <!-- Microsoft Flight Simulator 2004 -->
+      <div class="sim-card">
+        <div class="sim-title-bar">
+          <h3>FS2004 (Flight Simulator 9)</h3>
+          <span class="tag tag-classic">RETRO</span>
+        </div>
+
+        <div class="info-grid">
+          <span class="info-label">RELEASE:</span>
+          <span class="info-value">2003 (100th anniversary of flight)</span>
+
+          <span class="info-label">STATUS:</span>
+          <span class="info-value">Abandonware / Legacy</span>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">OVERVIEW:</div>
+          <p>Predecessor to FSX, commemorating 100 years since Wright Brothers. Still beloved for its stability and massive add-on library. Simpler graphics but rock-solid performance. Many consider it more stable than FSX.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">WHY SOME STILL USE IT:</div>
+          <ul class="spec-list">
+            <li>More stable than FSX on some systems</li>
+            <li>Huge freeware library</li>
+            <li>Lower system requirements than FSX</li>
+            <li>Nostalgic value</li>
+            <li>Good for very old PCs</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUICK SELECTION GUIDE -->
+    <div class="terminal-box">
+      <h2>Quick Selection Guide</h2>
+
+      <div class="detail-section">
+        <div class="detail-title">IF YOU WANT...</div>
+
+        <div class="spec-list">
+          <li><strong>BEST GRAPHICS & IMMERSION:</strong> Microsoft Flight Simulator 2024</li>
+          <li><strong>MOST REALISTIC FLIGHT MODEL:</strong> X-Plane 12</li>
+          <li><strong>MILITARY COMBAT SIMULATION:</strong> DCS World</li>
+          <li><strong>WW2 COMBAT:</strong> IL-2 Sturmovik</li>
+          <li><strong>COMPLETELY FREE:</strong> FlightGear or DCS World (base)</li>
+          <li><strong>MOBILE DEVICE:</strong> Infinite Flight</li>
+          <li><strong>BEST PERFORMANCE:</strong> Aerofly FS 4</li>
+          <li><strong>PROFESSIONAL TRAINING:</strong> X-Plane 12 or Prepar3D</li>
+          <li><strong>FOR KIDS:</strong> Roblox PTFS or YSFlight</li>
+          <li><strong>ARCADE ACTION:</strong> Ace Combat 7</li>
+          <li><strong>GLIDER/SOARING:</strong> Condor 2</li>
+          <li><strong>BUDGET PC:</strong> FlightGear or FSX</li>
+          <li><strong>F-16 SPECIALIST:</strong> Falcon BMS</li>
+          <li><strong>VR EXPERIENCE:</strong> MSFS 2024 or Aerofly FS 4</li>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-title">BEGINNER PATH:</div>
+        <ul class="spec-list">
+          <li>START: MSFS 2024 with assists on OR FlightGear (free)</li>
+          <li>LEARN: Basic controls with Cessna 172</li>
+          <li>PROGRESS: Disable assists gradually</li>
+          <li>ADVANCE: Try IFR in X-Plane 12</li>
+          <li>OPTIONAL: Explore combat in DCS World</li>
+        </ul>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-title">HARDWARE RECOMMENDATIONS:</div>
+        <ul class="spec-list">
+          <li><strong>MINIMUM:</strong> Logitech Extreme 3D Pro joystick ($30-40)</li>
+          <li><strong>BETTER:</strong> Thrustmaster T.16000M FCS HOTAS ($100-150)</li>
+          <li><strong>SERIOUS:</strong> VKB Gladiator NXT + TWCS Throttle ($200-300)</li>
+          <li><strong>YOKE OPTION:</strong> Honeycomb Alpha + Bravo ($400-500)</li>
+          <li><strong>COMBAT:</strong> VKB or Virpil HOTAS + rudder pedals ($500+)</li>
+          <li><strong>VR:</strong> Meta Quest 3 or Valve Index for best experience</li>
+        </ul>
+      </div>
+
+      <div class="tip-box">
+        Don't buy expensive hardware until you've flown 20+ hours. Many people think they need a $500 setup but quit after a week. Start with a basic $40 joystick!
+      </div>
+    </div>
+
+    <!-- LEARNING RESOURCES -->
+    <div class="terminal-box">
+      <h2>Learning Resources</h2>
+
+      <div class="detail-section">
+        <div class="detail-title">YOUTUBE CHANNELS:</div>
+        <ul class="spec-list">
+          <li><strong>Airforceproud95</strong> - Comedy + ATC chaos (great entertainment)</li>
+          <li><strong>320 Sim Pilot</strong> - Airbus tutorial king</li>
+          <li><strong>P Gatcomb</strong> - Excellent MSFS tutorials</li>
+          <li><strong>The Grim Reapers</strong> - DCS tutorials and missions</li>
+          <li><strong>Matt Davies</strong> - X-Plane 12 tutorials</li>
+          <li><strong>Squirrel</strong> - DCS helicopter master</li>
+          <li><strong>Angle of Attack</strong> - Professional instruction</li>
+        </ul>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-title">COMMUNITIES:</div>
+        <ul class="spec-list">
+          <li>Reddit: r/flightsim, r/MicrosoftFlightSim, r/hoggit (DCS)</li>
+          <li>Forums: FlightSim.to, X-Plane.org, Mudspike.com</li>
+          <li>Discord: Various sim-specific servers with thousands of members</li>
+          <li>VATSIM/IVAO: Online flying with real ATC</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>Flight Simulator Guide 2025</p>
+      <p>Updated December 2025</p>
+      <p style="margin-top: 1rem;">Happy Flying! ✈️</p>
+    </div>
+
+  </div>
+
+<script src="/livereload.js"></script>
+</body>
+</html>

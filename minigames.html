@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Mini Games</title>
+  <meta name="description" content="Play fun flight-themed mini games while you learn about flight simulators.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 36px;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .game-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.3s;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+
+    .game-card h2 {
+      color: var(--accent);
+      font-size: 24px;
+      margin-bottom: 1rem;
+    }
+
+    .game-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-alt);
+    }
+
+    .game-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .game-modal.active {
+      display: flex;
+    }
+
+    .game-content {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--accent-light);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .game-canvas {
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+      border: 2px solid var(--border-light);
+      border-radius: 8px;
+      margin: 1rem auto;
+      display: block;
+      background: #87ceeb;
+    }
+
+    .game-controls {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .game-score {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .game-instructions {
+      background: var(--accent-light);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .game-instructions h3 {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .aircraft-btn, .livery-btn {
+      padding: 0.75rem;
+      border: 2px solid var(--border-light);
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+    }
+
+    .aircraft-btn strong {
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    .aircraft-btn small {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .aircraft-btn:hover, .livery-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .aircraft-btn.active, .livery-btn.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .aircraft-btn.active strong,
+    .aircraft-btn.active small {
+      color: #fff;
+    }
+
+    .livery-btn {
+      padding: 0.5rem 1rem;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .game-canvas {
+        height: 300px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware</a>
+        <a href="addons.html" class="nav-link">Add-ons</a>
+        <a href="map.html" class="nav-link">Coverage Map</a>
+        <a href="sys-req-calc.html" class="nav-link">System Check</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1>Mini Games</h1>
+      <p class="subtitle">Take a break with these fun flight-themed games!</p>
+    </div>
+
+    <div class="games-grid">
+      <div class="game-card" onclick="openGame('flappy')">
+        <h2>✈️ Flappy Plane</h2>
+        <p>Navigate your plane through obstacles! Tap or press Space to fly. How far can you go?</p>
+        <button class="btn">Play Now</button>
+      </div>
+
+      <div class="game-card" onclick="openGame('landing')">
+        <h2>🛬 Perfect Landing</h2>
+        <p>Test your landing skills! Use arrow keys to control your descent and land smoothly on the runway.</p>
+        <button class="btn">Play Now</button>
+      </div>
+
+      <div class="game-card" onclick="openGame('memory')">
+        <h2>🎮 Aircraft Memory</h2>
+        <p>Match pairs of aircraft cards! Click to flip cards and find matching pairs. Beat your best time!</p>
+        <button class="btn">Play Now</button>
+      </div>
+    </div>
+
+    <!-- Flappy Plane Game -->
+    <div id="flappyModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('flappy')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Flappy Plane</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p><strong>HOLD</strong> SPACE or click and hold to engage thrust - the longer you hold, the more power you get! Release to let gravity take over. Navigate through obstacles and see how far you can fly!</p>
+          <p>💡 <em>Tip: Use short bursts for precise control, or hold longer for more lift.</em></p>
+        </div>
+        <div class="game-score">Score: <span id="flappyScore">0</span></div>
+
+        <!-- Aircraft Selection -->
+        <div id="aircraftSelection" style="margin-bottom: 1rem;">
+          <h3 style="color: var(--accent); margin-bottom: 0.75rem; font-size: 16px;">Select Your Aircraft:</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+            <button class="aircraft-btn active" data-aircraft="f16">
+              <strong>F-16 Fighting Falcon</strong>
+              <small>Multirole Fighter</small>
+            </button>
+            <button class="aircraft-btn" data-aircraft="f22">
+              <strong>F-22 Raptor</strong>
+              <small>Air Superiority</small>
+            </button>
+            <button class="aircraft-btn" data-aircraft="su27">
+              <strong>Su-27 Flanker</strong>
+              <small>Russian Fighter</small>
+            </button>
+            <button class="aircraft-btn" data-aircraft="mig29">
+              <strong>MiG-29 Fulcrum</strong>
+              <small>Soviet Interceptor</small>
+            </button>
+          </div>
+
+          <h3 style="color: var(--accent); margin-bottom: 0.75rem; font-size: 16px;">Choose Livery:</h3>
+          <div id="liverySelection" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <!-- Liveries will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <canvas id="flappyCanvas" class="game-canvas"></canvas>
+        <div class="game-controls">
+          <button class="btn" id="flappyStart">Start Game</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Landing Game -->
+    <div id="landingModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('landing')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Perfect Landing</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Use ← → arrow keys to move left/right. Use ↓ to descend faster. Land gently on the runway for a perfect score!</p>
+        </div>
+        <div class="game-score">Altitude: <span id="landingAlt">1000</span>m | Speed: <span id="landingSpeed">0</span> m/s</div>
+        <canvas id="landingCanvas" class="game-canvas"></canvas>
+        <div class="game-controls">
+          <button class="btn" id="landingStart">Start Landing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory Game -->
+    <div id="memoryModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('memory')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Aircraft Memory</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Click cards to flip them. Find matching pairs of aircraft. Match all pairs to win!</p>
+        </div>
+        <div class="game-score">Moves: <span id="memoryMoves">0</span> | Pairs: <span id="memoryPairs">0</span>/8</div>
+        <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 600px; margin: 1rem auto;"></div>
+        <div class="game-controls">
+          <button class="btn" id="memoryStart">New Game</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/livereload.js"></script>
+  <script>
+    // Dark Mode Toggle with automatic system preference detection
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const html = document.documentElement;
+
+    // Detect system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Check for saved theme preference, or use system preference
+    const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    html.setAttribute('data-theme', savedTheme);
+    darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+    // Listen for system preference changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      // Only auto-switch if user hasn't manually set a preference
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        html.setAttribute('data-theme', newTheme);
+        darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      }
+    });
+
+    darkModeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+
+    // Game Modal Functions
+    function openGame(game) {
+      document.getElementById(game + 'Modal').classList.add('active');
+    }
+
+    function closeGame(game) {
+      document.getElementById(game + 'Modal').classList.remove('active');
+      // Stop any running games
+      if (game === 'flappy') stopFlappyGame();
+      if (game === 'landing') stopLandingGame();
+    }
+
+    // Aircraft livery data
+    const aircraftLiveries = {
+      f16: {
+        name: 'F-16 Fighting Falcon',
+        liveries: {
+          usaf: { name: 'USAF Gray', primary: '#8b8b8b', secondary: '#6b6b6b', accent: '#4a4a4a' },
+          thunderbirds: { name: 'Thunderbirds', primary: '#e63946', secondary: '#1d3557', accent: '#f1faee' },
+          viper: { name: 'Viper Demo', primary: '#2a9d8f', secondary: '#264653', accent: '#e76f51' },
+          desert: { name: 'Desert Storm', primary: '#d4a574', secondary: '#a67c52', accent: '#8b6f47' }
+        }
+      },
+      f22: {
+        name: 'F-22 Raptor',
+        liveries: {
+          usaf: { name: 'USAF Gray', primary: '#7a7a7a', secondary: '#5a5a5a', accent: '#3a3a3a' },
+          raptor: { name: 'Raptor Demo', primary: '#1a1a2e', secondary: '#16213e', accent: '#0f3460' },
+          alaska: { name: 'Alaska', primary: '#457b9d', secondary: '#1d3557', accent: '#a8dadc' },
+          aggressor: { name: 'Aggressor', primary: '#2d6a4f', secondary: '#1b4332', accent: '#74c69d' }
+        }
+      },
+      su27: {
+        name: 'Su-27 Flanker',
+        liveries: {
+          russian: { name: 'Russian AF', primary: '#5c7a99', secondary: '#4a5f7a', accent: '#2d3e50' },
+          knights: { name: 'Russian Knights', primary: '#0077b6', secondary: '#023e8a', accent: '#ffffff' },
+          flanker: { name: 'Blue Flanker', primary: '#3a86ff', secondary: '#0066cc', accent: '#001d3d' },
+          ukraine: { name: 'Ukrainian', primary: '#0057b7', secondary: '#ffd700', accent: '#004494' }
+        }
+      },
+      mig29: {
+        name: 'MiG-29 Fulcrum',
+        liveries: {
+          russian: { name: 'Russian AF', primary: '#6b8e9f', secondary: '#577080', accent: '#3d5260' },
+          strizhi: { name: 'Strizhi', primary: '#c1121f', secondary: '#780000', accent: '#ffffff' },
+          fulcrum: { name: 'Gray Fulcrum', primary: '#606c72', secondary: '#4a545a', accent: '#2d3439' },
+          export: { name: 'Export', primary: '#8b7355', secondary: '#6b5842', accent: '#4a3c2d' }
+        }
+      }
+    };
+
+    // Selected aircraft and livery
+    let selectedAircraft = 'f16';
+    let selectedLivery = 'usaf';
+
+    // F-16 Fighting Falcon - Realistic Angular Design
+    function drawF16(ctx, x, y, size, angle = 0, livery) {
+      const colors = livery || aircraftLiveries.f16.liveries.usaf;
+
+      ctx.save();
+      ctx.translate(x + size / 2, y + size / 2);
+      ctx.rotate(angle);
+      ctx.translate(-size / 2, -size / 2);
+
+      const w = size;
+      const h = size;
+
+      // MAIN DELTA WINGS - F-16's characteristic swept wings
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.35, h * 0.5); // Wing root
+      ctx.lineTo(w * 0.05, h * 0.05); // Wing tip top
+      ctx.lineTo(w * 0.15, h * 0.42); // Trailing edge top
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.35, h * 0.5); // Wing root
+      ctx.lineTo(w * 0.05, h * 0.95); // Wing tip bottom
+      ctx.lineTo(w * 0.15, h * 0.58); // Trailing edge bottom
+      ctx.closePath();
+      ctx.fill();
+
+      // HORIZONTAL STABILIZERS (small tail wings)
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.15, h * 0.5);
+      ctx.lineTo(w * 0.01, h * 0.28);
+      ctx.lineTo(w * 0.08, h * 0.44);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.15, h * 0.5);
+      ctx.lineTo(w * 0.01, h * 0.72);
+      ctx.lineTo(w * 0.08, h * 0.56);
+      ctx.closePath();
+      ctx.fill();
+
+      // VERTICAL TAIL (single fin)
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.18, h * 0.5);
+      ctx.lineTo(w * 0.08, h * 0.12);
+      ctx.lineTo(w * 0.13, h * 0.2);
+      ctx.lineTo(w * 0.22, h * 0.48);
+      ctx.closePath();
+      ctx.fill();
+
+      // MAIN FUSELAGE - slim cylindrical body
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.10, h * 0.46);
+      ctx.lineTo(w * 0.88, h * 0.45);
+      ctx.lineTo(w * 0.98, h * 0.5);
+      ctx.lineTo(w * 0.88, h * 0.55);
+      ctx.lineTo(w * 0.10, h * 0.54);
+      ctx.closePath();
+      ctx.fill();
+
+      // Top fuselage stripe
+      ctx.fillStyle = colors.secondary;
+      ctx.fillRect(w * 0.3, h * 0.46, w * 0.45, h * 0.01);
+
+      // COCKPIT CANOPY - bubble style
+      ctx.fillStyle = 'rgba(40, 60, 100, 0.6)';
+      ctx.beginPath();
+      ctx.ellipse(w * 0.68, h * 0.5, w * 0.08, h * 0.055, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Canopy frame
+      ctx.strokeStyle = '#222';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // AIR INTAKE (chin-mounted, F-16 signature feature)
+      ctx.fillStyle = '#111';
+      ctx.fillRect(w * 0.48, h * 0.54, w * 0.12, h * 0.05);
+
+      // ENGINE EXHAUST
+      ctx.fillStyle = '#0a0a0a';
+      ctx.beginPath();
+      ctx.arc(w * 0.11, h * 0.5, h * 0.035, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Exhaust glow
+      ctx.fillStyle = 'rgba(255, 100, 30, 0.3)';
+      ctx.beginPath();
+      ctx.arc(w * 0.11, h * 0.5, h * 0.025, 0, Math.PI * 2);
+      ctx.fill();
+
+      // NOSE CONE
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.88, h * 0.45);
+      ctx.lineTo(w * 0.98, h * 0.5);
+      ctx.lineTo(w * 0.88, h * 0.55);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // F-22 Raptor - Stealth Angular Design
+    function drawF22(ctx, x, y, size, angle = 0, livery) {
+      const colors = livery || aircraftLiveries.f22.liveries.usaf;
+
+      ctx.save();
+      ctx.translate(x + size / 2, y + size / 2);
+      ctx.rotate(angle);
+      ctx.translate(-size / 2, -size / 2);
+
+      const w = size;
+      const h = size;
+
+      // MAIN WINGS - swept trapezoid (stealth design)
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.38, h * 0.5);
+      ctx.lineTo(w * 0.08, h * 0.08);
+      ctx.lineTo(w * 0.18, h * 0.42);
+      ctx.lineTo(w * 0.48, h * 0.48);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.38, h * 0.5);
+      ctx.lineTo(w * 0.08, h * 0.92);
+      ctx.lineTo(w * 0.18, h * 0.58);
+      ctx.lineTo(w * 0.48, h * 0.52);
+      ctx.closePath();
+      ctx.fill();
+
+      // V-TAIL (canted twin tails - F-22 signature)
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.2, h * 0.5);
+      ctx.lineTo(w * 0.08, h * 0.18);
+      ctx.lineTo(w * 0.14, h * 0.46);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.2, h * 0.5);
+      ctx.lineTo(w * 0.08, h * 0.82);
+      ctx.lineTo(w * 0.14, h * 0.54);
+      ctx.closePath();
+      ctx.fill();
+
+      // MAIN FUSELAGE - wide flat body (stealth)
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.12, h * 0.44);
+      ctx.lineTo(w * 0.85, h * 0.44);
+      ctx.lineTo(w * 0.98, h * 0.5);
+      ctx.lineTo(w * 0.85, h * 0.56);
+      ctx.lineTo(w * 0.12, h * 0.56);
+      ctx.closePath();
+      ctx.fill();
+
+      // CHINES (angular fuselage edges)
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.5, h * 0.44);
+      ctx.lineTo(w * 0.85, h * 0.44);
+      ctx.lineTo(w * 0.85, h * 0.46);
+      ctx.lineTo(w * 0.5, h * 0.46);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.5, h * 0.56);
+      ctx.lineTo(w * 0.85, h * 0.56);
+      ctx.lineTo(w * 0.85, h * 0.54);
+      ctx.lineTo(w * 0.5, h * 0.54);
+      ctx.closePath();
+      ctx.fill();
+
+      // COCKPIT - angular stealth canopy
+      ctx.fillStyle = 'rgba(30, 40, 60, 0.7)';
+      ctx.beginPath();
+      ctx.moveTo(w * 0.62, h * 0.46);
+      ctx.lineTo(w * 0.76, h * 0.46);
+      ctx.lineTo(w * 0.76, h * 0.54);
+      ctx.lineTo(w * 0.62, h * 0.54);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // ENGINE INTAKES (rectangular, stealth design)
+      ctx.fillStyle = '#0d0d0d';
+      ctx.fillRect(w * 0.38, h * 0.42, w * 0.1, h * 0.03);
+      ctx.fillRect(w * 0.38, h * 0.55, w * 0.1, h * 0.03);
+
+      // ENGINE NOZZLES (dual engines)
+      ctx.fillStyle = '#080808';
+      ctx.fillRect(w * 0.12, h * 0.46, w * 0.04, h * 0.02);
+      ctx.fillRect(w * 0.12, h * 0.52, w * 0.04, h * 0.02);
+
+      // Exhaust glow
+      ctx.fillStyle = 'rgba(255, 100, 30, 0.25)';
+      ctx.fillRect(w * 0.115, h * 0.465, w * 0.025, h * 0.015);
+      ctx.fillRect(w * 0.115, h * 0.52, w * 0.025, h * 0.015);
+
+      // NOSE CONE - sharp angular
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.85, h * 0.44);
+      ctx.lineTo(w * 0.98, h * 0.5);
+      ctx.lineTo(w * 0.85, h * 0.56);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Su-27 Flanker - Heavy Fighter Design
+    function drawSu27(ctx, x, y, size, angle = 0, livery) {
+      const colors = livery || aircraftLiveries.su27.liveries.russian;
+
+      ctx.save();
+      ctx.translate(x + size / 2, y + size / 2);
+      ctx.rotate(angle);
+      ctx.translate(-size / 2, -size / 2);
+
+      const w = size;
+      const h = size;
+
+      // MAIN WINGS - large swept wings (Flanker signature)
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.4, h * 0.5);
+      ctx.lineTo(w * 0.03, h * 0.06);
+      ctx.lineTo(w * 0.15, h * 0.4);
+      ctx.lineTo(w * 0.5, h * 0.47);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.4, h * 0.5);
+      ctx.lineTo(w * 0.03, h * 0.94);
+      ctx.lineTo(w * 0.15, h * 0.6);
+      ctx.lineTo(w * 0.5, h * 0.53);
+      ctx.closePath();
+      ctx.fill();
+
+      // TWIN VERTICAL TAILS (distinctive Flanker feature)
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.2, h * 0.38);
+      ctx.lineTo(w * 0.08, h * 0.12);
+      ctx.lineTo(w * 0.15, h * 0.2);
+      ctx.lineTo(w * 0.25, h * 0.42);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.2, h * 0.62);
+      ctx.lineTo(w * 0.08, h * 0.88);
+      ctx.lineTo(w * 0.15, h * 0.8);
+      ctx.lineTo(w * 0.25, h * 0.58);
+      ctx.closePath();
+      ctx.fill();
+
+      // TWIN FUSELAGE BOOMS (wide body)
+      ctx.fillStyle = colors.primary;
+      ctx.fillRect(w * 0.12, h * 0.39, w * 0.73, h * 0.05);
+      ctx.fillRect(w * 0.12, h * 0.56, w * 0.73, h * 0.05);
+
+      // CENTER FUSELAGE
+      ctx.fillStyle = colors.secondary;
+      ctx.fillRect(w * 0.4, h * 0.44, w * 0.42, h * 0.12);
+
+      // COCKPIT
+      ctx.fillStyle = 'rgba(40, 60, 90, 0.65)';
+      ctx.beginPath();
+      ctx.ellipse(w * 0.68, h * 0.5, w * 0.085, h * 0.06, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // AIR INTAKES (under-fuselage)
+      ctx.fillStyle = '#0f0f0f';
+      ctx.fillRect(w * 0.42, h * 0.44, w * 0.08, h * 0.025);
+      ctx.fillRect(w * 0.42, h * 0.535, w * 0.08, h * 0.025);
+
+      // TWIN ENGINE EXHAUSTS (dual nozzles)
+      ctx.fillStyle = '#0a0a0a';
+      ctx.beginPath();
+      ctx.arc(w * 0.14, h * 0.415, h * 0.028, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(w * 0.14, h * 0.585, h * 0.028, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Exhaust glow
+      ctx.fillStyle = 'rgba(255, 100, 30, 0.3)';
+      ctx.beginPath();
+      ctx.arc(w * 0.14, h * 0.415, h * 0.018, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(w * 0.14, h * 0.585, h * 0.018, 0, Math.PI * 2);
+      ctx.fill();
+
+      // NOSE CONE
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.82, h * 0.44);
+      ctx.lineTo(w * 0.97, h * 0.5);
+      ctx.lineTo(w * 0.82, h * 0.56);
+      ctx.closePath();
+      ctx.fill();
+
+      // LERX (leading edge root extensions)
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.5, h * 0.44);
+      ctx.lineTo(w * 0.38, h * 0.38);
+      ctx.lineTo(w * 0.48, h * 0.47);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.5, h * 0.56);
+      ctx.lineTo(w * 0.38, h * 0.62);
+      ctx.lineTo(w * 0.48, h * 0.53);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // MiG-29 Fulcrum - Compact Fighter Design
+    function drawMig29(ctx, x, y, size, angle = 0, livery) {
+      const colors = livery || aircraftLiveries.mig29.liveries.russian;
+
+      ctx.save();
+      ctx.translate(x + size / 2, y + size / 2);
+      ctx.rotate(angle);
+      ctx.translate(-size / 2, -size / 2);
+
+      const w = size;
+      const h = size;
+
+      // MAIN WINGS - medium swept wings
+      ctx.fillStyle = colors.secondary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.38, h * 0.5);
+      ctx.lineTo(w * 0.06, h * 0.1);
+      ctx.lineTo(w * 0.18, h * 0.42);
+      ctx.lineTo(w * 0.48, h * 0.48);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.38, h * 0.5);
+      ctx.lineTo(w * 0.06, h * 0.9);
+      ctx.lineTo(w * 0.18, h * 0.58);
+      ctx.lineTo(w * 0.48, h * 0.52);
+      ctx.closePath();
+      ctx.fill();
+
+      // TWIN VERTICAL TAILS (MiG-29 signature)
+      ctx.fillStyle = colors.primary;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.22, h * 0.42);
+      ctx.lineTo(w * 0.1, h * 0.16);
+      ctx.lineTo(w * 0.16, h * 0.24);
+      ctx.lineTo(w * 0.27, h * 0.44);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.22, h * 0.58);
+      ctx.lineTo(w * 0.1, h * 0.84);
+      ctx.lineTo(w * 0.16, h * 0.76);
+      ctx.lineTo(w * 0.27, h * 0.56);
+      ctx.closePath();
+      ctx.fill();
+
+      // TWIN FUSELAGE NACELLES (compact design)
+      ctx.fillStyle = colors.primary;
+      ctx.fillRect(w * 0.15, h * 0.41, w * 0.68, h * 0.045);
+      ctx.fillRect(w * 0.15, h * 0.545, w * 0.68, h * 0.045);
+
+      // CENTER FUSELAGE (narrower than Su-27)
+      ctx.fillStyle = colors.secondary;
+      ctx.fillRect(w * 0.42, h * 0.455, w * 0.38, h * 0.09);
+
+      // COCKPIT
+      ctx.fillStyle = 'rgba(35, 55, 85, 0.7)';
+      ctx.beginPath();
+      ctx.ellipse(w * 0.7, h * 0.5, w * 0.075, h * 0.055, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#181818';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // AIR INTAKES (top-mounted, MiG-29 feature)
+      ctx.fillStyle = '#111';
+      ctx.fillRect(w * 0.4, h * 0.41, w * 0.08, h * 0.028);
+      ctx.fillRect(w * 0.4, h * 0.562, w * 0.08, h * 0.028);
+
+      // TWIN ENGINE EXHAUSTS
+      ctx.fillStyle = '#090909';
+      ctx.beginPath();
+      ctx.arc(w * 0.17, h * 0.433, h * 0.026, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(w * 0.17, h * 0.567, h * 0.026, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Exhaust glow
+      ctx.fillStyle = 'rgba(255, 100, 30, 0.28)';
+      ctx.beginPath();
+      ctx.arc(w * 0.17, h * 0.433, h * 0.016, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(w * 0.17, h * 0.567, h * 0.016, 0, Math.PI * 2);
+      ctx.fill();
+
+      // NOSE CONE
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.8, h * 0.455);
+      ctx.lineTo(w * 0.96, h * 0.5);
+      ctx.lineTo(w * 0.8, h * 0.545);
+      ctx.closePath();
+      ctx.fill();
+
+      // LERX (Leading Edge Root Extensions)
+      ctx.fillStyle = colors.accent;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.48, h * 0.455);
+      ctx.lineTo(w * 0.36, h * 0.4);
+      ctx.lineTo(w * 0.46, h * 0.48);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(w * 0.48, h * 0.545);
+      ctx.lineTo(w * 0.36, h * 0.6);
+      ctx.lineTo(w * 0.46, h * 0.52);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Master draw function that routes to the correct aircraft
+    function drawAircraft(ctx, x, y, size, angle = 0) {
+      const livery = aircraftLiveries[selectedAircraft].liveries[selectedLivery];
+
+      switch(selectedAircraft) {
+        case 'f16':
+          drawF16(ctx, x, y, size, angle, livery);
+          break;
+        case 'f22':
+          drawF22(ctx, x, y, size, angle, livery);
+          break;
+        case 'su27':
+          drawSu27(ctx, x, y, size, angle, livery);
+          break;
+        case 'mig29':
+          drawMig29(ctx, x, y, size, angle, livery);
+          break;
+        default:
+          drawF16(ctx, x, y, size, angle, livery);
+      }
+    }
+
+    // FLAPPY PLANE GAME
+    let flappyGame = null;
+    const flappyCanvas = document.getElementById('flappyCanvas');
+    const flappyCtx = flappyCanvas.getContext('2d');
+    flappyCanvas.width = 600;
+    flappyCanvas.height = 400;
+
+    // Track space key state for variable thrust
+    let spacePressed = false;
+    let thrustPower = 0;
+
+    function startFlappyGame() {
+      if (flappyGame) return;
+
+      flappyGame = {
+        plane: { x: 100, y: 200, velocity: 0, size: 20 },
+        obstacles: [],
+        score: 0,
+        frame: 0,
+        running: true,
+        thrustActive: false
+      };
+
+      spacePressed = false;
+      thrustPower = 0;
+      document.getElementById('flappyScore').textContent = '0';
+      console.log('Flappy game started!'); // Debug log
+      gameLoop();
+    }
+
+    function stopFlappyGame() {
+      if (flappyGame) flappyGame.running = false;
+      flappyGame = null;
+      spacePressed = false;
+      thrustPower = 0;
+    }
+
+    function startThrust() {
+      if (flappyGame && flappyGame.running) {
+        spacePressed = true;
+        if (thrustPower === 0) {
+          thrustPower = 0;
+        }
+      }
+    }
+
+    function stopThrust() {
+      spacePressed = false;
+      thrustPower = 0;
+      if (flappyGame) flappyGame.thrustActive = false;
+    }
+
+    function gameLoop() {
+      if (!flappyGame || !flappyGame.running) return;
+
+      const g = flappyGame;
+      g.frame++;
+
+      // Update plane with improved control
+      // Variable thrust based on how long space is held
+      if (spacePressed) {
+        thrustPower = Math.min(thrustPower + 0.5, 6); // Build up thrust power
+        g.plane.velocity -= thrustPower * 0.3; // Apply upward thrust
+        g.thrustActive = true;
+      } else {
+        g.thrustActive = false;
+      }
+
+      // Smoother gravity with velocity damping
+      g.plane.velocity += 0.4; // Reduced gravity for better control
+      g.plane.velocity *= 0.98; // Air resistance for smoother feel
+
+      // Clamp velocity for better control
+      g.plane.velocity = Math.max(Math.min(g.plane.velocity, 10), -10);
+
+      g.plane.y += g.plane.velocity;
+
+      // Add obstacles
+      if (g.frame % 90 === 0) {
+        const gap = 150;
+        const minHeight = 50;
+        const maxHeight = flappyCanvas.height - gap - 50;
+        const height = Math.random() * (maxHeight - minHeight) + minHeight;
+        g.obstacles.push({ x: flappyCanvas.width, top: height, gap: gap });
+      }
+
+      // Update obstacles
+      g.obstacles.forEach((obs, i) => {
+        obs.x -= 3;
+
+        // Score
+        if (obs.x + 50 < g.plane.x && !obs.scored) {
+          g.score++;
+          obs.scored = true;
+          document.getElementById('flappyScore').textContent = g.score;
+        }
+
+        // Collision
+        if (g.plane.x + g.plane.size > obs.x && g.plane.x < obs.x + 50) {
+          if (g.plane.y < obs.top || g.plane.y + g.plane.size > obs.top + obs.gap) {
+            g.running = false;
+            alert('Game Over! Score: ' + g.score);
+            stopFlappyGame();
+          }
+        }
+
+        // Remove off-screen obstacles
+        if (obs.x < -50) g.obstacles.splice(i, 1);
+      });
+
+      // Check bounds
+      if (g.plane.y < 0 || g.plane.y + g.plane.size > flappyCanvas.height) {
+        g.running = false;
+        alert('Game Over! Score: ' + g.score);
+        stopFlappyGame();
+        return;
+      }
+
+      // Draw
+      flappyCtx.fillStyle = '#87ceeb';
+      flappyCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+
+      // Draw obstacles
+      flappyCtx.fillStyle = '#8b4513';
+      g.obstacles.forEach(obs => {
+        flappyCtx.fillRect(obs.x, 0, 50, obs.top);
+        flappyCtx.fillRect(obs.x, obs.top + obs.gap, 50, flappyCanvas.height);
+      });
+
+      // Draw engine thrust effect when active
+      if (g.thrustActive) {
+        const thrustIntensity = thrustPower / 6; // 0 to 1
+        flappyCtx.save();
+
+        // Engine exhaust glow
+        const gradient = flappyCtx.createRadialGradient(
+          g.plane.x - 5, g.plane.y + g.plane.size / 2,
+          0,
+          g.plane.x - 5, g.plane.y + g.plane.size / 2,
+          20 + thrustIntensity * 15
+        );
+        gradient.addColorStop(0, `rgba(255, 200, 100, ${0.8 * thrustIntensity})`);
+        gradient.addColorStop(0.5, `rgba(255, 150, 50, ${0.5 * thrustIntensity})`);
+        gradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+
+        flappyCtx.fillStyle = gradient;
+        flappyCtx.beginPath();
+        flappyCtx.arc(g.plane.x - 5, g.plane.y + g.plane.size / 2, 20 + thrustIntensity * 15, 0, Math.PI * 2);
+        flappyCtx.fill();
+
+        // Thrust flame particles
+        for (let i = 0; i < 3; i++) {
+          const offsetY = (Math.random() - 0.5) * 10;
+          const offsetX = Math.random() * 10;
+          flappyCtx.fillStyle = `rgba(255, ${150 + Math.random() * 100}, 50, ${0.6 * thrustIntensity})`;
+          flappyCtx.fillRect(
+            g.plane.x - 10 - offsetX,
+            g.plane.y + g.plane.size / 2 + offsetY,
+            8,
+            3
+          );
+        }
+
+        flappyCtx.restore();
+      }
+
+      // Draw plane (selected aircraft)
+      const angle = Math.min(Math.max(g.plane.velocity * 0.05, -0.4), 0.4);
+      drawAircraft(flappyCtx, g.plane.x, g.plane.y, g.plane.size * 2, angle);
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    document.getElementById('flappyStart').addEventListener('click', startFlappyGame);
+
+    // Enhanced keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        startThrust();
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        stopThrust();
+      }
+    });
+
+    // Mouse/touch controls - hold to thrust
+    let mouseDown = false;
+    flappyCanvas.addEventListener('mousedown', (e) => {
+      mouseDown = true;
+      startThrust();
+    });
+
+    flappyCanvas.addEventListener('mouseup', () => {
+      mouseDown = false;
+      stopThrust();
+    });
+
+    flappyCanvas.addEventListener('mouseleave', () => {
+      if (mouseDown) {
+        mouseDown = false;
+        stopThrust();
+      }
+    });
+
+    // Aircraft and Livery Selection Handlers
+    function updateLiveryButtons() {
+      const liveryContainer = document.getElementById('liverySelection');
+      liveryContainer.innerHTML = '';
+
+      const liveries = aircraftLiveries[selectedAircraft].liveries;
+
+      Object.keys(liveries).forEach(liveryKey => {
+        const livery = liveries[liveryKey];
+        const btn = document.createElement('button');
+        btn.className = 'livery-btn' + (liveryKey === selectedLivery ? ' active' : '');
+        btn.textContent = livery.name;
+        btn.dataset.livery = liveryKey;
+        btn.addEventListener('click', () => {
+          selectedLivery = liveryKey;
+          document.querySelectorAll('.livery-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+        liveryContainer.appendChild(btn);
+      });
+    }
+
+    // Aircraft selection
+    document.querySelectorAll('.aircraft-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedAircraft = btn.dataset.aircraft;
+        selectedLivery = Object.keys(aircraftLiveries[selectedAircraft].liveries)[0];
+
+        document.querySelectorAll('.aircraft-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        updateLiveryButtons();
+      });
+    });
+
+    // Initialize livery buttons
+    updateLiveryButtons();
+
+    // LANDING GAME
+    let landingGame = null;
+    const landingCanvas = document.getElementById('landingCanvas');
+    const landingCtx = landingCanvas.getContext('2d');
+    landingCanvas.width = 600;
+    landingCanvas.height = 400;
+
+    function startLandingGame() {
+      if (landingGame) return;
+
+      // Random spawn position
+      const randomX = Math.random() * (landingCanvas.width - 60) + 30; // Keep some margin
+      const randomY = Math.random() * 80 + 20; // Spawn between y: 20-100
+      const randomVelocityX = (Math.random() - 0.5) * 4; // Random horizontal drift: -2 to +2
+
+      // Random runway position
+      const runwayWidth = 100;
+      const randomRunwayX = Math.random() * (landingCanvas.width - runwayWidth - 100) + 50; // Avoid edges
+
+      landingGame = {
+        plane: {
+          x: randomX,
+          y: randomY,
+          velocityY: 2,
+          velocityX: randomVelocityX,
+          size: 30
+        },
+        runway: { x: randomRunwayX, y: 370, width: runwayWidth },
+        running: true
+      };
+
+      landingLoop();
+    }
+
+    function stopLandingGame() {
+      if (landingGame) landingGame.running = false;
+      landingGame = null;
+    }
+
+    const keys = {};
+    document.addEventListener('keydown', (e) => { keys[e.code] = true; });
+    document.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
+    function landingLoop() {
+      if (!landingGame || !landingGame.running) return;
+
+      const g = landingGame;
+
+      // Controls
+      if (keys['ArrowLeft']) g.plane.velocityX = -3;
+      else if (keys['ArrowRight']) g.plane.velocityX = 3;
+      else g.plane.velocityX *= 0.9;
+
+      if (keys['ArrowDown']) g.plane.velocityY = 4;
+      else g.plane.velocityY = 2;
+
+      g.plane.x += g.plane.velocityX;
+      g.plane.y += g.plane.velocityY;
+
+      // Keep plane in bounds horizontally
+      if (g.plane.x < 0) g.plane.x = 0;
+      if (g.plane.x > landingCanvas.width - g.plane.size) g.plane.x = landingCanvas.width - g.plane.size;
+
+      // Update display
+      const altitude = Math.max(0, Math.round(landingCanvas.height - g.plane.y));
+      const speed = Math.abs(g.plane.velocityY).toFixed(1);
+      document.getElementById('landingAlt').textContent = altitude;
+      document.getElementById('landingSpeed').textContent = speed;
+
+      // Landing check
+      if (g.plane.y + g.plane.size >= g.runway.y) {
+        const onRunway = g.plane.x >= g.runway.x && g.plane.x + g.plane.size <= g.runway.x + g.runway.width;
+        const gentleLanding = Math.abs(g.plane.velocityY) < 3;
+
+        if (onRunway && gentleLanding) {
+          alert('Perfect Landing! 🎉');
+        } else if (onRunway) {
+          alert('Landed on runway but too hard! Try again.');
+        } else {
+          alert('Missed the runway! Try again.');
+        }
+        stopLandingGame();
+        return;
+      }
+
+      // Draw
+      landingCtx.fillStyle = '#87ceeb';
+      landingCtx.fillRect(0, 0, landingCanvas.width, landingCanvas.height);
+
+      // Draw runway
+      landingCtx.fillStyle = '#333';
+      landingCtx.fillRect(g.runway.x, g.runway.y, g.runway.width, 30);
+      landingCtx.fillStyle = '#fff';
+      for (let i = 0; i < 5; i++) {
+        landingCtx.fillRect(g.runway.x + i * 20, g.runway.y + 12, 10, 6);
+      }
+
+      // Draw plane (F-16)
+      const descentAngle = Math.atan2(g.plane.velocityY, 5) * 0.3;
+      drawF16(landingCtx, g.plane.x, g.plane.y, g.plane.size * 1.5, descentAngle);
+
+      requestAnimationFrame(landingLoop);
+    }
+
+    document.getElementById('landingStart').addEventListener('click', startLandingGame);
+
+    // MEMORY GAME
+    let memoryGame = null;
+    const aircraft = ['✈️', '🛩️', '🚁', '🛫', '🛬', '🚀', '🎈', '🪂'];
+
+    function startMemoryGame() {
+      const cards = [...aircraft, ...aircraft].sort(() => Math.random() - 0.5);
+
+      memoryGame = {
+        cards: cards,
+        flipped: [],
+        matched: [],
+        moves: 0
+      };
+
+      document.getElementById('memoryMoves').textContent = '0';
+      document.getElementById('memoryPairs').textContent = '0';
+
+      const grid = document.getElementById('memoryGrid');
+      grid.innerHTML = '';
+
+      cards.forEach((card, index) => {
+        const cardEl = document.createElement('div');
+        cardEl.style.cssText = `
+          background: var(--accent-light);
+          border: 2px solid var(--border-light);
+          border-radius: 8px;
+          aspect-ratio: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          cursor: pointer;
+          transition: all 0.3s;
+        `;
+        cardEl.dataset.index = index;
+        cardEl.innerHTML = '?';
+        cardEl.addEventListener('click', () => flipCard(index, cardEl));
+        grid.appendChild(cardEl);
+      });
+    }
+
+    function flipCard(index, element) {
+      if (!memoryGame || memoryGame.flipped.length === 2) return;
+      if (memoryGame.flipped.includes(index) || memoryGame.matched.includes(index)) return;
+
+      memoryGame.flipped.push(index);
+      element.innerHTML = memoryGame.cards[index];
+      element.style.background = 'var(--accent)';
+
+      if (memoryGame.flipped.length === 2) {
+        memoryGame.moves++;
+        document.getElementById('memoryMoves').textContent = memoryGame.moves;
+
+        const [first, second] = memoryGame.flipped;
+        if (memoryGame.cards[first] === memoryGame.cards[second]) {
+          memoryGame.matched.push(first, second);
+          document.getElementById('memoryPairs').textContent = memoryGame.matched.length / 2;
+          memoryGame.flipped = [];
+
+          if (memoryGame.matched.length === 16) {
+            setTimeout(() => alert(`You won in ${memoryGame.moves} moves! 🎉`), 300);
+          }
+        } else {
+          setTimeout(() => {
+            const grid = document.getElementById('memoryGrid');
+            [first, second].forEach(i => {
+              const card = grid.children[i];
+              card.innerHTML = '?';
+              card.style.background = 'var(--accent-light)';
+            });
+            memoryGame.flipped = [];
+          }, 1000);
+        }
+      }
+    }
+
+    document.getElementById('memoryStart').addEventListener('click', startMemoryGame);
+  </script>
+</body>
+</html>

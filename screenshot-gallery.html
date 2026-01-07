@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Screenshot Gallery</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.filter-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--accent-light);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.screenshot-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.screenshot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.screenshot-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.screenshot-info {
+  padding: 1.25rem;
+}
+
+.screenshot-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.screenshot-meta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.meta-tag {
+  font-size: 11px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.screenshot-author {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.upload-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-section h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.upload-info {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 15px;
+}
+
+.upload-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.upload-btn:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 90%;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.lightbox-info {
+  color: var(--text-main);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: white;
+  color: #333;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.lightbox-close:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Screenshot Gallery</h1>
+    <p class="subtitle">Community Screenshots from Flight Simulators Worldwide</p>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label">Filter by Simulator:</label>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All Screenshots</button>
+      <button class="filter-btn" data-filter="msfs2024">MSFS 2024</button>
+      <button class="filter-btn" data-filter="msfs2020">MSFS 2020</button>
+      <button class="filter-btn" data-filter="xplane">X-Plane 12</button>
+      <button class="filter-btn" data-filter="dcs">DCS World</button>
+      <button class="filter-btn" data-filter="prepar3d">Prepar3D</button>
+      <button class="filter-btn" data-filter="il2">IL-2 Sturmovik</button>
+    </div>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+    <!-- MSFS 2024 Screenshots -->
+    <div class="screenshot-card" data-category="msfs2024">
+      <div class="screenshot-image">📸 Sample Screenshot - MSFS 2024</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Sunset Approach into Los Angeles</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">MSFS 2024</span>
+          <span class="meta-tag">Boeing 737</span>
+        </div>
+        <div class="screenshot-author">by VirtualPilot123</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="msfs2024">
+      <div class="screenshot-image">📸 Sample Screenshot - MSFS 2024</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Norwegian Fjords VFR Flight</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">MSFS 2024</span>
+          <span class="meta-tag">Cessna 172</span>
+        </div>
+        <div class="screenshot-author">by SkyExplorer</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="msfs2024">
+      <div class="screenshot-image">📸 Sample Screenshot - MSFS 2024</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Night Landing at Tokyo Narita</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">MSFS 2024</span>
+          <span class="meta-tag">A320neo</span>
+        </div>
+        <div class="screenshot-author">by AirlineCommander</div>
+      </div>
+    </div>
+
+    <!-- MSFS 2020 Screenshots -->
+    <div class="screenshot-card" data-category="msfs2020">
+      <div class="screenshot-image">📸 Sample Screenshot - MSFS 2020</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Flying Over Mount Everest</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">MSFS 2020</span>
+          <span class="meta-tag">TBM 930</span>
+        </div>
+        <div class="screenshot-author">by MountainFlyer</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="msfs2020">
+      <div class="screenshot-image">📸 Sample Screenshot - MSFS 2020</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Caribbean Island Hopping</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">MSFS 2020</span>
+          <span class="meta-tag">Kodiak 100</span>
+        </div>
+        <div class="screenshot-author">by IslandAviator</div>
+      </div>
+    </div>
+
+    <!-- X-Plane 12 Screenshots -->
+    <div class="screenshot-card" data-category="xplane">
+      <div class="screenshot-image">📸 Sample Screenshot - X-Plane 12</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Stormy Approach into Seattle</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">X-Plane 12</span>
+          <span class="meta-tag">Boeing 737</span>
+        </div>
+        <div class="screenshot-author">by WeatherFlyer</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="xplane">
+      <div class="screenshot-image">📸 Sample Screenshot - X-Plane 12</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Bush Flying in Alaska</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">X-Plane 12</span>
+          <span class="meta-tag">Cessna 208</span>
+        </div>
+        <div class="screenshot-author">by BushPilotPro</div>
+      </div>
+    </div>
+
+    <!-- DCS World Screenshots -->
+    <div class="screenshot-card" data-category="dcs">
+      <div class="screenshot-image">📸 Sample Screenshot - DCS World</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">F/A-18 Carrier Takeoff</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">DCS World</span>
+          <span class="meta-tag">F/A-18C</span>
+        </div>
+        <div class="screenshot-author">by TopGunMaverick</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="dcs">
+      <div class="screenshot-image">📸 Sample Screenshot - DCS World</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">A-10C Close Air Support</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">DCS World</span>
+          <span class="meta-tag">A-10C</span>
+        </div>
+        <div class="screenshot-author">by WarthogDriver</div>
+      </div>
+    </div>
+
+    <!-- Prepar3D Screenshots -->
+    <div class="screenshot-card" data-category="prepar3d">
+      <div class="screenshot-image">📸 Sample Screenshot - Prepar3D</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Atlantic Crossing in 777</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">Prepar3D</span>
+          <span class="meta-tag">Boeing 777</span>
+        </div>
+        <div class="screenshot-author">by LongHaulPilot</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="prepar3d">
+      <div class="screenshot-image">📸 Sample Screenshot - Prepar3D</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Dubai Night Departure</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">Prepar3D</span>
+          <span class="meta-tag">A380</span>
+        </div>
+        <div class="screenshot-author">by MegaJetPilot</div>
+      </div>
+    </div>
+
+    <!-- IL-2 Screenshots -->
+    <div class="screenshot-card" data-category="il2">
+      <div class="screenshot-image">📸 Sample Screenshot - IL-2</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">Spitfire Dogfight Over Britain</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">IL-2 Sturmovik</span>
+          <span class="meta-tag">Spitfire Mk IX</span>
+        </div>
+        <div class="screenshot-author">by WW2AcePilot</div>
+      </div>
+    </div>
+
+    <div class="screenshot-card" data-category="il2">
+      <div class="screenshot-image">📸 Sample Screenshot - IL-2</div>
+      <div class="screenshot-info">
+        <div class="screenshot-title">P-51 Mustang Escort Mission</div>
+        <div class="screenshot-meta">
+          <span class="meta-tag">IL-2 Sturmovik</span>
+          <span class="meta-tag">P-51D</span>
+        </div>
+        <div class="screenshot-author">by FighterAce44</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="upload-section">
+    <h2>Share Your Screenshots</h2>
+    <p class="upload-info">
+      Have amazing screenshots from your virtual flights? We'd love to feature them in our gallery!<br/>
+      Share your best moments with the community.
+    </p>
+    <a href="#" class="upload-btn" onclick="alert('Upload feature coming soon! For now, share your screenshots on our Discord or Reddit community.'); return false;">Upload Screenshot</a>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <div class="lightbox-content">
+    <div class="lightbox-image" id="lightboxImage">📸 Screenshot</div>
+    <div class="lightbox-info" id="lightboxInfo"></div>
+  </div>
+</div>
+
+<script>
+// Filter functionality
+const filterButtons = document.querySelectorAll('.filter-btn');
+const screenshotCards = document.querySelectorAll('.screenshot-card');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Update active button
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    const filter = button.getAttribute('data-filter');
+
+    // Filter cards
+    screenshotCards.forEach(card => {
+      if (filter === 'all' || card.getAttribute('data-category') === filter) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Lightbox functionality
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+
+screenshotCards.forEach(card => {
+  card.addEventListener('click', () => {
+    const title = card.querySelector('.screenshot-title').textContent;
+    const author = card.querySelector('.screenshot-author').textContent;
+    const tags = Array.from(card.querySelectorAll('.meta-tag')).map(tag => tag.textContent).join(' • ');
+
+    document.getElementById('lightboxInfo').innerHTML = `
+      <h3 style="color: var(--accent-alt); margin-bottom: 0.5rem;">${title}</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">${tags}</p>
+      <p style="color: var(--text-secondary);">${author}</p>
+    `;
+
+    document.getElementById('lightbox').classList.add('active');
+  });
+});
+
+// Close lightbox on background click
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target.id === 'lightbox') {
+    closeLightbox();
+  }
+});
+
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>

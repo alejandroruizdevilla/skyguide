@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Your Complete Flight Simulator Guide 2025</title>
+  <meta name="description" content="SkyGuide - The ultimate guide to flight simulators. Compare sims, find hardware, check system requirements, and discover the best flight simulators of 2025.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    .category {
+      margin-bottom: 4rem;
+    }
+
+    .category-title {
+      font-size: 26px;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sim-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .sim-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .sim-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--accent-light) 0%, #e8dfd6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sim-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .sim-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 100%);
+      pointer-events: none;
+    }
+
+    .sim-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .sim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .sim-name {
+      font-size: 20px;
+      color: var(--accent-alt);
+      font-weight: 600;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-recommended {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .tag-combat {
+      color: #fff;
+      background: var(--danger);
+    }
+
+    .tag-free {
+      color: #fff;
+      background: #6b9e78;
+    }
+
+    .tag-classic {
+      color: #fff;
+      background: #9b7d4f;
+    }
+
+    .sim-description {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-size: 15px;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .sim-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .meta-item {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .meta-label {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .meta-value {
+      color: var(--text-secondary);
+    }
+
+    .sim-highlights {
+      list-style: none;
+      margin-bottom: 1rem;
+      font-size: 14px;
+    }
+
+    .sim-highlights li {
+      padding-left: 1.2rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .sim-highlights li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .sim-link {
+      display: inline-block;
+      margin-top: auto;
+      padding: 0.85rem 1.5rem;
+      background: var(--accent);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .sim-link:hover {
+      background: var(--accent-alt);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(193, 122, 74, 0.3);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Filters */
+    .filters {
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .filter-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .filter-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .filter-group-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--border-light);
+      background: var(--bg);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .search-box::placeholder {
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+
+      .category-title {
+        font-size: 22px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .filters {
+        padding: 1rem;
+      }
+
+      .filter-groups {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware</a>
+        <a href="addons.html" class="nav-link">Add-ons</a>
+        <a href="map.html" class="nav-link">Coverage Map</a>
+        <a href="sys-req-calc.html" class="nav-link">System Check</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">SkyGuide</h1>
+      <p class="subtitle">Your Complete Flight Simulator Guide 2025</p>
+    </div>
+
+    <div class="intro">
+      <p>Welcome to the comprehensive flight simulator guide. Whether you're a beginner pilot or a seasoned veteran, this guide contains detailed information about the best flight simulators available in 2025. Click on any simulator to learn more.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-title">Find Your Perfect Simulator</div>
+      <div class="filter-groups">
+        <div class="filter-group">
+          <div class="filter-group-title">Search</div>
+          <input type="text" class="search-box" id="searchBox" placeholder="Search simulators...">
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Price</div>
+          <div class="filter-options">
+            <button class="filter-btn" data-filter="price" data-value="all">All</button>
+            <button class="filter-btn" data-filter="price" data-value="free">Free</button>
+            <button class="filter-btn" data-filter="price" data-value="paid">Paid</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Platform</div>
+          <div class="filter-options">
+            <button class="filter-btn" data-filter="platform" data-value="all">All</button>
+            <button class="filter-btn" data-filter="platform" data-value="pc">PC</button>
+            <button class="filter-btn" data-filter="platform" data-value="console">Console</button>
+            <button class="filter-btn" data-filter="platform" data-value="mobile">Mobile</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Type</div>
+          <div class="filter-options">
+            <button class="filter-btn" data-filter="type" data-value="all">All</button>
+            <button class="filter-btn" data-filter="type" data-value="civilian">Civilian</button>
+            <button class="filter-btn" data-filter="type" data-value="combat">Combat</button>
+            <button class="filter-btn" data-filter="type" data-value="arcade">Arcade</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFESSIONAL SIMULATORS -->
+    <section class="category">
+      <h2 class="category-title">Professional Flight Simulators</h2>
+      <div class="grid">
+
+        <div class="sim-card" data-price="paid" data-platform="pc console" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/msfs2024.jpg" alt="Microsoft Flight Simulator 2024">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Microsoft Flight Simulator 2024</h3>
+              <span class="tag tag-recommended">Top Pick</span>
+            </div>
+            <p class="sim-description">
+              The gold standard for visual fidelity and real-world accuracy. Features the entire planet with photorealistic satellite imagery, real-time weather, and a living world.
+            </p>
+            <ul class="sim-highlights">
+              <li>Photorealistic global scenery</li>
+              <li>65+ detailed aircraft</li>
+              <li>Full VR support</li>
+              <li>Career mode with missions</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC, Xbox, PS5</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$69.99</span></span>
+            </div>
+            <a href="details/msfs2024.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc console" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/msfs2020.jpg" alt="Microsoft Flight Simulator 2020">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Microsoft Flight Simulator 2020</h3>
+              <span class="tag tag-recommended">Popular</span>
+            </div>
+            <p class="sim-description">
+              The predecessor that started the revolution. Still amazing with stunning visuals, massive aircraft library, and years of community content.
+            </p>
+            <ul class="sim-highlights">
+              <li>Mature addon ecosystem</li>
+              <li>Lower system requirements</li>
+              <li>Proven stability</li>
+              <li>Huge aircraft selection</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC, Xbox</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$59.99</span></span>
+            </div>
+            <a href="details/msfs2020.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/xplane12.jpg" alt="X-Plane 12">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">X-Plane 12</h3>
+              <span class="tag tag-recommended">Best Physics</span>
+            </div>
+            <p class="sim-description">
+              Renowned for its physically accurate flight model using blade element theory. FAA-certified versions used for actual pilot training.
+            </p>
+            <ul class="sim-highlights">
+              <li>Most realistic flight physics</li>
+              <li>FAA-approved for training</li>
+              <li>Study-level aircraft add-ons</li>
+              <li>Advanced weather modeling</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows, macOS, Linux</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$59.99</span></span>
+            </div>
+            <a href="details/xplane12.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/prepar3d.jpg" alt="Prepar3D v6">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Prepar3D v6</h3>
+              <span class="tag tag-recommended">Professional</span>
+            </div>
+            <p class="sim-description">
+              Professional training platform developed by Lockheed Martin. Used by airlines and military for actual crew training.
+            </p>
+            <ul class="sim-highlights">
+              <li>Professional-grade SDK</li>
+              <li>FSX add-on compatibility</li>
+              <li>Multi-channel display support</li>
+              <li>TrueSky weather engine</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$59.95-$199.95</span></span>
+            </div>
+            <a href="details/prepar3d.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc mobile" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/aerofly.jpg" alt="Aerofly FS 4">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Aerofly FS 4</h3>
+              <span class="tag tag-free">Smooth</span>
+            </div>
+            <p class="sim-description">
+              Excels at providing smooth, buttery performance even on mid-range systems. Beautiful VR implementation and instant loading.
+            </p>
+            <ul class="sim-highlights">
+              <li>Exceptional VR performance</li>
+              <li>Instant loading times</li>
+              <li>Photogrammetry cities</li>
+              <li>Great for helicopters</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC, Mobile, Switch</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$49.99</span></span>
+            </div>
+            <a href="details/aerofly.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COMBAT SIMULATORS -->
+    <section class="category">
+      <h2 class="category-title">Military & Combat Simulators</h2>
+      <div class="grid">
+
+        <div class="sim-card" data-price="free" data-platform="pc" data-type="combat">
+          <div class="sim-image">
+            <img src="images/dcs.jpg" alt="DCS World">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">DCS World</h3>
+              <span class="tag tag-combat">Best Combat</span>
+            </div>
+            <p class="sim-description">
+              THE definitive combat flight simulator. Study-level aircraft requiring dozens of hours to master. From Cold War jets to modern fighters.
+            </p>
+            <ul class="sim-highlights">
+              <li>Study-level aircraft modules</li>
+              <li>Full clickable cockpits</li>
+              <li>Advanced radar & weapons</li>
+              <li>Multiplayer persistent wars</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free + modules</span></span>
+            </div>
+            <a href="details/dcs.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="combat">
+          <div class="sim-image">
+            <img src="images/il2.jpg" alt="IL-2 Sturmovik">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">IL-2 Sturmovik</h3>
+              <span class="tag tag-combat">WW2</span>
+            </div>
+            <p class="sim-description">
+              The premier World War 2 flight combat simulator. Meticulously researched aircraft from all major nations with dynamic campaigns.
+            </p>
+            <ul class="sim-highlights">
+              <li>100+ WW2 aircraft</li>
+              <li>Realistic damage model</li>
+              <li>Dynamic career mode</li>
+              <li>Excellent VR support</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$49.99/pack</span></span>
+            </div>
+            <a href="details/il2.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="free" data-platform="pc" data-type="combat">
+          <div class="sim-image">
+            <img src="images/falcon-bms.jpg" alt="Falcon BMS">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Falcon BMS</h3>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <p class="sim-description">
+              Community-developed F-16 simulator. Most realistic F-16 simulation available with legendary dynamic campaign engine.
+            </p>
+            <ul class="sim-highlights">
+              <li>Most detailed F-16C sim</li>
+              <li>Dynamic campaign system</li>
+              <li>Modern avionics (Link-16, JHMCS)</li>
+              <li>Completely free</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free</span></span>
+            </div>
+            <a href="details/falcon-bms.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FREE & OPEN SOURCE -->
+    <section class="category">
+      <h2 class="category-title">Free & Open Source Simulators</h2>
+      <div class="grid">
+
+        <div class="sim-card" data-price="free" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/flightgear.jpg" alt="FlightGear">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">FlightGear</h3>
+              <span class="tag tag-free">100% Free</span>
+            </div>
+            <p class="sim-description">
+              Completely free, open-source flight simulator with solid flight model. Perfect for learning aviation fundamentals without spending money.
+            </p>
+            <ul class="sim-highlights">
+              <li>500+ aircraft available</li>
+              <li>Global scenery coverage</li>
+              <li>Full IFR capabilities</li>
+              <li>Active community</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows, macOS, Linux</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free</span></span>
+            </div>
+            <a href="details/flightgear.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="free" data-platform="pc" data-type="arcade">
+          <div class="sim-image">
+            <img src="images/ysflight.jpg" alt="YSFlight">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">YSFlight</h3>
+              <span class="tag tag-free">Retro</span>
+            </div>
+            <p class="sim-description">
+              Charming, lightweight flight simulator that runs on anything. Perfect for casual flying fun with simplified controls.
+            </p>
+            <ul class="sim-highlights">
+              <li>1000+ downloadable aircraft</li>
+              <li>Extremely low requirements</li>
+              <li>Multiplayer dogfights</li>
+              <li>Great for beginners</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows, macOS, Linux</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free</span></span>
+            </div>
+            <a href="details/ysflight.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MOBILE & CASUAL -->
+    <section class="category">
+      <h2 class="category-title">Mobile & Casual Simulators</h2>
+      <div class="grid">
+
+        <div class="sim-card" data-price="paid" data-platform="mobile" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/infinite-flight.jpg" alt="Infinite Flight">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Infinite Flight</h3>
+              <span class="tag tag-recommended">Best Mobile</span>
+            </div>
+            <p class="sim-description">
+              The best mobile flight simulator. Global HD scenery, live ATC with human controllers, and multiplayer with 1000+ pilots.
+            </p>
+            <ul class="sim-highlights">
+              <li>60+ aircraft (A350, 787, 777)</li>
+              <li>Live human ATC</li>
+              <li>Global HD scenery</li>
+              <li>Virtual airlines & events</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">iOS, Android</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free/$9.99/mo</span></span>
+            </div>
+            <a href="details/infinite-flight.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="free" data-platform="mobile" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/rfs.jpg" alt="RFS - Real Flight Simulator">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">RFS - Real Flight Simulator</h3>
+              <span class="tag tag-free">Mobile</span>
+            </div>
+            <p class="sim-description">
+              Mobile flight simulator with realistic aircraft systems and procedures. More arcade-friendly than Infinite Flight.
+            </p>
+            <ul class="sim-highlights">
+              <li>Realistic aircraft systems</li>
+              <li>Weather simulation</li>
+              <li>Multiplayer capability</li>
+              <li>Flight planning tools</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">iOS, Android</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free + IAP</span></span>
+            </div>
+            <a href="details/rfs.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ARCADE & GAMING -->
+    <section class="category">
+      <h2 class="category-title">Arcade & Gaming</h2>
+      <div class="grid">
+
+        <div class="sim-card" data-price="free" data-platform="pc console" data-type="combat arcade">
+          <div class="sim-image">
+            <img src="images/war-thunder.jpg" alt="War Thunder">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">War Thunder</h3>
+              <span class="tag tag-free">F2P</span>
+            </div>
+            <p class="sim-description">
+              Free-to-play with Arcade, Realistic, and Simulator modes. 800+ aircraft from WW1 biplanes to modern jets.
+            </p>
+            <ul class="sim-highlights">
+              <li>2000+ vehicles total</li>
+              <li>Three difficulty modes</li>
+              <li>Combined arms battles</li>
+              <li>Regular updates</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC, PlayStation, Xbox</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free</span></span>
+            </div>
+            <a href="details/war-thunder.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc console" data-type="arcade">
+          <div class="sim-image">
+            <img src="images/ace-combat-7.jpg" alt="Ace Combat 7">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Ace Combat 7</h3>
+              <span class="tag tag-classic">Arcade</span>
+            </div>
+            <p class="sim-description">
+              Pure arcade action with cinematic flair. Epic storylines, incredible soundtracks, and spectacular combat.
+            </p>
+            <ul class="sim-highlights">
+              <li>Hollywood-style campaign</li>
+              <li>28 aircraft available</li>
+              <li>VR missions (PSVR)</li>
+              <li>Easy to pick up</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC, PS4/5, Xbox</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$59.99</span></span>
+            </div>
+            <a href="details/ace-combat-7.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="free" data-platform="mobile pc" data-type="arcade">
+          <div class="sim-image">
+            <img src="images/roblox.jpg" alt="Roblox Flight Sims">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Roblox Flight Sims</h3>
+              <span class="tag tag-free">Kids</span>
+            </div>
+            <p class="sim-description">
+              Flight simulation games on Roblox platform. Perfect for kids and beginners. PTFS, Airplane Simulator, and more.
+            </p>
+            <ul class="sim-highlights">
+              <li>PTFS: 100+ aircraft</li>
+              <li>Very accessible controls</li>
+              <li>Play with friends</li>
+              <li>Great introduction</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Roblox (multi-platform)</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free</span></span>
+            </div>
+            <a href="details/roblox.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SPECIALTY -->
+    <section class="category">
+      <h2 class="category-title">Specialty Simulators</h2>
+      <div class="grid">
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/condor2.jpg" alt="Condor 2">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Condor 2</h3>
+              <span class="tag tag-recommended">Gliding</span>
+            </div>
+            <p class="sim-description">
+              THE definitive glider/sailplane simulator. Used by real glider pilots for training with realistic thermal modeling.
+            </p>
+            <ul class="sim-highlights">
+              <li>Realistic soaring physics</li>
+              <li>25+ gliders available</li>
+              <li>Online competitions</li>
+              <li>Used for real training</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$49.99</span></span>
+            </div>
+            <a href="details/condor2.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/fsx.jpg" alt="Microsoft FSX">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Microsoft FSX</h3>
+              <span class="tag tag-classic">Classic</span>
+            </div>
+            <p class="sim-description">
+              The legendary 2006 simulator. Still has the largest add-on library in history. Runs perfectly on modern low-end PCs.
+            </p>
+            <ul class="sim-highlights">
+              <li>Massive freeware library</li>
+               <li>Runs on low-end PCs</li>
+              <li>Study-level add-ons</li>
+              <li>Historic significance</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$24.99</span></span>
+            </div>
+            <a href="details/fsx.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025</p>
+      <p>Updated December 2025</p>
+      <p style="margin-top: 1rem;">Happy Flying! ✈️</p>
+    </footer>
+
+  </div>
+
+<script src="/livereload.js"></script>
+<script>
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+});
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+
+// Filtering System
+const filterBtns = document.querySelectorAll('.filter-btn');
+const searchBox = document.getElementById('searchBox');
+const simCards = document.querySelectorAll('.sim-card');
+
+let activeFilters = {
+  price: 'all',
+  platform: 'all',
+  type: 'all'
+};
+
+function applyFilters() {
+  const searchTerm = searchBox.value.toLowerCase();
+
+  simCards.forEach(card => {
+    const cardPrice = card.dataset.price;
+    const cardPlatforms = card.dataset.platform.split(' ');
+    const cardTypes = card.dataset.type.split(' ');
+    const cardText = card.textContent.toLowerCase();
+
+    const matchesPrice = activeFilters.price === 'all' || cardPrice === activeFilters.price;
+    const matchesPlatform = activeFilters.platform === 'all' || cardPlatforms.includes(activeFilters.platform);
+    const matchesType = activeFilters.type === 'all' || cardTypes.includes(activeFilters.type);
+    const matchesSearch = searchTerm === '' || cardText.includes(searchTerm);
+
+    if (matchesPrice && matchesPlatform && matchesType && matchesSearch) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filterType = btn.dataset.filter;
+    const filterValue = btn.dataset.value;
+
+    // Update active state
+    document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Update active filters
+    activeFilters[filterType] = filterValue;
+    applyFilters();
+  });
+});
+
+searchBox.addEventListener('input', applyFilters);
+
+// Set default active states
+document.querySelector('[data-filter="price"][data-value="all"]').classList.add('active');
+document.querySelector('[data-filter="platform"][data-value="all"]').classList.add('active');
+document.querySelector('[data-filter="type"][data-value="all"]').classList.add('active');
+</script>
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Hardware Buying Guide</title>
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --success: #6b9e78;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --success: #8bc49c;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    .section {
+      background: var(--bg-card);
+      padding: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 1rem;
+    }
+
+    .tier-budget {
+      background: var(--success);
+      color: white;
+    }
+
+    .tier-mid {
+      background: var(--accent);
+      color: white;
+    }
+
+    .tier-high {
+      background: var(--danger);
+      color: white;
+    }
+
+    .hardware-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .hardware-card {
+      background: var(--bg);
+      border: 2px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+
+    .hardware-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .hardware-card h4 {
+      color: var(--accent);
+      font-size: 18px;
+      margin-bottom: 0.75rem;
+    }
+
+    .hardware-card .price {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent-alt);
+      margin-bottom: 0.75rem;
+    }
+
+    .hardware-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .hardware-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 0 0;
+    }
+
+    .hardware-card li {
+      color: var(--text-secondary);
+      font-size: 14px;
+      padding-left: 1.2rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .hardware-card li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .best-for {
+      background: var(--accent-light);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 1rem;
+      display: inline-block;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+
+    .highlight-box h4 {
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-size: 18px;
+    }
+
+    .highlight-box p {
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-box ul {
+      margin: 0.75rem 0 0 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .recommendation-box {
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .recommendation-box h4 {
+      color: var(--accent);
+      font-size: 18px;
+      margin-bottom: 1rem;
+    }
+
+    .recommendation-box p {
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 28px;
+      }
+
+      .section {
+        padding: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .hardware-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link active">Hardware Guide</a>
+        <a href="sys-req-calc.html" class="nav-link">System Checker</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">Flight Sim Hardware Buying Guide</h1>
+      <p class="subtitle">Find the Perfect Equipment for Your Budget in 2025</p>
+    </div>
+
+    <div class="intro">
+      <p>Choosing the right hardware can make or break your flight sim experience. This guide breaks down the best controllers, yokes, pedals, and VR headsets for every budget, from beginners to enthusiasts.</p>
+    </div>
+
+    <!-- Budget Tier -->
+    <section class="section">
+      <h2 class="section-title">Budget Tier ($0-100)</h2>
+      <span class="tier-badge tier-budget">Perfect for Beginners</span>
+
+      <div class="hardware-grid">
+        <div class="hardware-card">
+          <h4>Xbox/PlayStation Controller</h4>
+          <div class="price">$0-60</div>
+          <p>If you already own a console controller, this is your best starting point. Works great for arcade sims and casual flying.</p>
+          <ul>
+            <li>Already have one? Start here!</li>
+            <li>Works with all simulators</li>
+            <li>Easy to use</li>
+            <li>Great for arcade games</li>
+          </ul>
+          <span class="best-for">Best for: Complete beginners, casual flying</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Logitech Extreme 3D Pro</h4>
+          <div class="price">$35-50</div>
+          <p>The most popular budget joystick. Reliable, precise, and has served millions of virtual pilots. Perfect first joystick.</p>
+          <ul>
+            <li>Twist rudder control</li>
+            <li>12 programmable buttons</li>
+            <li>Excellent value</li>
+            <li>Proven reliability</li>
+          </ul>
+          <span class="best-for">Best for: General aviation, first joystick</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Thrustmaster T.Flight HOTAS X</h4>
+          <div class="price">$60-80</div>
+          <p>Entry-level HOTAS (Hands On Throttle And Stick) system. Separate throttle and stick give you the full fighter pilot experience.</p>
+          <ul>
+            <li>Detachable throttle</li>
+            <li>Wide hand rest</li>
+            <li>12 action buttons</li>
+            <li>Works on PC & PS4</li>
+          </ul>
+          <span class="best-for">Best for: Combat sims, DCS, War Thunder</span>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <h4>Budget Tier Recommendation</h4>
+        <p>Start with what you have (controller or keyboard). After 2-3 weeks, if you're still enjoying flight simming, get the Logitech Extreme 3D Pro. It's cheap, reliable, and you can resell it easily if you upgrade later.</p>
+      </div>
+    </section>
+
+    <!-- Mid-Range Tier -->
+    <section class="section">
+      <h2 class="section-title">Mid-Range Tier ($100-300)</h2>
+      <span class="tier-badge tier-mid">Best Value for Enthusiasts</span>
+
+      <div class="hardware-grid">
+        <div class="hardware-card">
+          <h4>Thrustmaster T.16000M FCS</h4>
+          <div class="price">$120-180</div>
+          <p>The sweet spot for serious sim pilots. Hall Effect sensors provide incredible precision. The HOTAS pack includes throttle.</p>
+          <ul>
+            <li>16-bit precision sensors</li>
+            <li>Ambidextrous design</li>
+            <li>16 action buttons</li>
+            <li>Optional HOTAS pack available</li>
+          </ul>
+          <span class="best-for">Best for: All-around excellence, space sims</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>VKB Gladiator NXT EVO</h4>
+          <div class="price">$150-200</div>
+          <p>Premium build quality at mid-range price. Metal construction, incredible precision, and built-in twist. The best stick under $200.</p>
+          <ul>
+            <li>Metal gimbal</li>
+            <li>Contactless sensors</li>
+            <li>Tons of buttons</li>
+            <li>Premium feel</li>
+          </ul>
+          <span class="best-for">Best for: DCS, IL-2, serious combat sims</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Thrustmaster TCA Sidestick Airbus</h4>
+          <div class="price">$100-130</div>
+          <p>Official Airbus replica. If you love flying the A320 in MSFS, this is the stick for you. Add the throttle quadrant for full immersion.</p>
+          <ul>
+            <li>Official Airbus license</li>
+            <li>Realistic sidestick</li>
+            <li>17 action buttons</li>
+            <li>Pairs with TCA Quadrant</li>
+          </ul>
+          <span class="best-for">Best for: Airbus pilots, MSFS airliner flying</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Honeycomb Alpha Flight Yoke</h4>
+          <div class="price">$250</div>
+          <p>The gold standard for civilian flight simulation. Feels like a real Cessna/Piper yoke. Built like a tank with realistic resistance.</p>
+          <ul>
+            <li>Steel shaft construction</li>
+            <li>Realistic forces</li>
+            <li>Magnetic sensor technology</li>
+            <li>Matches real aircraft feel</li>
+          </ul>
+          <span class="best-for">Best for: General aviation, Boeing aircraft</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Thrustmaster TFRP Rudder Pedals</h4>
+          <div class="price">$100-150</div>
+          <p>Entry-level rudder pedals. Huge upgrade for realism - independent brake control and proper rudder authority.</p>
+          <ul>
+            <li>Sliding rail system</li>
+            <li>Self-centering rudder</li>
+            <li>Differential braking</li>
+            <li>Adjustable springs</li>
+          </ul>
+          <span class="best-for">Best for: Adding realism to any setup</span>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <h4>Mid-Range Recommendation</h4>
+        <p><strong>For Combat Sims:</strong> VKB Gladiator NXT + Thrustmaster TFRP pedals ($300 total)</p>
+        <p><strong>For Civilian Sims:</strong> Honeycomb Alpha Yoke + Thrustmaster TFRP pedals ($400 total)</p>
+        <p>This tier offers the best value. You get near-professional quality without breaking the bank.</p>
+      </div>
+    </section>
+
+    <!-- High-End Tier -->
+    <section class="section">
+      <h2 class="section-title">High-End Tier ($300-1000+)</h2>
+      <span class="tier-badge tier-high">Enthusiast & Professional Grade</span>
+
+      <div class="hardware-grid">
+        <div class="hardware-card">
+          <h4>Virpil VPC MongoosT-50CM3</h4>
+          <div class="price">$400-500</div>
+          <p>Top-tier combat stick. Metal construction, infinite customization, and precision that matches military-grade equipment.</p>
+          <ul>
+            <li>All-metal construction</li>
+            <li>Swappable grips</li>
+            <li>Professional-grade sensors</li>
+            <li>Lifetime durability</li>
+          </ul>
+          <span class="best-for">Best for: Serious DCS pilots, collectors</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>VKB Gunfighter Mk.IV</h4>
+          <div class="price">$450-550</div>
+          <p>The ultimate flight stick. Dry clutch system, force sensing, and build quality that will outlast your PC. The Lamborghini of joysticks.</p>
+          <ul>
+            <li>Dry clutch mechanism</li>
+            <li>Force sensing option</li>
+            <li>Swappable grips & cams</li>
+            <li>Unmatched precision</li>
+          </ul>
+          <span class="best-for">Best for: Ultimate combat sim experience</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Honeycomb Bravo Throttle Quadrant</h4>
+          <div class="price">$250-280</div>
+          <p>Perfect companion to the Alpha yoke. Six levers for multi-engine aircraft, plus autopilot panel and gear/flaps switches.</p>
+          <ul>
+            <li>6 lever axes</li>
+            <li>14 button switch panel</li>
+            <li>Trim wheel</li>
+            <li>Autopilot controls</li>
+          </ul>
+          <span class="best-for">Best for: Multi-engine aircraft, airliners</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Virpil VPC Throttle</h4>
+          <div class="price">$400-500</div>
+          <p>Premium combat throttle with countless switches, encoders, and axes. Used by professional combat sim pilots worldwide.</p>
+          <ul>
+            <li>Dual throttle axes</li>
+            <li>30+ programmable inputs</li>
+            <li>Metal construction</li>
+            <li>Modular design</li>
+          </ul>
+          <span class="best-for">Best for: DCS, Falcon BMS hardcore users</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>MFG Crosswind Rudder Pedals</h4>
+          <div class="price">$400-500</div>
+          <p>The ultimate rudder pedals. All-metal, fully adjustable, and using real aircraft-grade bearings. Buy once, use forever.</p>
+          <ul>
+            <li>All-metal construction</li>
+            <li>Adjustable geometry</li>
+            <li>Contactless sensors</li>
+            <li>Professional quality</li>
+          </ul>
+          <span class="best-for">Best for: Ultimate realism, helicopters</span>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <h4>High-End Complete Setups</h4>
+        <p><strong>Ultimate Civilian Rig ($800):</strong> Honeycomb Alpha + Bravo + MFG Crosswind Pedals</p>
+        <p><strong>Ultimate Combat Rig ($1400):</strong> VKB Gunfighter + Virpil Throttle + MFG Crosswind Pedals</p>
+        <p>These setups rival professional training equipment. Only buy this tier if you're committed to the hobby long-term.</p>
+      </div>
+    </section>
+
+    <!-- VR Headsets -->
+    <section class="section">
+      <h2 class="section-title">VR Headsets for Flight Simulation</h2>
+
+      <div class="hardware-grid">
+        <div class="hardware-card">
+          <h4>Meta Quest 3</h4>
+          <div class="price">$500</div>
+          <p>Best all-around VR headset for 2025. Great resolution, works standalone or PC tethered, and excellent value.</p>
+          <ul>
+            <li>2064x2208 per eye</li>
+            <li>Standalone & PC VR</li>
+            <li>Great clarity</li>
+            <li>Comfortable for long sessions</li>
+          </ul>
+          <span class="best-for">Best for: Most people, best value</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Meta Quest 3S</h4>
+          <div class="price">$300</div>
+          <p>Budget VR option. Lower resolution than Quest 3 but still excellent for flight sims. Best entry point for VR.</p>
+          <ul>
+            <li>1832x1920 per eye</li>
+            <li>Same processor as Quest 3</li>
+            <li>Good clarity</li>
+            <li>Great price</li>
+          </ul>
+          <span class="best-for">Best for: VR beginners, budget-conscious</span>
+        </div>
+
+        <div class="hardware-card">
+          <h4>Valve Index</h4>
+          <div class="price">$1000</div>
+          <p>High refresh rate (144Hz) and best controllers. Requires powerful PC but offers premium experience for enthusiasts.</p>
+          <ul>
+            <li>144Hz refresh rate</li>
+            <li>Excellent FOV</li>
+            <li>Best-in-class audio</li>
+            <li>Premium build quality</li>
+          </ul>
+          <span class="best-for">Best for: High-end PC owners, enthusiasts</span>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <h4>Is VR Worth It for Flight Sim?</h4>
+        <p>Absolutely! VR transforms flight simulation. Being able to look around the cockpit, check your six in combat, or lean forward to read instruments is incredible. However:</p>
+        <ul>
+          <li>Requires a powerful PC (RTX 3070 or better recommended)</li>
+          <li>Can cause motion sickness initially (most people adapt)</li>
+          <li>Harder to read small text compared to monitors</li>
+          <li>Amazing for spatial awareness and immersion</li>
+        </ul>
+        <p><strong>Recommendation:</strong> Start with Meta Quest 3 ($500). It's the best balance of price, quality, and performance in 2025.</p>
+      </div>
+    </section>
+
+    <!-- Recommendations by Simulator -->
+    <section class="section">
+      <h2 class="section-title">Hardware Recommendations by Simulator Type</h2>
+
+      <div class="recommendation-box">
+        <h4>Microsoft Flight Simulator 2024/2020 (Civilian)</h4>
+        <p><strong>Budget:</strong> Xbox Controller → Logitech Extreme 3D Pro</p>
+        <p><strong>Mid-Range:</strong> Honeycomb Alpha Yoke + Thrustmaster TFRP Pedals</p>
+        <p><strong>High-End:</strong> Honeycomb Alpha + Bravo + MFG Crosswind Pedals</p>
+      </div>
+
+      <div class="recommendation-box">
+        <h4>X-Plane 12 (Study-Level Civilian)</h4>
+        <p><strong>Budget:</strong> Logitech Extreme 3D Pro</p>
+        <p><strong>Mid-Range:</strong> Honeycomb Alpha + Bravo + Rudder Pedals</p>
+        <p><strong>High-End:</strong> Full Honeycomb setup + MFG Crosswind + VR headset</p>
+      </div>
+
+      <div class="recommendation-box">
+        <h4>DCS World (Combat)</h4>
+        <p><strong>Budget:</strong> Thrustmaster T.Flight HOTAS X</p>
+        <p><strong>Mid-Range:</strong> VKB Gladiator NXT + TFRP Pedals</p>
+        <p><strong>High-End:</strong> VKB Gunfighter + Virpil Throttle + MFG Crosswind</p>
+      </div>
+
+      <div class="recommendation-box">
+        <h4>IL-2 Sturmovik (WW2 Combat)</h4>
+        <p><strong>Budget:</strong> Logitech Extreme 3D Pro</p>
+        <p><strong>Mid-Range:</strong> VKB Gladiator NXT + TFRP Pedals + VR</p>
+        <p><strong>High-End:</strong> VKB Gunfighter + MFG Crosswind + Valve Index VR</p>
+      </div>
+
+      <div class="recommendation-box">
+        <h4>Casual/Arcade (War Thunder, Ace Combat)</h4>
+        <p><strong>Best Choice:</strong> Xbox/PlayStation Controller</p>
+        <p><strong>Upgrade Option:</strong> Logitech Extreme 3D Pro (if you want more immersion)</p>
+        <p>These games are designed for controllers. Don't overspend on hardware for arcade games.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Flight Simulator Guide 2025</p>
+      <p>Updated December 2025</p>
+      <p style="margin-top: 1rem;">Buy once, fly forever. Choose quality hardware and enjoy years of virtual flying!</p>
+    </footer>
+
+  </div>
+
+<script>
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+</script>
+</body>
+</html>

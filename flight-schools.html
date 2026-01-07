@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Flight School Directory</title>
+<style>
+:root {
+  --bg: #faf8f6;
+  --bg-card: #ffffff;
+  --accent: #c17a4a;
+  --accent-alt: #a66843;
+  --accent-light: #f4e8df;
+  --text-main: #2d2520;
+  --text-secondary: #6b5d54;
+  --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #1a1614;
+  --bg-card: #2d2520;
+  --accent: #e8b87e;
+  --accent-alt: #f4d9a6;
+  --accent-light: #3d3330;
+  --text-main: #f0e8e0;
+  --text-secondary: #b8aca0;
+  --border-light: #3d3330;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent-alt);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.intro {
+  font-size: 16px;
+  color: var(--text-main);
+  line-height: 1.7;
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.school-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--accent);
+  transition: all 0.3s ease;
+}
+
+.school-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.school-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.school-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-alt);
+  margin-bottom: 0.25rem;
+}
+
+.school-type {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rating {
+  display: flex;
+  gap: 0.25rem;
+  font-size: 18px;
+}
+
+.star {
+  color: #f4b942;
+}
+
+.school-description {
+  color: var(--text-main);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.school-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.feature-tag {
+  background: var(--bg-card);
+  color: var(--accent);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.school-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.school-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(4px);
+}
+
+.category-intro {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 15px;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .header, .section {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .school-header {
+    flex-direction: column;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">← Back to Guide</a>
+    <a href="minigames.html" class="back-link">Mini Games</a>
+  </div>
+
+  <div class="header">
+    <h1>Flight School Directory</h1>
+    <p class="subtitle">Your Gateway to Virtual Aviation Training</p>
+    <p class="intro">
+      Whether you're a complete beginner or looking to master advanced procedures, the virtual aviation community offers comprehensive training through flight schools, virtual airlines, and online networks. These organizations provide structured learning paths, mentorship, and realistic operations to help you become a proficient virtual pilot.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Online Flight Networks</h2>
+    <p class="category-intro">Join thousands of pilots and air traffic controllers in realistic, live online flying experiences.</p>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">VATSIM</div>
+          <div class="school-type">Virtual Air Traffic Simulation Network</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <p class="school-description">
+        The world's largest online flight simulation network with real human air traffic controllers. VATSIM offers the most realistic online flying experience with strict procedures, professional ATC, and a massive global community. Free to join and use.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">Live ATC</span>
+        <span class="feature-tag">All Simulators</span>
+        <span class="feature-tag">Pilot Training</span>
+        <span class="feature-tag">ATC Training</span>
+        <span class="feature-tag">Events</span>
+      </div>
+      <a href="https://www.vatsim.net/" target="_blank" class="school-link">
+        Visit VATSIM →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">IVAO</div>
+          <div class="school-type">International Virtual Aviation Organisation</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <p class="school-description">
+        A comprehensive flight simulation network with live ATC coverage, structured training programs, and a strong European presence. IVAO provides free training for both pilots and controllers with detailed documentation and mentor support.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">Live ATC</span>
+        <span class="feature-tag">Training Programs</span>
+        <span class="feature-tag">European Focus</span>
+        <span class="feature-tag">Mentorship</span>
+      </div>
+      <a href="https://www.ivao.aero/" target="_blank" class="school-link">
+        Visit IVAO →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">PilotEdge</div>
+          <div class="school-type">Premium ATC Network (North America)</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Professional-grade ATC coverage with guaranteed controller availability during operating hours. Perfect for serious flight training with real-world procedures and professional controllers. Subscription-based service covering western North America.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Paid ($19.95/mo)</span>
+        <span class="feature-tag">Guaranteed ATC</span>
+        <span class="feature-tag">North America</span>
+        <span class="feature-tag">CAT Ratings</span>
+        <span class="feature-tag">IFR Training</span>
+      </div>
+      <a href="https://www.pilotedge.net/" target="_blank" class="school-link">
+        Visit PilotEdge →
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Virtual Airlines</h2>
+    <p class="category-intro">Experience realistic airline operations with scheduled routes, fleet management, and career progression.</p>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">FlightSimLabs</div>
+          <div class="school-type">Multi-Airline Community</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">☆</span>
+        </div>
+      </div>
+      <p class="school-description">
+        A comprehensive virtual airline platform supporting multiple airlines and aircraft types. Offers ACARS tracking, pilot statistics, and a well-organized community. Great for pilots who want structured airline operations.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">ACARS</span>
+        <span class="feature-tag">Multiple Airlines</span>
+        <span class="feature-tag">Route Planning</span>
+        <span class="feature-tag">Career Progression</span>
+      </div>
+      <a href="https://www.flightsimlabs.com/" target="_blank" class="school-link">
+        Visit FlightSimLabs →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">Virtual Norwegian</div>
+          <div class="school-type">737 & 787 Operations</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">☆</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Simulating Norwegian Air operations with Boeing 737 and 787 fleets. Features realistic route networks, professional training programs, and ACARS flight tracking. Active community with regular events.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">Boeing Focus</span>
+        <span class="feature-tag">European Routes</span>
+        <span class="feature-tag">Training Program</span>
+        <span class="feature-tag">Active Community</span>
+      </div>
+      <a href="https://www.virtualnorwegian.net/" target="_blank" class="school-link">
+        Visit Virtual Norwegian →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">Delta Virtual Airlines</div>
+          <div class="school-type">Premium VA Experience</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <p class="school-description">
+        One of the most established virtual airlines, simulating Delta Air Lines operations worldwide. Comprehensive training, realistic procedures, hub operations, and an active pilot community. Excellent for serious airline simulation.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">Full Fleet</span>
+        <span class="feature-tag">Hub System</span>
+        <span class="feature-tag">Type Ratings</span>
+        <span class="feature-tag">Events</span>
+      </div>
+      <a href="https://www.deltava.org/" target="_blank" class="school-link">
+        Visit Delta Virtual Airlines →
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Specialized Flight Training</h2>
+    <p class="category-intro">Focused training programs for specific skills and certifications.</p>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">Flight Sim Academy</div>
+          <div class="school-type">Structured Training Courses</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Professional flight training courses covering everything from basic VFR to complex IFR procedures. Offers video lessons, interactive training, and one-on-one instructor sessions. Perfect for beginners wanting structured learning.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free & Paid</span>
+        <span class="feature-tag">Video Lessons</span>
+        <span class="feature-tag">VFR/IFR Training</span>
+        <span class="feature-tag">Instructors</span>
+        <span class="feature-tag">Certificates</span>
+      </div>
+      <a href="https://www.youtube.com/@FlightSimSchool" target="_blank" class="school-link">
+        Visit Flight Sim Academy →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">2-Minute Tutorials</div>
+          <div class="school-type">Quick Training Videos</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">☆</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Bite-sized video tutorials covering specific procedures and aircraft systems. Great for quick learning sessions and reference material. Covers MSFS 2020/2024, X-Plane, and various aircraft add-ons.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">YouTube</span>
+        <span class="feature-tag">Quick Tips</span>
+        <span class="feature-tag">Aircraft Guides</span>
+        <span class="feature-tag">MSFS/X-Plane</span>
+      </div>
+      <a href="https://www.youtube.com/@2MinuteFlightSim" target="_blank" class="school-link">
+        Visit 2-Minute Tutorials →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">P3D/MSFS Training Courses</div>
+          <div class="school-type">Simulator-Specific Training</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">☆</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Detailed courses specifically designed for Microsoft Flight Simulator and Prepar3D. Covers simulator setup, performance optimization, weather systems, and advanced features unique to these platforms.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free & Paid</span>
+        <span class="feature-tag">MSFS Focus</span>
+        <span class="feature-tag">Setup Guides</span>
+        <span class="feature-tag">Performance</span>
+        <span class="feature-tag">Add-ons</span>
+      </div>
+      <a href="https://www.fly-by-wire.com/" target="_blank" class="school-link">
+        Visit FlyByWire Documentation →
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Military Flight Training</h2>
+    <p class="category-intro">Tactical training for combat simulation enthusiasts.</p>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">476th Virtual Fighter Group</div>
+          <div class="school-type">DCS World Training Squadron</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Elite DCS World training squadron offering comprehensive fighter pilot training. From basic flight to advanced tactical operations, BVR combat, and carrier operations. Professional instruction and regular missions.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">DCS World</span>
+        <span class="feature-tag">Fighter Training</span>
+        <span class="feature-tag">BVR/ACM</span>
+        <span class="feature-tag">Carrier Ops</span>
+      </div>
+      <a href="https://www.476vfightergroup.com/" target="_blank" class="school-link">
+        Visit 476th vFG →
+      </a>
+    </div>
+
+    <div class="school-card">
+      <div class="school-header">
+        <div>
+          <div class="school-name">The Grim Reapers</div>
+          <div class="school-type">Combat Flight Community</div>
+        </div>
+        <div class="rating">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">☆</span>
+        </div>
+      </div>
+      <p class="school-description">
+        Large combat flight simulation community with extensive tutorial content on YouTube. Covers DCS World, IL-2, and other combat sims. Great for learning through video content and community events.
+      </p>
+      <div class="school-features">
+        <span class="feature-tag">Free</span>
+        <span class="feature-tag">Video Tutorials</span>
+        <span class="feature-tag">DCS/IL-2</span>
+        <span class="feature-tag">Community Events</span>
+        <span class="feature-tag">Beginner Friendly</span>
+      </div>
+      <a href="https://www.youtube.com/@GrimReapers" target="_blank" class="school-link">
+        Visit Grim Reapers →
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Getting Started Tips</h2>
+    <div class="school-card">
+      <h3 style="color: var(--accent-alt); margin-bottom: 1rem;">Choosing Your Path</h3>
+      <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0; color: var(--accent);">▸</span>
+          <strong>Beginners:</strong> Start with Flight Sim Academy or 2-Minute Tutorials for basic training
+        </li>
+        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0; color: var(--accent);">▸</span>
+          <strong>Realistic Operations:</strong> Join VATSIM or IVAO for live ATC experience
+        </li>
+        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0; color: var(--accent);">▸</span>
+          <strong>Airline Pilots:</strong> Join a virtual airline for structured career progression
+        </li>
+        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0; color: var(--accent);">▸</span>
+          <strong>Combat Enthusiasts:</strong> Join 476th vFG or Grim Reapers for tactical training
+        </li>
+        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative;">
+          <span style="position: absolute; left: 0; color: var(--accent);">▸</span>
+          <strong>Serious Training:</strong> Consider PilotEdge for guaranteed professional ATC
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+<script>
+// Dark Mode Toggle with automatic system preference detection
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Check for saved theme preference, or use system preference
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+if (darkModeToggle) {
+  darkModeToggle.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Toggle function
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+  });
+}
+
+// Listen for system preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Only auto-switch if user hasn't manually set a preference
+  if (!localStorage.getItem('theme')) {
+    const newTheme = e.matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    if (darkModeToggle) {
+      darkModeToggle.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+  }
+});
+</script>
+</body>
+</html>
