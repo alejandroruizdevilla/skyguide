@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <style>
+            p {
+                color: red;
+            }
+            div p {
+                color: blue;
+            }
+
+            #zona1 p {
+                color:green;
+            }
+
+            td {
+                background-color: aqua;
+                border: 1px solid red;
+            }
+        </style>
+        <script>
+            var totalClicks = 0;
+            function aumenta(){
+                totalClicks = totalClicks + 1
+                contador.innerHTML = totalClicks
+
+            }
+        </script>
+    </head>
+    <body>
+        <h1>HOla</h1>
+        <hr>
+        <p>Contador de clicks: <span id="contador">0</span></p>
+        <button onclick="aumenta()">Haz click aqui</button>
+        <hr>
+
+        <div id="zona1">
+            <p> En la zona 1</p>
+        </div>
+        <div id="zona2">
+            <p> En la zona 2</p>
+        </div>
+        <p>Esto esun estio de fisica cuantioca....</p>
+        <h6>Refern ias</h6>
+        <a href="https://www.google.com">Google</a>
+        <table>
+            <tr><th>Tipo Dato 1</th><th>Tipo Dato 2</th></tr>
+            <tr>
+                <td>Dato 1</td>
+                <td>Dato 2</td>
+            </tr>
+            <tr>
+                <td>Dato 1</td>
+                <td>Dato 2</td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -395,20 +395,6 @@ input[type="url"]:focus {
   border: 1px solid var(--error);
 }
 
-/* Language Preview */
-.language-preview {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--accent-light);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.language-preview strong {
-  color: var(--text-main);
-}
-
 /* Schedule Preview */
 .schedule-preview {
   margin-top: 1rem;
@@ -520,61 +506,24 @@ input[type="url"]:focus {
     </div>
 
     <div class="header">
-      <h1 data-i18n="settings.title">Settings</h1>
-      <p class="subtitle" data-i18n="settings.subtitle">Customize your SkyGuide experience</p>
+      <h1>Settings</h1>
+      <p class="subtitle">Customize your SkyGuide experience</p>
     </div>
-
-    <!-- Language Section -->
-    <section class="settings-section">
-      <div class="section-header">
-        <div class="section-icon">🌐</div>
-        <div>
-          <h2 class="section-title" data-i18n="settings.language.title">Language</h2>
-          <p class="section-description" data-i18n="settings.language.description">Choose your preferred language for the interface</p>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-info">
-          <div class="setting-label" data-i18n="settings.language.select">Display Language</div>
-          <div class="setting-hint" data-i18n="settings.language.selectHint">This will change all text throughout the application</div>
-        </div>
-        <div class="setting-control">
-          <select id="languageSelect">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
-            <option value="pt">Português</option>
-            <option value="ja">日本語</option>
-            <option value="zh">中文</option>
-            <option value="ko">한국어</option>
-            <option value="ru">Русский</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="language-preview" id="languagePreview">
-        <strong data-i18n="settings.language.preview">Preview:</strong>
-        <span id="previewText">Welcome to SkyGuide - Your Complete Flight Simulator Guide</span>
-      </div>
-    </section>
 
     <!-- Day/Night Schedule Section -->
     <section class="settings-section">
       <div class="section-header">
         <div class="section-icon">🌓</div>
         <div>
-          <h2 class="section-title" data-i18n="settings.theme.title">Theme Schedule</h2>
-          <p class="section-description" data-i18n="settings.theme.description">Automatically switch between light and dark mode based on time</p>
+          <h2 class="section-title">Theme Schedule</h2>
+          <p class="section-description">Automatically switch between light and dark mode based on time</p>
         </div>
       </div>
 
       <div class="setting-row">
         <div class="setting-info">
-          <div class="setting-label" data-i18n="settings.theme.autoSwitch">Automatic Theme Switching</div>
-          <div class="setting-hint" data-i18n="settings.theme.autoSwitchHint">Enable scheduled day/night mode changes</div>
+          <div class="setting-label">Automatic Theme Switching</div>
+          <div class="setting-hint">Enable scheduled day/night mode changes</div>
         </div>
         <div class="setting-control">
           <label class="toggle-switch">
@@ -586,8 +535,8 @@ input[type="url"]:focus {
 
       <div class="setting-row" id="scheduleSettings" style="display: none;">
         <div class="setting-info">
-          <div class="setting-label" data-i18n="settings.theme.schedule">Schedule Times</div>
-          <div class="setting-hint" data-i18n="settings.theme.scheduleHint">Set when to switch to light (day) and dark (night) mode</div>
+          <div class="setting-label">Schedule Times</div>
+          <div class="setting-hint">Set when to switch to light (day) and dark (night) mode</div>
         </div>
         <div class="setting-control">
           <div class="time-inputs">
@@ -602,8 +551,8 @@ input[type="url"]:focus {
 
       <div class="setting-row">
         <div class="setting-info">
-          <div class="setting-label" data-i18n="settings.theme.useSystem">Use System Preference</div>
-          <div class="setting-hint" data-i18n="settings.theme.useSystemHint">Follow your operating system's dark mode setting</div>
+          <div class="setting-label">Use System Preference</div>
+          <div class="setting-hint">Follow your operating system's dark mode setting</div>
         </div>
         <div class="setting-control">
           <label class="toggle-switch">
@@ -618,21 +567,21 @@ input[type="url"]:focus {
           <span class="schedule-icon">☀️</span>
           <div>
             <div class="schedule-time" id="dayTimeDisplay">7:00 AM</div>
-            <div class="schedule-label" data-i18n="settings.theme.lightMode">Light Mode</div>
+            <div class="schedule-label">Light Mode</div>
           </div>
         </div>
         <div class="schedule-item">
           <span class="schedule-icon">🌙</span>
           <div>
             <div class="schedule-time" id="nightTimeDisplay">7:00 PM</div>
-            <div class="schedule-label" data-i18n="settings.theme.darkMode">Dark Mode</div>
+            <div class="schedule-label">Dark Mode</div>
           </div>
         </div>
         <div class="schedule-item">
           <span class="schedule-icon">⏰</span>
           <div>
             <div class="schedule-time" id="currentTimeDisplay">--:--</div>
-            <div class="schedule-label" data-i18n="settings.theme.currentTime">Current Time</div>
+            <div class="schedule-label">Current Time</div>
           </div>
         </div>
       </div>
@@ -641,10 +590,10 @@ input[type="url"]:focus {
     <!-- Save All Settings -->
     <div class="btn-group" style="justify-content: center; margin-top: 2rem;">
       <button class="btn btn-primary" id="saveAllSettings" style="padding: 1rem 2rem; font-size: 1.1rem;">
-        <span>✓</span> <span data-i18n="settings.saveAll">Save All Settings</span>
+        <span>✓</span> <span>Save All Settings</span>
       </button>
       <button class="btn btn-secondary" id="resetSettings" style="padding: 1rem 2rem; font-size: 1.1rem;">
-        <span>↺</span> <span data-i18n="settings.reset">Reset to Defaults</span>
+        <span>↺</span> <span>Reset to Defaults</span>
       </button>
     </div>
 
@@ -652,157 +601,6 @@ input[type="url"]:focus {
   </div>
 
 <script>
-// Translations
-const translations = {
-  en: {
-    'settings.title': 'Settings',
-    'settings.subtitle': 'Customize your SkyGuide experience',
-    'settings.language.title': 'Language',
-    'settings.language.description': 'Choose your preferred language for the interface',
-    'settings.language.select': 'Display Language',
-    'settings.language.selectHint': 'This will change all text throughout the application',
-    'settings.language.preview': 'Preview:',
-    'settings.theme.title': 'Theme Schedule',
-    'settings.theme.description': 'Automatically switch between light and dark mode based on time',
-    'settings.theme.autoSwitch': 'Automatic Theme Switching',
-    'settings.theme.autoSwitchHint': 'Enable scheduled day/night mode changes',
-    'settings.theme.schedule': 'Schedule Times',
-    'settings.theme.scheduleHint': 'Set when to switch to light (day) and dark (night) mode',
-    'settings.theme.useSystem': 'Use System Preference',
-    'settings.theme.useSystemHint': "Follow your operating system's dark mode setting",
-    'settings.theme.lightMode': 'Light Mode',
-    'settings.theme.darkMode': 'Dark Mode',
-    'settings.theme.currentTime': 'Current Time',
-    'settings.saveAll': 'Save All Settings',
-    'settings.reset': 'Reset to Defaults',
-    'preview.welcome': 'Welcome to SkyGuide - Your Complete Flight Simulator Guide'
-  },
-  es: {
-    'settings.title': 'Configuración',
-    'settings.subtitle': 'Personaliza tu experiencia en SkyGuide',
-    'settings.language.title': 'Idioma',
-    'settings.language.description': 'Elige tu idioma preferido para la interfaz',
-    'settings.language.select': 'Idioma de visualización',
-    'settings.language.selectHint': 'Esto cambiará todo el texto de la aplicación',
-    'settings.language.preview': 'Vista previa:',
-    'settings.theme.title': 'Programación del Tema',
-    'settings.theme.description': 'Cambiar automáticamente entre modo claro y oscuro según la hora',
-    'settings.theme.autoSwitch': 'Cambio Automático de Tema',
-    'settings.theme.autoSwitchHint': 'Activar cambios programados de día/noche',
-    'settings.theme.schedule': 'Horarios',
-    'settings.theme.scheduleHint': 'Configura cuándo cambiar a modo claro (día) y oscuro (noche)',
-    'settings.theme.useSystem': 'Usar Preferencia del Sistema',
-    'settings.theme.useSystemHint': 'Seguir la configuración de modo oscuro de tu sistema operativo',
-    'settings.theme.lightMode': 'Modo Claro',
-    'settings.theme.darkMode': 'Modo Oscuro',
-    'settings.theme.currentTime': 'Hora Actual',
-    'settings.saveAll': 'Guardar Toda la Configuración',
-    'settings.reset': 'Restablecer Valores',
-    'preview.welcome': 'Bienvenido a SkyGuide - Tu Guía Completa de Simuladores de Vuelo'
-  },
-  fr: {
-    'settings.title': 'Paramètres',
-    'settings.subtitle': 'Personnalisez votre expérience SkyGuide',
-    'settings.language.title': 'Langue',
-    'settings.language.description': "Choisissez votre langue préférée pour l'interface",
-    'settings.language.select': "Langue d'affichage",
-    'settings.language.selectHint': "Cela changera tout le texte de l'application",
-    'settings.language.preview': 'Aperçu:',
-    'settings.theme.title': 'Programmation du Thème',
-    'settings.theme.description': "Basculer automatiquement entre le mode clair et sombre selon l'heure",
-    'settings.theme.autoSwitch': 'Changement Automatique de Thème',
-    'settings.theme.autoSwitchHint': 'Activer les changements jour/nuit programmés',
-    'settings.theme.schedule': 'Horaires',
-    'settings.theme.scheduleHint': 'Définir quand passer en mode clair (jour) et sombre (nuit)',
-    'settings.theme.useSystem': 'Utiliser les Préférences Système',
-    'settings.theme.useSystemHint': "Suivre le paramètre de mode sombre de votre système d'exploitation",
-    'settings.theme.lightMode': 'Mode Clair',
-    'settings.theme.darkMode': 'Mode Sombre',
-    'settings.theme.currentTime': 'Heure Actuelle',
-    'settings.saveAll': 'Enregistrer Tous les Paramètres',
-    'settings.reset': 'Réinitialiser',
-    'preview.welcome': 'Bienvenue sur SkyGuide - Votre Guide Complet des Simulateurs de Vol'
-  },
-  de: {
-    'settings.title': 'Einstellungen',
-    'settings.subtitle': 'Passen Sie Ihre SkyGuide-Erfahrung an',
-    'settings.language.title': 'Sprache',
-    'settings.language.description': 'Wählen Sie Ihre bevorzugte Sprache für die Benutzeroberfläche',
-    'settings.language.select': 'Anzeigesprache',
-    'settings.language.selectHint': 'Dies ändert den gesamten Text in der Anwendung',
-    'settings.language.preview': 'Vorschau:',
-    'settings.theme.title': 'Thema-Zeitplan',
-    'settings.theme.description': 'Automatisch zwischen Hell- und Dunkelmodus basierend auf der Uhrzeit wechseln',
-    'settings.theme.autoSwitch': 'Automatischer Themawechsel',
-    'settings.theme.autoSwitchHint': 'Geplante Tag/Nacht-Modusänderungen aktivieren',
-    'settings.theme.schedule': 'Zeitplan',
-    'settings.theme.scheduleHint': 'Festlegen, wann auf Hell (Tag) und Dunkel (Nacht) gewechselt wird',
-    'settings.theme.useSystem': 'Systemeinstellung verwenden',
-    'settings.theme.useSystemHint': 'Der Dunkelmodus-Einstellung Ihres Betriebssystems folgen',
-    'settings.theme.lightMode': 'Hellmodus',
-    'settings.theme.darkMode': 'Dunkelmodus',
-    'settings.theme.currentTime': 'Aktuelle Zeit',
-    'settings.saveAll': 'Alle Einstellungen Speichern',
-    'settings.reset': 'Zurücksetzen',
-    'preview.welcome': 'Willkommen bei SkyGuide - Ihr Kompletter Flugsimulator-Leitfaden'
-  },
-  it: {
-    'settings.title': 'Impostazioni',
-    'settings.subtitle': 'Personalizza la tua esperienza SkyGuide',
-    'preview.welcome': 'Benvenuto su SkyGuide - La Tua Guida Completa ai Simulatori di Volo'
-  },
-  pt: {
-    'settings.title': 'Configurações',
-    'settings.subtitle': 'Personalize sua experiência no SkyGuide',
-    'preview.welcome': 'Bem-vindo ao SkyGuide - Seu Guia Completo de Simuladores de Voo'
-  },
-  ja: {
-    'settings.title': '設定',
-    'settings.subtitle': 'SkyGuideのエクスペリエンスをカスタマイズ',
-    'preview.welcome': 'SkyGuideへようこそ - あなたの完全なフライトシミュレーターガイド'
-  },
-  zh: {
-    'settings.title': '设置',
-    'settings.subtitle': '自定义您的SkyGuide体验',
-    'preview.welcome': '欢迎来到SkyGuide - 您的完整飞行模拟器指南'
-  },
-  ko: {
-    'settings.title': '설정',
-    'settings.subtitle': 'SkyGuide 경험을 사용자 정의하세요',
-    'preview.welcome': 'SkyGuide에 오신 것을 환영합니다 - 완벽한 비행 시뮬레이터 가이드'
-  },
-  ru: {
-    'settings.title': 'Настройки',
-    'settings.subtitle': 'Настройте ваш опыт работы с SkyGuide',
-    'preview.welcome': 'Добро пожаловать в SkyGuide - Ваш Полный Гид по Авиасимуляторам'
-  }
-};
-
-// Current language
-let currentLanguage = localStorage.getItem('skyguide-language') || 'en';
-
-// Apply translations
-function applyTranslations(lang) {
-  const langData = translations[lang] || translations['en'];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (langData[key]) {
-      el.textContent = langData[key];
-    } else if (translations['en'][key]) {
-      el.textContent = translations['en'][key];
-    }
-  });
-
-  // Update preview text
-  const previewText = document.getElementById('previewText');
-  if (previewText) {
-    previewText.textContent = langData['preview.welcome'] || translations['en']['preview.welcome'];
-  }
-
-  // Update HTML lang attribute
-  document.documentElement.lang = lang;
-}
-
 // Dark mode functionality
 function initDarkMode() {
   const savedTheme = localStorage.getItem('skyguide-theme');
@@ -892,12 +690,6 @@ function showStatusMessage(elementId, message, type) {
 
 // Load all settings
 function loadSettings() {
-  // Language
-  const savedLanguage = localStorage.getItem('skyguide-language') || 'en';
-  document.getElementById('languageSelect').value = savedLanguage;
-  currentLanguage = savedLanguage;
-  applyTranslations(savedLanguage);
-
   // Theme schedule
   const autoTheme = localStorage.getItem('skyguide-auto-theme') === 'true';
   const useSystem = localStorage.getItem('skyguide-use-system-theme') === 'true';
@@ -915,12 +707,6 @@ function loadSettings() {
 
 // Save all settings
 function saveAllSettings() {
-  // Language
-  const language = document.getElementById('languageSelect').value;
-  localStorage.setItem('skyguide-language', language);
-  currentLanguage = language;
-  applyTranslations(language);
-
   // Theme schedule
   const autoTheme = document.getElementById('autoThemeToggle').checked;
   const useSystem = document.getElementById('useSystemTheme').checked;
@@ -950,7 +736,6 @@ function resetSettings() {
   }
 
   // Clear localStorage
-  localStorage.removeItem('skyguide-language');
   localStorage.removeItem('skyguide-auto-theme');
   localStorage.removeItem('skyguide-use-system-theme');
   localStorage.removeItem('skyguide-day-start');
@@ -973,16 +758,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dark mode toggle
   document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
-
-  // Language change
-  document.getElementById('languageSelect').addEventListener('change', (e) => {
-    currentLanguage = e.target.value;
-    applyTranslations(currentLanguage);
-    // Also update global translations system
-    if (typeof SkyGuideTranslations !== 'undefined') {
-      SkyGuideTranslations.setLanguage(currentLanguage);
-    }
-  });
 
   // Auto theme toggle
   document.getElementById('autoThemeToggle').addEventListener('change', (e) => {
@@ -1020,6 +795,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 60000);
 });
 </script>
-<script src="js/translations.js"></script>
 </body>
 </html>
