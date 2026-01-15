@@ -449,6 +449,121 @@
       color: var(--text-muted);
     }
 
+    /* Sim of the Month */
+    .sim-of-month {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-alt) 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sim-of-month::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .sim-of-month-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sim-of-month-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sim-of-month-date {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .sim-of-month-content {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sim-of-month-image {
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .sim-of-month-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sim-of-month-info h2 {
+      font-size: 28px;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .sim-of-month-info p {
+      font-size: 16px;
+      line-height: 1.7;
+      opacity: 0.95;
+      margin-bottom: 1.5rem;
+    }
+
+    .sim-of-month-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sim-of-month-highlights span {
+      background: rgba(255,255,255,0.2);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .sim-of-month-link {
+      display: inline-block;
+      background: #fff;
+      color: var(--accent);
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .sim-of-month-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
     @media (max-width: 768px) {
       .grid {
         grid-template-columns: 1fr;
@@ -477,6 +592,24 @@
 
       .filter-groups {
         grid-template-columns: 1fr;
+      }
+
+      .sim-of-month-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .sim-of-month-image {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .sim-of-month-info h2 {
+        font-size: 24px;
+      }
+
+      .sim-of-month-highlights {
+        justify-content: center;
       }
     }
   </style>
@@ -518,6 +651,28 @@
     <div class="intro">
       <p>Welcome to the comprehensive flight simulator guide. Whether you're a beginner pilot or a seasoned veteran, this guide contains detailed information about the best flight simulators available in 2025. Click on any simulator to learn more.</p>
     </div>
+
+    <!-- Sim of the Month -->
+    <section class="sim-of-month" id="simOfMonth">
+      <div class="sim-of-month-header">
+        <div class="sim-of-month-badge">
+          <span>⭐</span> Sim of the Month
+        </div>
+        <span class="sim-of-month-date" id="simOfMonthDate"></span>
+      </div>
+      <div class="sim-of-month-content">
+        <div class="sim-of-month-image">
+          <img id="simOfMonthImage" src="images/msfs2024.jpg" alt="Sim of the Month">
+        </div>
+        <div class="sim-of-month-info">
+          <h2 id="simOfMonthName">Loading...</h2>
+          <p id="simOfMonthDesc">Discover this month's featured flight simulator.</p>
+          <div class="sim-of-month-highlights" id="simOfMonthHighlights">
+          </div>
+          <a href="#" class="sim-of-month-link" id="simOfMonthLink">Explore This Simulator →</a>
+        </div>
+      </div>
+    </section>
 
     <!-- Filters -->
     <div class="filters">
@@ -1043,6 +1198,136 @@
           </div>
         </div>
 
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/vtolvr.jpg" alt="VTOL VR">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">VTOL VR</h3>
+              <span class="tag tag-recommended">VR Only</span>
+            </div>
+            <p class="sim-description">
+              A VR-exclusive combat flight game with intuitive motion controls. Interact with every switch and button in the cockpit using your hands.
+            </p>
+            <ul class="sim-highlights">
+              <li>Full hand tracking</li>
+              <li>Intuitive VR controls</li>
+              <li>Mission editor</li>
+              <li>Multiplayer co-op</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC VR</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$29.99</span></span>
+            </div>
+            <a href="details/vtolvr.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/msfs-helicopters.jpg" alt="Rotorcraft Sims">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">HeliSimmer's Pick</h3>
+              <span class="tag tag-recommended">Helicopters</span>
+            </div>
+            <p class="sim-description">
+              Dedicated helicopter simulation is a specialized field. Options include X-Plane with HPG H145, DCS Huey/Apache, and Aerofly's excellent heli models.
+            </p>
+            <ul class="sim-highlights">
+              <li>Realistic rotor physics</li>
+              <li>Complex systems</li>
+              <li>SAR missions</li>
+              <li>VR immersion</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Varies</span></span>
+            </div>
+            <a href="details/helicopters.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="free" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/geofsim.jpg" alt="GeoFS">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">GeoFS</h3>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <p class="sim-description">
+              A free browser-based flight simulator. No download required - just open your browser and start flying anywhere in the world.
+            </p>
+            <ul class="sim-highlights">
+              <li>No download needed</li>
+              <li>Works in browser</li>
+              <li>Global scenery</li>
+              <li>Multiplayer</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Web Browser</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">Free</span></span>
+            </div>
+            <a href="details/geofs.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc console" data-type="combat">
+          <div class="sim-image">
+            <img src="images/project-wingman.jpg" alt="Project Wingman">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Project Wingman</h3>
+              <span class="tag tag-combat">Combat</span>
+            </div>
+            <p class="sim-description">
+              An indie combat flight action game in the style of Ace Combat. Features an engaging campaign with VR support and incredible soundtrack.
+            </p>
+            <ul class="sim-highlights">
+              <li>Ace Combat style</li>
+              <li>Full VR support</li>
+              <li>Great campaign</li>
+              <li>Conquest mode</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">PC, Xbox, Switch</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$24.99</span></span>
+            </div>
+            <a href="details/project-wingman.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
+        <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
+          <div class="sim-image">
+            <img src="images/take-on-helicopters.jpg" alt="Take On Helicopters">
+          </div>
+          <div class="sim-content">
+            <div class="sim-header">
+              <h3 class="sim-name">Take On Helicopters</h3>
+              <span class="tag tag-recommended">Helicopters</span>
+            </div>
+            <p class="sim-description">
+              From Bohemia Interactive (ARMA), a civilian helicopter sim with career mode. Features realistic flight model and diverse missions.
+            </p>
+            <ul class="sim-highlights">
+              <li>Career mode</li>
+              <li>Realistic physics</li>
+              <li>Mission variety</li>
+              <li>Modding support</li>
+            </ul>
+            <div class="sim-meta">
+              <span class="meta-item"><span class="meta-label">Platforms:</span> <span class="meta-value">Windows</span></span>
+              <span class="meta-item"><span class="meta-label">Price:</span> <span class="meta-value">$9.99</span></span>
+            </div>
+            <a href="details/take-on-helicopters.html" class="sim-link">View Details →</a>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1140,6 +1425,131 @@ searchBox.addEventListener('input', applyFilters);
 document.querySelector('[data-filter="price"][data-value="all"]').classList.add('active');
 document.querySelector('[data-filter="platform"][data-value="all"]').classList.add('active');
 document.querySelector('[data-filter="type"][data-value="all"]').classList.add('active');
+
+// Sim of the Month Feature
+const simsOfTheMonth = [
+  {
+    name: "Microsoft Flight Simulator 2024",
+    image: "images/msfs2024.jpg",
+    description: "The gold standard for visual fidelity and real-world accuracy. Features the entire planet with photorealistic satellite imagery, real-time weather, and a living world with career mode.",
+    highlights: ["Photorealistic Graphics", "Career Mode", "65+ Aircraft", "VR Support"],
+    link: "details/msfs2024.html"
+  },
+  {
+    name: "X-Plane 12",
+    image: "images/xplane12.jpg",
+    description: "The most realistic flight model available. Trusted by pilots and aviation professionals worldwide for its accurate aerodynamic simulation and professional-grade systems.",
+    highlights: ["Best Flight Model", "Pro Training Tool", "Real Weather", "Cross-Platform"],
+    link: "details/xplane12.html"
+  },
+  {
+    name: "DCS World",
+    image: "images/dcs.jpg",
+    description: "The ultimate military aviation simulator with study-level aircraft modules. Experience combat flying with unprecedented realism and attention to detail.",
+    highlights: ["Study-Level Aircraft", "Free Base Game", "VR Support", "Active Community"],
+    link: "details/dcs.html"
+  },
+  {
+    name: "Prepar3D v6",
+    image: "images/prepar3d.jpg",
+    description: "The professional-grade simulator used by airlines and military organizations worldwide. Excellent for serious flight training and simulation.",
+    highlights: ["Professional Grade", "Training Tool", "SDK Included", "Multi-Monitor"],
+    link: "details/prepar3d.html"
+  },
+  {
+    name: "IL-2 Sturmovik",
+    image: "images/il2.jpg",
+    description: "The definitive WWII combat flight simulator. Experience historically accurate aircraft, theaters of war, and intense dogfighting action.",
+    highlights: ["WWII Combat", "Great Damage Model", "Career Mode", "Multiplayer"],
+    link: "details/il2.html"
+  },
+  {
+    name: "Aerofly FS 4",
+    image: "images/aerofly.jpg",
+    description: "Stunning visuals with buttery smooth performance. Perfect for VR enthusiasts seeking the most immersive cockpit experience.",
+    highlights: ["Best VR Performance", "Beautiful Graphics", "Easy to Learn", "Helicopters"],
+    link: "details/aerofly.html"
+  },
+  {
+    name: "FlightGear",
+    image: "images/flightgear.jpg",
+    description: "The completely free, open-source flight simulator. Community-driven development with over 400 aircraft and global scenery coverage.",
+    highlights: ["100% Free", "Open Source", "400+ Aircraft", "Active Community"],
+    link: "details/flightgear.html"
+  },
+  {
+    name: "Condor 2",
+    image: "images/condor2.jpg",
+    description: "THE definitive glider/sailplane simulator used by real-world pilots for training. Master the art of soaring with realistic thermal modeling.",
+    highlights: ["Glider Specialist", "Real Training", "Online Racing", "25+ Gliders"],
+    link: "details/condor2.html"
+  },
+  {
+    name: "War Thunder",
+    image: "images/warthunder.jpg",
+    description: "Free-to-play military combat featuring aircraft, tanks, and naval vessels. Accessible yet deep with various realism modes.",
+    highlights: ["Free to Play", "Air/Ground/Naval", "Huge Player Base", "Regular Updates"],
+    link: "details/war-thunder.html"
+  },
+  {
+    name: "Infinite Flight",
+    image: "images/infiniteFlight.jpg",
+    description: "The premier mobile flight simulator with global scenery and live multiplayer. Fly anywhere in the world from your phone or tablet.",
+    highlights: ["Best Mobile Sim", "Global Scenery", "Live ATC", "100+ Aircraft"],
+    link: "details/infinite-flight.html"
+  },
+  {
+    name: "Falcon BMS",
+    image: "images/falconbms.jpg",
+    description: "The most detailed F-16 simulation ever created. A free community project that delivers study-level systems and dynamic campaigns.",
+    highlights: ["F-16 Specialist", "Free Mod", "Dynamic Campaign", "Study-Level"],
+    link: "details/falcon-bms.html"
+  },
+  {
+    name: "Microsoft FSX",
+    image: "images/fsx.jpg",
+    description: "The legendary 2006 simulator with the largest add-on library in history. Still runs perfectly on modern low-end PCs.",
+    highlights: ["Legendary Classic", "Huge Addon Library", "Runs Anywhere", "Great Community"],
+    link: "details/fsx.html"
+  }
+];
+
+function getSimOfTheMonth() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  // Create a seed based on year and month (changes on 1st of each month)
+  const seed = year * 12 + month;
+
+  // Use the seed to pick a "random" but consistent sim for the month
+  const index = seed % simsOfTheMonth.length;
+  return simsOfTheMonth[index];
+}
+
+function getMonthName(date) {
+  const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                  'July', 'August', 'September', 'October', 'November', 'December'];
+  return months[date.getMonth()] + ' ' + date.getFullYear();
+}
+
+function updateSimOfTheMonth() {
+  const sim = getSimOfTheMonth();
+  const now = new Date();
+
+  document.getElementById('simOfMonthDate').textContent = getMonthName(now);
+  document.getElementById('simOfMonthName').textContent = sim.name;
+  document.getElementById('simOfMonthDesc').textContent = sim.description;
+  document.getElementById('simOfMonthImage').src = sim.image;
+  document.getElementById('simOfMonthImage').alt = sim.name;
+  document.getElementById('simOfMonthLink').href = sim.link;
+
+  const highlightsContainer = document.getElementById('simOfMonthHighlights');
+  highlightsContainer.innerHTML = sim.highlights.map(h => `<span>${h}</span>`).join('');
+}
+
+// Initialize Sim of the Month
+updateSimOfTheMonth();
 </script>
 </body>
 </html>
