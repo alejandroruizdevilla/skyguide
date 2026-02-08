@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - AI Sim Advisor</title>
+  <meta name="description" content="Get personalized flight simulator recommendations from our AI advisor.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      font-size: 16px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover { color: var(--accent-alt); transform: translateY(-1px); }
+    .logo svg { width: 28px; height: 28px; }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--accent); }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover { background: var(--accent); color: #fff; }
+
+    /* Chat container */
+    .chat-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 1rem;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      text-align: center;
+      padding: 1.5rem 0 1rem;
+    }
+
+    .chat-header h1 {
+      font-size: 24px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .chat-header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+    /* Message bubbles */
+    .message {
+      max-width: 85%;
+      padding: 0.85rem 1.15rem;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.6;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--accent);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message .bot-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Typing indicator */
+    .typing {
+      display: flex;
+      gap: 4px;
+      padding: 0.6rem 1rem;
+      align-self: flex-start;
+    }
+
+    .typing span {
+      width: 8px;
+      height: 8px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* Quick reply buttons */
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .quick-reply {
+      padding: 0.5rem 1rem;
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .quick-reply:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Recommendation card */
+    .rec-card {
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .rec-card h4 {
+      color: var(--accent);
+      font-size: 16px;
+      margin-bottom: 0.25rem;
+    }
+
+    .rec-card .rec-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .rec-card p {
+      font-size: 14px;
+      margin-bottom: 0.75rem;
+    }
+
+    .rec-card .rec-link {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .rec-card .rec-link:hover { background: var(--accent-alt); }
+
+    .rec-match {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--accent);
+      color: #fff;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* Input area */
+    .chat-input-area {
+      padding: 1rem 0 1.5rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border-light);
+      border-radius: 24px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input:focus { border-color: var(--accent); }
+
+    .chat-input::placeholder { color: var(--text-muted); }
+
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover { background: var(--accent-alt); transform: scale(1.05); }
+
+    .restart-btn {
+      display: block;
+      margin: 0.75rem auto 0;
+      padding: 0.4rem 1rem;
+      background: transparent;
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .restart-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+      .chat-header h1 { font-size: 20px; }
+      .message { max-width: 92%; font-size: 14px; }
+      .quick-reply { font-size: 12px; padding: 0.45rem 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+        <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="20" r="2" fill="currentColor"/>
+      </svg>
+      <span>SkyGuide</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="compare.html" class="nav-link">Compare</a>
+      <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+      <a href="hardware-guide.html" class="nav-link">Hardware</a>
+      <a href="minigames.html" class="nav-link">Mini Games</a>
+    </div>
+    <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
+  </nav>
+
+  <!-- Chat Interface -->
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <h1>AI Sim Advisor</h1>
+      <p>I'll help you find the perfect flight simulator. Just answer a few questions!</p>
+    </div>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Type a message or pick an option above..." autocomplete="off">
+        <button class="send-btn" id="sendBtn">&#10148;</button>
+      </div>
+      <button class="restart-btn" id="restartBtn">Start over</button>
+    </div>
+  </div>
+
+  <script>
+    // Dark Mode
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const html = document.documentElement;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    html.setAttribute('data-theme', savedTheme);
+    darkModeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+    darkModeToggle.addEventListener('click', () => {
+      const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      darkModeToggle.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    });
+
+    // === SIMULATOR DATABASE ===
+    const simulators = [
+      {
+        name: "Microsoft Flight Simulator 2024",
+        platform: ["pc", "console"],
+        price: "paid",
+        cost: "$69.99",
+        type: ["civilian"],
+        experience: ["beginner", "intermediate", "advanced"],
+        interest: ["airliners", "general-aviation", "vfr", "scenery", "career"],
+        vr: true,
+        multiplayer: true,
+        description: "The gold standard. Photorealistic global scenery, 65+ aircraft, real-time weather, career mode.",
+        link: "details/msfs2024.html"
+      },
+      {
+        name: "Microsoft Flight Simulator 2020",
+        platform: ["pc", "console"],
+        price: "paid",
+        cost: "$59.99",
+        type: ["civilian"],
+        experience: ["beginner", "intermediate", "advanced"],
+        interest: ["airliners", "general-aviation", "vfr", "scenery"],
+        vr: true,
+        multiplayer: true,
+        description: "Stunning visuals with a massive addon ecosystem. Still a top choice with years of community content.",
+        link: "details/msfs2020.html"
+      },
+      {
+        name: "X-Plane 12",
+        platform: ["pc"],
+        price: "paid",
+        cost: "$59.99",
+        type: ["civilian"],
+        experience: ["intermediate", "advanced"],
+        interest: ["airliners", "general-aviation", "study-level", "vfr"],
+        vr: true,
+        multiplayer: false,
+        description: "Best flight model in the business. Preferred by real-world pilots and serious enthusiasts.",
+        link: "details/xplane12.html"
+      },
+      {
+        name: "DCS World",
+        platform: ["pc"],
+        price: "free",
+        cost: "Free + modules",
+        type: ["combat"],
+        experience: ["intermediate", "advanced"],
+        interest: ["combat", "military", "study-level"],
+        vr: true,
+        multiplayer: true,
+        description: "The ultimate military combat flight sim. Study-level aircraft modules with incredible detail.",
+        link: "details/dcs.html"
+      },
+      {
+        name: "IL-2 Sturmovik",
+        platform: ["pc"],
+        price: "paid",
+        cost: "$49.99",
+        type: ["combat"],
+        experience: ["intermediate", "advanced"],
+        interest: ["combat", "military", "wwii"],
+        vr: true,
+        multiplayer: true,
+        description: "The best WWII combat flight sim. Beautiful graphics and intense dogfighting action.",
+        link: "details/il2.html"
+      },
+      {
+        name: "Falcon BMS",
+        platform: ["pc"],
+        price: "free",
+        cost: "Free (needs Falcon 4.0)",
+        type: ["combat"],
+        experience: ["advanced"],
+        interest: ["combat", "military", "study-level"],
+        vr: true,
+        multiplayer: true,
+        description: "The most realistic F-16 simulation ever made. Deep dynamic campaign system.",
+        link: "details/falcon-bms.html"
+      },
+      {
+        name: "FlightGear",
+        platform: ["pc"],
+        price: "free",
+        cost: "Free",
+        type: ["civilian"],
+        experience: ["beginner", "intermediate"],
+        interest: ["general-aviation", "vfr", "learning"],
+        vr: false,
+        multiplayer: true,
+        description: "Open-source and completely free. Great for learning flight basics without spending money.",
+        link: "details/flightgear.html"
+      },
+      {
+        name: "Prepar3D v6",
+        platform: ["pc"],
+        price: "paid",
+        cost: "$59.95",
+        type: ["civilian"],
+        experience: ["intermediate", "advanced"],
+        interest: ["airliners", "study-level", "training"],
+        vr: true,
+        multiplayer: false,
+        description: "Professional-grade simulator used for pilot training. Massive addon library from FSX era.",
+        link: "details/prepar3d.html"
+      },
+      {
+        name: "Aerofly FS 4",
+        platform: ["pc", "mobile"],
+        price: "paid",
+        cost: "$29.99",
+        type: ["civilian"],
+        experience: ["beginner", "intermediate"],
+        interest: ["general-aviation", "vfr", "scenery"],
+        vr: true,
+        multiplayer: false,
+        description: "Excellent VR performance and smooth flying. Great for VFR flying with stunning visuals.",
+        link: "details/aerofly.html"
+      },
+      {
+        name: "GeoFS",
+        platform: ["pc", "mobile"],
+        price: "free",
+        cost: "Free",
+        type: ["civilian"],
+        experience: ["beginner"],
+        interest: ["general-aviation", "casual", "learning"],
+        vr: false,
+        multiplayer: true,
+        description: "Free browser-based flight sim. No download needed - fly anywhere in seconds!",
+        link: "details/geofs.html"
+      },
+      {
+        name: "War Thunder",
+        platform: ["pc", "console"],
+        price: "free",
+        cost: "Free-to-play",
+        type: ["combat", "arcade"],
+        experience: ["beginner", "intermediate"],
+        interest: ["combat", "military", "casual", "wwii"],
+        vr: true,
+        multiplayer: true,
+        description: "Free-to-play multiplayer combat with planes, tanks, and ships. Easy to pick up.",
+        link: "details/war-thunder.html"
+      },
+      {
+        name: "Ace Combat 7",
+        platform: ["pc", "console"],
+        price: "paid",
+        cost: "$59.99",
+        type: ["arcade"],
+        experience: ["beginner", "intermediate"],
+        interest: ["combat", "casual", "action"],
+        vr: true,
+        multiplayer: true,
+        description: "Cinematic arcade air combat with an epic story. Accessible and action-packed.",
+        link: "details/ace-combat-7.html"
+      },
+      {
+        name: "Project Wingman",
+        platform: ["pc"],
+        price: "paid",
+        cost: "$24.99",
+        type: ["arcade", "combat"],
+        experience: ["beginner", "intermediate"],
+        interest: ["combat", "casual", "action", "vr"],
+        vr: true,
+        multiplayer: false,
+        description: "Indie Ace Combat-style game with amazing VR support. Great value at $24.99.",
+        link: "details/project-wingman.html"
+      },
+      {
+        name: "Infinite Flight",
+        platform: ["mobile"],
+        price: "paid",
+        cost: "$4.99 + subscription",
+        type: ["civilian"],
+        experience: ["beginner", "intermediate"],
+        interest: ["airliners", "general-aviation", "casual"],
+        vr: false,
+        multiplayer: true,
+        description: "The best mobile flight sim. Live ATC, global scenery, and a huge multiplayer community.",
+        link: "details/infinite-flight.html"
+      },
+      {
+        name: "VTOL VR",
+        platform: ["pc"],
+        price: "paid",
+        cost: "$29.99",
+        type: ["combat"],
+        experience: ["intermediate"],
+        interest: ["combat", "vr", "military"],
+        vr: true,
+        multiplayer: true,
+        description: "Built exclusively for VR. Use your hands to interact with every cockpit control.",
+        link: "details/vtolvr.html"
+      },
+      {
+        name: "Condor 2",
+        platform: ["pc"],
+        price: "paid",
+        cost: "$49.99",
+        type: ["civilian"],
+        experience: ["intermediate", "advanced"],
+        interest: ["gliders", "vfr", "soaring"],
+        vr: true,
+        multiplayer: true,
+        description: "The best glider/soaring simulation. Gorgeous scenery and realistic thermals.",
+        link: "details/condor2.html"
+      },
+      {
+        name: "RFS - Real Flight Simulator",
+        platform: ["mobile"],
+        price: "free",
+        cost: "Free + IAP",
+        type: ["civilian"],
+        experience: ["beginner"],
+        interest: ["airliners", "casual"],
+        vr: false,
+        multiplayer: true,
+        description: "Accessible mobile sim with real airline routes and liveries. Great casual experience.",
+        link: "details/rfs.html"
+      }
+    ];
+
+    // === CONVERSATION STATE ===
+    let state = {
+      step: 0,
+      platform: null,
+      budget: null,
+      experience: null,
+      interest: null,
+      vrInterest: null
+    };
+
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // === CONVERSATION FLOW ===
+    const steps = [
+      {
+        message: "Hey there! I'm your SkyGuide AI advisor. I'll help you find the perfect flight simulator based on your preferences. Let's get started!\n\nWhat platform do you mainly game on?",
+        options: [
+          { label: "PC", value: "pc" },
+          { label: "Console (Xbox/PS)", value: "console" },
+          { label: "Mobile", value: "mobile" },
+          { label: "I have multiple", value: "any" }
+        ],
+        field: "platform"
+      },
+      {
+        message: "Great choice! Now, what's your budget looking like?",
+        options: [
+          { label: "Free only", value: "free" },
+          { label: "Under $30", value: "low" },
+          { label: "Under $70", value: "mid" },
+          { label: "Money is no object", value: "any" }
+        ],
+        field: "budget"
+      },
+      {
+        message: "How much flight sim experience do you have?",
+        options: [
+          { label: "Complete beginner", value: "beginner" },
+          { label: "Some experience", value: "intermediate" },
+          { label: "Veteran pilot", value: "advanced" },
+          { label: "Not sure yet", value: "any" }
+        ],
+        field: "experience"
+      },
+      {
+        message: "What kind of flying interests you most?",
+        options: [
+          { label: "Airliners & routes", value: "airliners" },
+          { label: "General aviation / VFR", value: "general-aviation" },
+          { label: "Combat & military", value: "combat" },
+          { label: "Casual / arcade fun", value: "casual" }
+        ],
+        field: "interest"
+      },
+      {
+        message: "Last question - are you interested in VR (virtual reality) flying?",
+        options: [
+          { label: "Yes, VR is a must!", value: "yes" },
+          { label: "Nice to have", value: "nice" },
+          { label: "No, not interested", value: "no" },
+          { label: "Don't have VR", value: "no" }
+        ],
+        field: "vrInterest"
+      }
+    ];
+
+    // === CORE FUNCTIONS ===
+    function addMessage(text, type = 'bot', quickReplies = null, cards = null) {
+      const msg = document.createElement('div');
+      msg.className = `message ${type}`;
+
+      let html = '';
+      if (type === 'bot') {
+        html += '<div class="bot-label">SkyGuide AI</div>';
+      }
+
+      // Convert newlines to <br>
+      html += text.replace(/\n/g, '<br>');
+
+      // Add recommendation cards
+      if (cards) {
+        cards.forEach(card => {
+          html += `
+            <div class="rec-card">
+              <h4>${card.name} <span class="rec-match">${card.match}% match</span></h4>
+              <div class="rec-meta">${card.cost} &middot; ${card.platform.join(', ').toUpperCase()}</div>
+              <p>${card.description}</p>
+              <a href="${card.link}" class="rec-link">View Details &rarr;</a>
+            </div>`;
+        });
+      }
+
+      // Add quick replies
+      if (quickReplies) {
+        html += '<div class="quick-replies">';
+        quickReplies.forEach(qr => {
+          html += `<button class="quick-reply" data-value="${qr.value}">${qr.label}</button>`;
+        });
+        html += '</div>';
+      }
+
+      msg.innerHTML = html;
+      chatMessages.appendChild(msg);
+
+      // Attach quick reply handlers
+      if (quickReplies) {
+        msg.querySelectorAll('.quick-reply').forEach(btn => {
+          btn.addEventListener('click', () => {
+            handleQuickReply(btn.dataset.value, btn.textContent);
+          });
+        });
+      }
+
+      scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+      const typing = document.createElement('div');
+      typing.className = 'typing';
+      typing.id = 'typingIndicator';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+      chatMessages.appendChild(typing);
+      scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+      const el = document.getElementById('typingIndicator');
+      if (el) el.remove();
+    }
+
+    function scrollToBottom() {
+      setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 50);
+    }
+
+    function botReply(text, quickReplies = null, cards = null, delay = 600) {
+      addTypingIndicator();
+      setTimeout(() => {
+        removeTypingIndicator();
+        addMessage(text, 'bot', quickReplies, cards);
+      }, delay);
+    }
+
+    // === HANDLE USER INPUT ===
+    function handleQuickReply(value, label) {
+      // Disable all quick reply buttons
+      document.querySelectorAll('.quick-reply').forEach(b => {
+        b.disabled = true;
+        b.style.opacity = '0.5';
+        b.style.cursor = 'default';
+      });
+
+      addMessage(label, 'user');
+      processAnswer(value);
+    }
+
+    function handleFreeText(text) {
+      addMessage(text, 'user');
+
+      // Try to parse the free text input
+      const lower = text.toLowerCase();
+
+      if (state.step >= steps.length) {
+        // Already done with questions, handle follow-up
+        handleFollowUp(lower);
+        return;
+      }
+
+      const currentStep = steps[state.step];
+      let matchedValue = null;
+
+      // Try to match keywords to options
+      if (currentStep.field === 'platform') {
+        if (lower.includes('pc') || lower.includes('computer') || lower.includes('desktop') || lower.includes('laptop')) matchedValue = 'pc';
+        else if (lower.includes('xbox') || lower.includes('playstation') || lower.includes('ps5') || lower.includes('ps4') || lower.includes('console')) matchedValue = 'console';
+        else if (lower.includes('phone') || lower.includes('mobile') || lower.includes('ipad') || lower.includes('tablet') || lower.includes('android') || lower.includes('ios') || lower.includes('iphone')) matchedValue = 'mobile';
+        else if (lower.includes('all') || lower.includes('multiple') || lower.includes('any') || lower.includes('everything')) matchedValue = 'any';
+      } else if (currentStep.field === 'budget') {
+        if (lower.includes('free') || lower.includes('nothing') || lower.includes('$0') || lower.includes('no money') || lower.includes('cheap')) matchedValue = 'free';
+        else if (lower.includes('under 30') || lower.includes('low') || lower.includes('budget')) matchedValue = 'low';
+        else if (lower.includes('under 70') || lower.includes('mid') || lower.includes('moderate')) matchedValue = 'mid';
+        else if (lower.includes('any') || lower.includes("don't care") || lower.includes('unlimited') || lower.includes('no limit') || lower.includes('whatever')) matchedValue = 'any';
+      } else if (currentStep.field === 'experience') {
+        if (lower.includes('beginner') || lower.includes('new') || lower.includes('first') || lower.includes('never') || lower.includes('start')) matchedValue = 'beginner';
+        else if (lower.includes('some') || lower.includes('intermediate') || lower.includes('played') || lower.includes('bit') || lower.includes('moderate')) matchedValue = 'intermediate';
+        else if (lower.includes('veteran') || lower.includes('advanced') || lower.includes('expert') || lower.includes('lot') || lower.includes('experienced') || lower.includes('pro')) matchedValue = 'advanced';
+        else if (lower.includes('not sure') || lower.includes("don't know") || lower.includes('any')) matchedValue = 'any';
+      } else if (currentStep.field === 'interest') {
+        if (lower.includes('airliner') || lower.includes('airline') || lower.includes('boeing') || lower.includes('airbus') || lower.includes('737') || lower.includes('a320') || lower.includes('route')) matchedValue = 'airliners';
+        else if (lower.includes('general') || lower.includes('cessna') || lower.includes('vfr') || lower.includes('scenic') || lower.includes('sight') || lower.includes('small plane') || lower.includes('light aircraft')) matchedValue = 'general-aviation';
+        else if (lower.includes('combat') || lower.includes('military') || lower.includes('fighter') || lower.includes('war') || lower.includes('dogfight') || lower.includes('shoot')) matchedValue = 'combat';
+        else if (lower.includes('casual') || lower.includes('fun') || lower.includes('arcade') || lower.includes('easy') || lower.includes('simple') || lower.includes('action')) matchedValue = 'casual';
+      } else if (currentStep.field === 'vrInterest') {
+        if (lower.includes('yes') || lower.includes('love vr') || lower.includes('must') || lower.includes('definitely') || lower.includes('absolutely')) matchedValue = 'yes';
+        else if (lower.includes('nice') || lower.includes('maybe') || lower.includes('bonus') || lower.includes('would be cool')) matchedValue = 'nice';
+        else if (lower.includes('no') || lower.includes("don't") || lower.includes('not') || lower.includes('nah') || lower.includes("haven't")) matchedValue = 'no';
+      }
+
+      if (matchedValue) {
+        processAnswer(matchedValue);
+      } else {
+        botReply(
+          "I didn't quite catch that. Could you try picking one of the options, or rephrase?",
+          steps[state.step].options
+        );
+      }
+    }
+
+    function processAnswer(value) {
+      const currentStep = steps[state.step];
+      state[currentStep.field] = value;
+      state.step++;
+
+      if (state.step < steps.length) {
+        const nextStep = steps[state.step];
+        botReply(nextStep.message, nextStep.options);
+      } else {
+        generateRecommendations();
+      }
+    }
+
+    // === RECOMMENDATION ENGINE ===
+    function generateRecommendations() {
+      botReply("Analyzing your preferences...", null, null, 500);
+
+      setTimeout(() => {
+        const scored = simulators.map(sim => {
+          let score = 0;
+          let maxScore = 0;
+
+          // Platform match (weight: 30)
+          maxScore += 30;
+          if (state.platform === 'any') {
+            score += 30;
+          } else if (sim.platform.includes(state.platform)) {
+            score += 30;
+          }
+
+          // Budget match (weight: 25)
+          maxScore += 25;
+          if (state.budget === 'any') {
+            score += 25;
+          } else if (state.budget === 'free' && sim.price === 'free') {
+            score += 25;
+          } else if (state.budget === 'low') {
+            if (sim.price === 'free') score += 25;
+            else {
+              const p = parseFloat(sim.cost.replace(/[^0-9.]/g, ''));
+              if (!isNaN(p) && p <= 30) score += 25;
+              else if (!isNaN(p) && p <= 50) score += 10;
+            }
+          } else if (state.budget === 'mid') {
+            score += 25; // everything fits under $70
+          }
+
+          // Experience match (weight: 20)
+          maxScore += 20;
+          if (state.experience === 'any') {
+            score += 20;
+          } else if (sim.experience.includes(state.experience)) {
+            score += 20;
+          } else {
+            score += 5; // partial match
+          }
+
+          // Interest match (weight: 20)
+          maxScore += 20;
+          if (state.interest === 'any') {
+            score += 20;
+          } else {
+            const interestMap = {
+              'airliners': ['airliners'],
+              'general-aviation': ['general-aviation', 'vfr', 'scenery'],
+              'combat': ['combat', 'military'],
+              'casual': ['casual', 'action', 'arcade']
+            };
+            const interests = interestMap[state.interest] || [state.interest];
+            if (interests.some(i => sim.interest.includes(i))) {
+              score += 20;
+            } else if (sim.type.some(t => {
+              if (state.interest === 'combat' && (t === 'combat' || t === 'arcade')) return true;
+              if (state.interest === 'casual' && t === 'arcade') return true;
+              return false;
+            })) {
+              score += 15;
+            }
+          }
+
+          // VR bonus (weight: 5)
+          maxScore += 5;
+          if (state.vrInterest === 'yes' && sim.vr) {
+            score += 5;
+          } else if (state.vrInterest === 'nice' && sim.vr) {
+            score += 3;
+          } else if (state.vrInterest === 'no') {
+            score += 5;
+          }
+
+          const matchPercent = Math.round((score / maxScore) * 100);
+          return { ...sim, score, matchPercent };
+        });
+
+        // Sort by score and take top 3
+        scored.sort((a, b) => b.score - a.score);
+        const top = scored.filter(s => s.matchPercent >= 50).slice(0, 3);
+
+        if (top.length === 0) {
+          botReply(
+            "Hmm, your preferences are quite specific! Here are the closest matches I found:",
+            null,
+            scored.slice(0, 3).map(s => ({
+              name: s.name,
+              match: s.matchPercent,
+              cost: s.cost,
+              platform: s.platform,
+              description: s.description,
+              link: s.link
+            }))
+          );
+        } else {
+          const cards = top.map(s => ({
+            name: s.name,
+            match: s.matchPercent,
+            cost: s.cost,
+            platform: s.platform,
+            description: s.description,
+            link: s.link
+          }));
+
+          botReply(
+            `Based on your preferences, here are my top ${top.length} recommendations:`,
+            null,
+            cards,
+            800
+          );
+        }
+
+        // Follow-up after recommendations
+        setTimeout(() => {
+          botReply(
+            "Want to know more? I can help with follow-up questions!",
+            [
+              { label: "Why these picks?", value: "why" },
+              { label: "Show free options", value: "free-options" },
+              { label: "Best for VR?", value: "best-vr" },
+              { label: "Start over", value: "restart" }
+            ],
+            null,
+            1500
+          );
+        }, 1400);
+
+      }, 1200);
+    }
+
+    // === FOLLOW-UP HANDLING ===
+    function handleFollowUp(text) {
+      if (text.includes('why') || text.includes('reason') || text.includes('explain')) {
+        let explanation = "Here's why I picked those sims for you:\n\n";
+        if (state.platform && state.platform !== 'any') explanation += `- You're on **${state.platform.toUpperCase()}**, so I filtered for that platform\n`;
+        if (state.budget === 'free') explanation += "- You want free options, so I prioritized free-to-play sims\n";
+        if (state.experience === 'beginner') explanation += "- As a beginner, I chose sims that are easy to get into\n";
+        if (state.experience === 'advanced') explanation += "- As a veteran, I picked study-level sims with depth\n";
+        if (state.interest) {
+          const labels = { airliners: 'airliner flying', 'general-aviation': 'general aviation', combat: 'combat', casual: 'casual fun' };
+          explanation += `- Your interest in ${labels[state.interest] || state.interest} helped narrow things down\n`;
+        }
+        if (state.vrInterest === 'yes') explanation += "- VR support was a must, so I boosted VR-capable sims\n";
+
+        explanation = explanation.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        botReply(explanation, [
+          { label: "Show free options", value: "free-options" },
+          { label: "Best for VR?", value: "best-vr" },
+          { label: "Start over", value: "restart" }
+        ]);
+      } else if (text.includes('free')) {
+        const freeSims = simulators.filter(s => s.price === 'free');
+        const cards = freeSims.slice(0, 3).map(s => ({
+          name: s.name, match: '--', cost: s.cost, platform: s.platform,
+          description: s.description, link: s.link
+        }));
+        botReply("Here are the best free flight simulators:", null, cards);
+      } else if (text.includes('vr')) {
+        const vrSims = simulators.filter(s => s.vr).sort((a, b) => {
+          const vrFocusA = a.interest.includes('vr') ? 1 : 0;
+          const vrFocusB = b.interest.includes('vr') ? 1 : 0;
+          return vrFocusB - vrFocusA;
+        });
+        const cards = vrSims.slice(0, 3).map(s => ({
+          name: s.name, match: '--', cost: s.cost, platform: s.platform,
+          description: s.description, link: s.link
+        }));
+        botReply("Here are the best VR flight simulators:", null, cards);
+      } else if (text.includes('restart') || text.includes('start over') || text.includes('again')) {
+        restartChat();
+      } else if (text.includes('combat') || text.includes('fight') || text.includes('military') || text.includes('war')) {
+        const combatSims = simulators.filter(s => s.type.includes('combat'));
+        const cards = combatSims.slice(0, 3).map(s => ({
+          name: s.name, match: '--', cost: s.cost, platform: s.platform,
+          description: s.description, link: s.link
+        }));
+        botReply("Here are the best combat flight simulators:", null, cards);
+      } else if (text.includes('mobile') || text.includes('phone') || text.includes('tablet')) {
+        const mobileSims = simulators.filter(s => s.platform.includes('mobile'));
+        const cards = mobileSims.map(s => ({
+          name: s.name, match: '--', cost: s.cost, platform: s.platform,
+          description: s.description, link: s.link
+        }));
+        botReply("Here are the best mobile flight simulators:", null, cards);
+      } else if (text.includes('beginner') || text.includes('easy') || text.includes('start') || text.includes('new')) {
+        const beginnerSims = simulators.filter(s => s.experience.includes('beginner'));
+        const cards = beginnerSims.slice(0, 3).map(s => ({
+          name: s.name, match: '--', cost: s.cost, platform: s.platform,
+          description: s.description, link: s.link
+        }));
+        botReply("Here are the best flight sims for beginners:", null, cards);
+      } else if (text.includes('thank') || text.includes('thanks') || text.includes('awesome') || text.includes('great') || text.includes('perfect')) {
+        botReply("You're welcome! Have fun flying! If you need more help, just ask or hit 'Start over' below.", [
+          { label: "Start over", value: "restart" }
+        ]);
+      } else {
+        botReply(
+          "I can help with that! Try asking about specific categories, or pick one of these:",
+          [
+            { label: "Free sims", value: "free-options" },
+            { label: "Best for VR", value: "best-vr" },
+            { label: "Combat sims", value: "combat-sims" },
+            { label: "Start over", value: "restart" }
+          ]
+        );
+      }
+    }
+
+    // === RESTART ===
+    function restartChat() {
+      state = { step: 0, platform: null, budget: null, experience: null, interest: null, vrInterest: null };
+      chatMessages.innerHTML = '';
+      startChat();
+    }
+
+    // === EVENT LISTENERS ===
+    sendBtn.addEventListener('click', () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      chatInput.value = '';
+      handleFreeText(text);
+    });
+
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        chatInput.value = '';
+        handleFreeText(text);
+      }
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', restartChat);
+
+    // Quick reply handler for follow-up options
+    document.addEventListener('click', (e) => {
+      // Already handled by inline handlers
+    });
+
+    // === START CHAT ===
+    function startChat() {
+      const first = steps[0];
+      setTimeout(() => {
+        botReply(first.message, first.options, null, 400);
+      }, 300);
+    }
+
+    startChat();
+  </script>
+</body>
+</html>
