@@ -519,6 +519,18 @@
         <p>Match pairs of aircraft cards! Click to flip cards and find matching pairs. Beat your best time!</p>
         <button class="btn">Play Now</button>
       </div>
+
+      <div class="game-card" onclick="openGame('trivia')">
+        <h2>🧠 Flight Trivia</h2>
+        <p>Test your aviation knowledge! Answer 10 questions about aircraft, airports, and flight history.</p>
+        <button class="btn">Play Now</button>
+      </div>
+
+      <div class="game-card" onclick="openGame('identify')">
+        <h2>🔍 Aircraft ID</h2>
+        <p>Can you identify the aircraft from its silhouette? Test your plane-spotting skills!</p>
+        <button class="btn">Play Now</button>
+      </div>
     </div>
 
     <!-- Flappy Plane Game -->
@@ -532,7 +544,7 @@
           <p><strong>Mobile:</strong> TAP and HOLD anywhere on the game area to fly up!</p>
           <p>💡 <em>The longer you hold, the more thrust power you get. Release to descend.</em></p>
         </div>
-        <div class="game-score">Score: <span id="flappyScore">0</span></div>
+        <div class="game-score">Score: <span id="flappyScore">0</span> | Best: <span id="flappyBest">0</span></div>
 
         <!-- Aircraft Selection -->
         <div id="aircraftSelection" style="margin-bottom: 1rem;">
@@ -616,6 +628,46 @@
         <div id="memoryGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 600px; margin: 1rem auto;"></div>
         <div class="game-controls">
           <button class="btn" id="memoryStart">New Game</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trivia Game -->
+    <div id="triviaModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('trivia')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Flight Trivia</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Answer 10 aviation questions. Pick the correct answer from 4 choices. How many can you get right?</p>
+        </div>
+        <div class="game-score">Question: <span id="triviaQ">0</span>/10 | Score: <span id="triviaScore">0</span></div>
+        <div id="triviaContent" style="max-width: 600px; margin: 1rem auto;">
+          <div id="triviaQuestion" style="font-size: 18px; font-weight: 600; margin-bottom: 1.5rem; min-height: 60px; color: var(--text-main);"></div>
+          <div id="triviaOptions" style="display: grid; gap: 0.75rem;"></div>
+          <div id="triviaFeedback" style="margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none; font-weight: 500;"></div>
+        </div>
+        <div class="game-controls">
+          <button class="btn" id="triviaStart">Start Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aircraft Identification Game -->
+    <div id="identifyModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('identify')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Aircraft ID</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Look at the aircraft silhouette and guess which plane it is! Score points for correct answers.</p>
+        </div>
+        <div class="game-score">Round: <span id="idRound">0</span>/8 | Score: <span id="idScore">0</span></div>
+        <canvas id="idCanvas" class="game-canvas" style="background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); max-width: 500px; height: 250px;"></canvas>
+        <div id="idOptions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; max-width: 500px; margin: 1rem auto;"></div>
+        <div id="idFeedback" style="text-align: center; margin-top: 0.5rem; font-weight: 500; min-height: 24px;"></div>
+        <div class="game-controls">
+          <button class="btn" id="idStart">Start Game</button>
         </div>
       </div>
     </div>
@@ -1197,6 +1249,10 @@
     const flappyCanvas = document.getElementById('flappyCanvas');
     const flappyCtx = flappyCanvas.getContext('2d');
 
+    // High score persistence
+    let flappyBest = parseInt(localStorage.getItem('flappyBest') || '0');
+    document.getElementById('flappyBest').textContent = flappyBest;
+
     // Responsive canvas sizing
     function resizeFlappyCanvas() {
       const container = flappyCanvas.parentElement;
@@ -1237,6 +1293,14 @@
       document.getElementById('flappyScore').textContent = '0';
       console.log('Flappy game started!'); // Debug log
       gameLoop();
+    }
+
+    function saveFlappyScore(score) {
+      if (score > flappyBest) {
+        flappyBest = score;
+        localStorage.setItem('flappyBest', score.toString());
+        document.getElementById('flappyBest').textContent = flappyBest;
+      }
     }
 
     function stopFlappyGame() {
@@ -1311,7 +1375,8 @@
         if (g.plane.x + g.plane.size > obs.x && g.plane.x < obs.x + 50) {
           if (g.plane.y < obs.top || g.plane.y + g.plane.size > obs.top + obs.gap) {
             g.running = false;
-            alert('Game Over! Score: ' + g.score);
+            saveFlappyScore(g.score);
+            alert('Game Over! Score: ' + g.score + (g.score > flappyBest ? ' - NEW HIGH SCORE!' : ' | Best: ' + flappyBest));
             stopFlappyGame();
           }
         }
@@ -1323,7 +1388,8 @@
       // Check bounds
       if (g.plane.y < 0 || g.plane.y + g.plane.size > flappyCanvas.height) {
         g.running = false;
-        alert('Game Over! Score: ' + g.score);
+        saveFlappyScore(g.score);
+        alert('Game Over! Score: ' + g.score + (g.score > flappyBest ? ' - NEW HIGH SCORE!' : ' | Best: ' + flappyBest));
         stopFlappyGame();
         return;
       }
@@ -1779,6 +1845,229 @@
     }
 
     document.getElementById('memoryStart').addEventListener('click', startMemoryGame);
+
+    // FLIGHT TRIVIA GAME
+    const triviaQuestions = [
+      { q: "What is the world's busiest airport by passenger traffic?", a: "Hartsfield-Jackson Atlanta", options: ["Hartsfield-Jackson Atlanta", "Dubai International", "London Heathrow", "Tokyo Haneda"] },
+      { q: "What does IFR stand for in aviation?", a: "Instrument Flight Rules", options: ["Instrument Flight Rules", "Internal Flight Registry", "International Flight Route", "In-Flight Radar"] },
+      { q: "Which aircraft is known as the 'Queen of the Skies'?", a: "Boeing 747", options: ["Airbus A380", "Boeing 747", "Boeing 777", "Concorde"] },
+      { q: "What is the standard cruising altitude for commercial jets?", a: "35,000 feet", options: ["25,000 feet", "35,000 feet", "45,000 feet", "15,000 feet"] },
+      { q: "Which company developed the F-16 Fighting Falcon?", a: "General Dynamics", options: ["Lockheed Martin", "Boeing", "General Dynamics", "Northrop Grumman"] },
+      { q: "What is the NATO reporting name for the Su-27?", a: "Flanker", options: ["Foxbat", "Flanker", "Fulcrum", "Frogfoot"] },
+      { q: "What does TCAS stand for?", a: "Traffic Collision Avoidance System", options: ["Traffic Collision Avoidance System", "Terminal Control Area System", "Total Cockpit Alert System", "Transponder Communication Alert Service"] },
+      { q: "Which is the fastest commercial aircraft ever built?", a: "Concorde", options: ["Boeing 747-8", "Airbus A380", "Concorde", "Tupolev Tu-144"] },
+      { q: "What is a 'go-around' in aviation?", a: "Aborting a landing and climbing", options: ["Taxiing around the airport", "Aborting a landing and climbing", "Flying in a circle", "An emergency procedure"] },
+      { q: "What year was the first powered flight by the Wright Brothers?", a: "1903", options: ["1899", "1903", "1907", "1911"] },
+      { q: "What does VOR stand for?", a: "VHF Omnidirectional Range", options: ["Visual Object Recognition", "VHF Omnidirectional Range", "Variable Output Radar", "Vertical Orientation Reference"] },
+      { q: "Which aircraft has the largest wingspan ever?", a: "Stratolaunch Roc", options: ["Airbus A380", "Hughes H-4 Spruce Goose", "Stratolaunch Roc", "Boeing 747-8"] },
+      { q: "What is the phonetic alphabet word for 'S'?", a: "Sierra", options: ["Sugar", "Sierra", "Sam", "Santiago"] },
+      { q: "What does METAR stand for?", a: "Meteorological Aerodrome Report", options: ["Meteorological Aerodrome Report", "Measured Terminal Area Report", "Metro Air Traffic Report", "Meteorological Altitude Reading"] },
+      { q: "What color is the right wing navigation light?", a: "Green", options: ["Red", "Green", "White", "Blue"] }
+    ];
+
+    let triviaState = null;
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startTrivia() {
+      const selected = shuffleArray(triviaQuestions).slice(0, 10);
+      triviaState = { questions: selected, current: 0, score: 0 };
+      document.getElementById('triviaScore').textContent = '0';
+      document.getElementById('triviaQ').textContent = '1';
+      document.getElementById('triviaFeedback').style.display = 'none';
+      showTriviaQuestion();
+    }
+
+    function showTriviaQuestion() {
+      if (!triviaState || triviaState.current >= triviaState.questions.length) {
+        document.getElementById('triviaQuestion').textContent = `Quiz Complete! You scored ${triviaState.score}/10`;
+        document.getElementById('triviaOptions').innerHTML = '';
+        document.getElementById('triviaFeedback').style.display = 'block';
+        document.getElementById('triviaFeedback').style.background = 'var(--accent-light)';
+        document.getElementById('triviaFeedback').style.color = 'var(--accent)';
+        document.getElementById('triviaFeedback').textContent = triviaState.score >= 8 ? 'Aviation expert!' : triviaState.score >= 5 ? 'Good flying knowledge!' : 'Keep learning, pilot!';
+        return;
+      }
+
+      const q = triviaState.questions[triviaState.current];
+      document.getElementById('triviaQ').textContent = triviaState.current + 1;
+      document.getElementById('triviaQuestion').textContent = q.q;
+      document.getElementById('triviaFeedback').style.display = 'none';
+
+      const optionsDiv = document.getElementById('triviaOptions');
+      const shuffledOpts = shuffleArray(q.options);
+      optionsDiv.innerHTML = shuffledOpts.map(opt => `
+        <button style="padding: 0.75rem 1rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 8px; color: var(--text-main); font-size: 14px; cursor: pointer; text-align: left; transition: all 0.2s;" class="trivia-opt" data-answer="${opt}">${opt}</button>
+      `).join('');
+
+      optionsDiv.querySelectorAll('.trivia-opt').forEach(btn => {
+        btn.addEventListener('click', () => handleTriviaAnswer(btn, q.a));
+      });
+    }
+
+    function handleTriviaAnswer(btn, correct) {
+      const chosen = btn.dataset.answer;
+      const feedback = document.getElementById('triviaFeedback');
+      const allBtns = document.querySelectorAll('.trivia-opt');
+
+      allBtns.forEach(b => {
+        b.disabled = true;
+        b.style.cursor = 'default';
+        if (b.dataset.answer === correct) {
+          b.style.borderColor = '#22c55e';
+          b.style.background = '#dcfce7';
+          b.style.color = '#166534';
+        }
+      });
+
+      if (chosen === correct) {
+        triviaState.score++;
+        document.getElementById('triviaScore').textContent = triviaState.score;
+        feedback.textContent = 'Correct!';
+        feedback.style.background = '#dcfce7';
+        feedback.style.color = '#166534';
+      } else {
+        btn.style.borderColor = '#ef4444';
+        btn.style.background = '#fee2e2';
+        btn.style.color = '#991b1b';
+        feedback.textContent = `Wrong! The answer is: ${correct}`;
+        feedback.style.background = '#fee2e2';
+        feedback.style.color = '#991b1b';
+      }
+      feedback.style.display = 'block';
+
+      triviaState.current++;
+      setTimeout(showTriviaQuestion, 1500);
+    }
+
+    document.getElementById('triviaStart').addEventListener('click', startTrivia);
+
+    // AIRCRAFT IDENTIFICATION GAME
+    const aircraftSilhouettes = [
+      { name: "Boeing 747", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.5, h*0.55, w*0.42, h*0.08, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.25, h*0.55); ctx.lineTo(w*0.1, h*0.2); ctx.lineTo(w*0.4, h*0.5); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.25, h*0.55); ctx.lineTo(w*0.1, h*0.9); ctx.lineTo(w*0.4, h*0.6); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.1, h*0.55); ctx.lineTo(w*0.05, h*0.3); ctx.lineTo(w*0.15, h*0.5); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.85, h*0.5); ctx.quadTo(w*0.95, h*0.35, w*0.92, h*0.55); ctx.fill(); }},
+      { name: "F-16", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.5, h*0.5, w*0.38, h*0.06, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.35, h*0.5); ctx.lineTo(w*0.15, h*0.15); ctx.lineTo(w*0.48, h*0.45); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.35, h*0.5); ctx.lineTo(w*0.15, h*0.85); ctx.lineTo(w*0.48, h*0.55); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.12, h*0.5); ctx.lineTo(w*0.05, h*0.2); ctx.lineTo(w*0.18, h*0.45); ctx.fill(); }},
+      { name: "Cessna 172", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.5, h*0.5, w*0.35, h*0.05, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.38, h*0.5); ctx.lineTo(w*0.15, h*0.15); ctx.lineTo(w*0.15, h*0.2); ctx.lineTo(w*0.42, h*0.48); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.38, h*0.5); ctx.lineTo(w*0.15, h*0.8); ctx.lineTo(w*0.15, h*0.85); ctx.lineTo(w*0.42, h*0.52); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.12, h*0.5); ctx.lineTo(w*0.05, h*0.3); ctx.lineTo(w*0.05, h*0.33); ctx.lineTo(w*0.14, h*0.48); ctx.fill(); }},
+      { name: "Airbus A380", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.5, h*0.52, w*0.44, h*0.1, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.28, h*0.52); ctx.lineTo(w*0.05, h*0.12); ctx.lineTo(w*0.42, h*0.47); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.28, h*0.52); ctx.lineTo(w*0.05, h*0.92); ctx.lineTo(w*0.42, h*0.57); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.1, h*0.52); ctx.lineTo(w*0.04, h*0.28); ctx.lineTo(w*0.15, h*0.48); ctx.fill(); }},
+      { name: "F-22 Raptor", draw: (ctx, w, h) => { ctx.beginPath(); ctx.moveTo(w*0.1, h*0.45); ctx.lineTo(w*0.92, h*0.45); ctx.lineTo(w*0.95, h*0.5); ctx.lineTo(w*0.92, h*0.55); ctx.lineTo(w*0.1, h*0.55); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.3, h*0.5); ctx.lineTo(w*0.08, h*0.1); ctx.lineTo(w*0.45, h*0.45); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.3, h*0.5); ctx.lineTo(w*0.08, h*0.9); ctx.lineTo(w*0.45, h*0.55); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.15, h*0.5); ctx.lineTo(w*0.06, h*0.2); ctx.lineTo(w*0.2, h*0.45); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.15, h*0.5); ctx.lineTo(w*0.06, h*0.8); ctx.lineTo(w*0.2, h*0.55); ctx.fill(); }},
+      { name: "Boeing 737", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.5, h*0.52, w*0.4, h*0.07, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.3, h*0.52); ctx.lineTo(w*0.12, h*0.18); ctx.lineTo(w*0.42, h*0.48); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.3, h*0.52); ctx.lineTo(w*0.12, h*0.86); ctx.lineTo(w*0.42, h*0.56); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.12, h*0.52); ctx.lineTo(w*0.06, h*0.28); ctx.lineTo(w*0.16, h*0.48); ctx.fill(); }},
+      { name: "Spitfire", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.5, h*0.5, w*0.38, h*0.05, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.ellipse(w*0.4, h*0.5, w*0.18, h*0.3, 0, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(w*0.1, h*0.5); ctx.lineTo(w*0.04, h*0.25); ctx.lineTo(w*0.15, h*0.45); ctx.fill(); }},
+      { name: "Helicopter", draw: (ctx, w, h) => { ctx.beginPath(); ctx.ellipse(w*0.45, h*0.55, w*0.2, h*0.12, 0, 0, Math.PI*2); ctx.fill(); ctx.fillRect(w*0.6, h*0.52, w*0.3, h*0.04); ctx.beginPath(); ctx.moveTo(w*0.85, h*0.52); ctx.lineTo(w*0.92, h*0.35); ctx.lineTo(w*0.95, h*0.38); ctx.lineTo(w*0.88, h*0.52); ctx.fill(); ctx.fillRect(w*0.2, h*0.42, w*0.5, h*0.02); ctx.fillRect(w*0.1, h*0.4, w*0.06, h*0.06); ctx.fillRect(w*0.62, h*0.4, w*0.06, h*0.06); }}
+    ];
+
+    let idState = null;
+    const idCanvas = document.getElementById('idCanvas');
+    const idCtx = idCanvas.getContext('2d');
+
+    function resizeIdCanvas() {
+      const container = idCanvas.parentElement;
+      const maxWidth = Math.min(500, container.clientWidth - 20);
+      idCanvas.width = maxWidth;
+      idCanvas.height = maxWidth * 0.5;
+    }
+
+    resizeIdCanvas();
+    window.addEventListener('resize', resizeIdCanvas);
+
+    function startIdGame() {
+      resizeIdCanvas();
+      const shuffled = shuffleArray(aircraftSilhouettes).slice(0, 8);
+      idState = { aircraft: shuffled, current: 0, score: 0 };
+      document.getElementById('idScore').textContent = '0';
+      document.getElementById('idRound').textContent = '1';
+      document.getElementById('idFeedback').textContent = '';
+      showIdRound();
+    }
+
+    function showIdRound() {
+      if (!idState || idState.current >= idState.aircraft.length) {
+        idCtx.clearRect(0, 0, idCanvas.width, idCanvas.height);
+        idCtx.fillStyle = '#f0f0f0';
+        idCtx.font = `${Math.max(16, idCanvas.width * 0.04)}px -apple-system, sans-serif`;
+        idCtx.textAlign = 'center';
+        idCtx.fillText(`Game Over! Score: ${idState.score}/8`, idCanvas.width/2, idCanvas.height/2);
+        document.getElementById('idOptions').innerHTML = '';
+        document.getElementById('idFeedback').textContent = idState.score >= 6 ? 'Expert spotter!' : idState.score >= 4 ? 'Good eye!' : 'Keep practicing!';
+        document.getElementById('idFeedback').style.color = 'var(--accent)';
+        return;
+      }
+
+      const ac = idState.aircraft[idState.current];
+      document.getElementById('idRound').textContent = idState.current + 1;
+
+      // Draw silhouette
+      idCtx.clearRect(0, 0, idCanvas.width, idCanvas.height);
+      const gradient = idCtx.createLinearGradient(0, 0, 0, idCanvas.height);
+      gradient.addColorStop(0, '#1a1a2e');
+      gradient.addColorStop(0.5, '#16213e');
+      gradient.addColorStop(1, '#0f3460');
+      idCtx.fillStyle = gradient;
+      idCtx.fillRect(0, 0, idCanvas.width, idCanvas.height);
+
+      // Draw stars
+      for (let i = 0; i < 30; i++) {
+        idCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.5 + 0.2})`;
+        idCtx.fillRect(Math.random() * idCanvas.width, Math.random() * idCanvas.height * 0.7, 1.5, 1.5);
+      }
+
+      idCtx.fillStyle = '#e0e0e0';
+      ac.draw(idCtx, idCanvas.width, idCanvas.height);
+
+      // Generate options (correct + 3 wrong)
+      const wrong = shuffleArray(aircraftSilhouettes.filter(a => a.name !== ac.name)).slice(0, 3).map(a => a.name);
+      const allOpts = shuffleArray([ac.name, ...wrong]);
+
+      const optDiv = document.getElementById('idOptions');
+      optDiv.innerHTML = allOpts.map(opt => `
+        <button style="padding: 0.75rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 8px; color: var(--text-main); font-size: 14px; cursor: pointer; font-weight: 500; transition: all 0.2s;" class="id-opt" data-answer="${opt}">${opt}</button>
+      `).join('');
+
+      optDiv.querySelectorAll('.id-opt').forEach(btn => {
+        btn.addEventListener('click', () => handleIdAnswer(btn, ac.name));
+      });
+
+      document.getElementById('idFeedback').textContent = '';
+    }
+
+    function handleIdAnswer(btn, correct) {
+      const chosen = btn.dataset.answer;
+      const allBtns = document.querySelectorAll('.id-opt');
+      const feedback = document.getElementById('idFeedback');
+
+      allBtns.forEach(b => {
+        b.disabled = true;
+        b.style.cursor = 'default';
+        if (b.dataset.answer === correct) {
+          b.style.borderColor = '#22c55e';
+          b.style.background = '#dcfce7';
+          b.style.color = '#166534';
+        }
+      });
+
+      if (chosen === correct) {
+        idState.score++;
+        document.getElementById('idScore').textContent = idState.score;
+        feedback.textContent = 'Correct!';
+        feedback.style.color = '#22c55e';
+      } else {
+        btn.style.borderColor = '#ef4444';
+        btn.style.background = '#fee2e2';
+        btn.style.color = '#991b1b';
+        feedback.textContent = `It was: ${correct}`;
+        feedback.style.color = '#ef4444';
+      }
+
+      idState.current++;
+      setTimeout(showIdRound, 1200);
+    }
+
+    document.getElementById('idStart').addEventListener('click', startIdGame);
   </script>
 </body>
 </html>

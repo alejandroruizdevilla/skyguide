@@ -117,7 +117,21 @@
       display: flex;
       flex-direction: column;
       height: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: cardFadeIn 0.5s ease forwards;
     }
+
+    @keyframes cardFadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sim-card:nth-child(1) { animation-delay: 0.05s; }
+    .sim-card:nth-child(2) { animation-delay: 0.1s; }
+    .sim-card:nth-child(3) { animation-delay: 0.15s; }
+    .sim-card:nth-child(4) { animation-delay: 0.2s; }
+    .sim-card:nth-child(5) { animation-delay: 0.25s; }
+    .sim-card:nth-child(6) { animation-delay: 0.3s; }
 
     .sim-card:hover {
       box-shadow: var(--shadow-hover);
@@ -141,6 +155,27 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: opacity 0.3s ease;
+    }
+
+    .sim-image img[loading="lazy"] {
+      opacity: 0;
+    }
+
+    .sim-image img.loaded {
+      opacity: 1;
+    }
+
+    /* Skeleton shimmer while images load */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .sim-image.loading {
+      background: linear-gradient(90deg, var(--accent-light) 25%, var(--border-light) 50%, var(--accent-light) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
     }
 
     .sim-image::after {
@@ -612,6 +647,128 @@
         justify-content: center;
       }
     }
+
+    /* User Reviews */
+    .review-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .star {
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--border-light);
+      transition: color 0.15s;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .star.filled { color: #e8a33c; }
+    .star:hover { color: #e8a33c; }
+
+    .review-avg {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .review-avg strong {
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    /* News Feed */
+    .news-feed {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .news-feed h2 {
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .news-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-light);
+      align-items: flex-start;
+    }
+
+    .news-item:last-child { border-bottom: none; }
+
+    .news-date {
+      min-width: 55px;
+      text-align: center;
+      background: var(--accent-light);
+      border-radius: 8px;
+      padding: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .news-date .day {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .news-date .month {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .news-body h4 {
+      font-size: 15px;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .news-body p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .news-tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-right: 0.5rem;
+    }
+
+    .news-tag.update { background: #dbeafe; color: #1e40af; }
+    .news-tag.dlc { background: #dcfce7; color: #166534; }
+    .news-tag.release { background: #fef3c7; color: #92400e; }
+    .news-tag.patch { background: #f3e8ff; color: #6b21a8; }
+
+    [data-theme="dark"] .news-tag.update { background: #1e3a5f; color: #93c5fd; }
+    [data-theme="dark"] .news-tag.dlc { background: #14532d; color: #86efac; }
+    [data-theme="dark"] .news-tag.release { background: #78350f; color: #fde68a; }
+    [data-theme="dark"] .news-tag.patch { background: #4a1d7a; color: #d8b4fe; }
   </style>
 </head>
 
@@ -675,6 +832,46 @@
       </div>
     </section>
 
+    <!-- News Feed -->
+    <div class="news-feed">
+      <h2>Latest Sim News</h2>
+      <div class="news-item">
+        <div class="news-date"><div class="day">15</div><div class="month">Feb</div></div>
+        <div class="news-body">
+          <h4><span class="news-tag update">Update</span>MSFS 2024 - World Update 3: Japan</h4>
+          <p>Major world update adding high-resolution scenery for Japan, including detailed airports and landmarks.</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-date"><div class="day">08</div><div class="month">Feb</div></div>
+        <div class="news-body">
+          <h4><span class="news-tag dlc">DLC</span>DCS World - F-15E Strike Eagle Released</h4>
+          <p>The highly anticipated F-15E module is now available with full study-level systems and weapons.</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-date"><div class="day">01</div><div class="month">Feb</div></div>
+        <div class="news-body">
+          <h4><span class="news-tag patch">Patch</span>X-Plane 12.1.4 Performance Update</h4>
+          <p>New patch brings significant FPS improvements, updated weather rendering, and bug fixes.</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-date"><div class="day">25</div><div class="month">Jan</div></div>
+        <div class="news-body">
+          <h4><span class="news-tag release">Release</span>IL-2 Great Battles - New Map Announced</h4>
+          <p>New Pacific theater map coming Q2 2025 with carrier operations and island-hopping campaigns.</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-date"><div class="day">18</div><div class="month">Jan</div></div>
+        <div class="news-body">
+          <h4><span class="news-tag dlc">DLC</span>War Thunder - Update "Firebirds" Live</h4>
+          <p>New update adds 40+ vehicles including modern jets, new ground forces, and naval additions.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Filters -->
     <div class="filters">
       <div class="filter-title">Find Your Perfect Simulator</div>
@@ -719,7 +916,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc console" data-type="civilian">
           <div class="sim-image">
-            <img src="images/msfs2024.jpg" alt="Microsoft Flight Simulator 2024">
+            <img loading="lazy" src="images/msfs2024.jpg" alt="Microsoft Flight Simulator 2024">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -745,7 +942,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc console" data-type="civilian">
           <div class="sim-image">
-            <img src="images/msfs2020.jpg" alt="Microsoft Flight Simulator 2020">
+            <img loading="lazy" src="images/msfs2020.jpg" alt="Microsoft Flight Simulator 2020">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -771,7 +968,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/xplane12.jpg" alt="X-Plane 12">
+            <img loading="lazy" src="images/xplane12.jpg" alt="X-Plane 12">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -797,7 +994,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/prepar3d.jpg" alt="Prepar3D v6">
+            <img loading="lazy" src="images/prepar3d.jpg" alt="Prepar3D v6">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -823,7 +1020,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc mobile" data-type="civilian">
           <div class="sim-image">
-            <img src="images/aerofly.jpg" alt="Aerofly FS 4">
+            <img loading="lazy" src="images/aerofly.jpg" alt="Aerofly FS 4">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -857,7 +1054,7 @@
 
         <div class="sim-card" data-price="free" data-platform="pc" data-type="combat">
           <div class="sim-image">
-            <img src="images/dcs.jpg" alt="DCS World">
+            <img loading="lazy" src="images/dcs.jpg" alt="DCS World">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -883,7 +1080,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="combat">
           <div class="sim-image">
-            <img src="images/il2.jpg" alt="IL-2 Sturmovik">
+            <img loading="lazy" src="images/il2.jpg" alt="IL-2 Sturmovik">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -909,7 +1106,7 @@
 
         <div class="sim-card" data-price="free" data-platform="pc" data-type="combat">
           <div class="sim-image">
-            <img src="images/falcon-bms.jpg" alt="Falcon BMS">
+            <img loading="lazy" src="images/falcon-bms.jpg" alt="Falcon BMS">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -943,7 +1140,7 @@
 
         <div class="sim-card" data-price="free" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/flightgear.jpg" alt="FlightGear">
+            <img loading="lazy" src="images/flightgear.jpg" alt="FlightGear">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -969,7 +1166,7 @@
 
         <div class="sim-card" data-price="free" data-platform="pc" data-type="arcade">
           <div class="sim-image">
-            <img src="images/ysflight.jpg" alt="YSFlight">
+            <img loading="lazy" src="images/ysflight.jpg" alt="YSFlight">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1003,7 +1200,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="mobile" data-type="civilian">
           <div class="sim-image">
-            <img src="images/infinite-flight.jpg" alt="Infinite Flight">
+            <img loading="lazy" src="images/infinite-flight.jpg" alt="Infinite Flight">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1029,7 +1226,7 @@
 
         <div class="sim-card" data-price="free" data-platform="mobile" data-type="civilian">
           <div class="sim-image">
-            <img src="images/rfs.jpg" alt="RFS - Real Flight Simulator">
+            <img loading="lazy" src="images/rfs.jpg" alt="RFS - Real Flight Simulator">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1063,7 +1260,7 @@
 
         <div class="sim-card" data-price="free" data-platform="pc console" data-type="combat arcade">
           <div class="sim-image">
-            <img src="images/war-thunder.jpg" alt="War Thunder">
+            <img loading="lazy" src="images/war-thunder.jpg" alt="War Thunder">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1089,7 +1286,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc console" data-type="arcade">
           <div class="sim-image">
-            <img src="images/ace-combat-7.jpg" alt="Ace Combat 7">
+            <img loading="lazy" src="images/ace-combat-7.jpg" alt="Ace Combat 7">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1115,7 +1312,7 @@
 
         <div class="sim-card" data-price="free" data-platform="mobile pc" data-type="arcade">
           <div class="sim-image">
-            <img src="images/roblox.jpg" alt="Roblox Flight Sims">
+            <img loading="lazy" src="images/roblox.jpg" alt="Roblox Flight Sims">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1149,7 +1346,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/condor2.jpg" alt="Condor 2">
+            <img loading="lazy" src="images/condor2.jpg" alt="Condor 2">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1175,7 +1372,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/fsx.jpg" alt="Microsoft FSX">
+            <img loading="lazy" src="images/fsx.jpg" alt="Microsoft FSX">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1201,7 +1398,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/vtolvr.jpg" alt="VTOL VR">
+            <img loading="lazy" src="images/vtolvr.jpg" alt="VTOL VR">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1227,7 +1424,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/msfs-helicopters.jpg" alt="Rotorcraft Sims">
+            <img loading="lazy" src="images/msfs-helicopters.jpg" alt="Rotorcraft Sims">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1253,7 +1450,7 @@
 
         <div class="sim-card" data-price="free" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/geofsim.jpg" alt="GeoFS">
+            <img loading="lazy" src="images/geofsim.jpg" alt="GeoFS">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1279,7 +1476,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc console" data-type="combat">
           <div class="sim-image">
-            <img src="images/project-wingman.jpg" alt="Project Wingman">
+            <img loading="lazy" src="images/project-wingman.jpg" alt="Project Wingman">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1305,7 +1502,7 @@
 
         <div class="sim-card" data-price="paid" data-platform="pc" data-type="civilian">
           <div class="sim-image">
-            <img src="images/take-on-helicopters.jpg" alt="Take On Helicopters">
+            <img loading="lazy" src="images/take-on-helicopters.jpg" alt="Take On Helicopters">
           </div>
           <div class="sim-content">
             <div class="sim-header">
@@ -1551,6 +1748,100 @@ function updateSimOfTheMonth() {
 
 // Initialize Sim of the Month
 updateSimOfTheMonth();
+
+// Lazy-load image handler
+document.querySelectorAll('.sim-image').forEach(container => {
+  container.classList.add('loading');
+  const img = container.querySelector('img');
+  if (img) {
+    if (img.complete) {
+      img.classList.add('loaded');
+      container.classList.remove('loading');
+    } else {
+      img.addEventListener('load', () => {
+        img.classList.add('loaded');
+        container.classList.remove('loading');
+      });
+      img.addEventListener('error', () => {
+        container.classList.remove('loading');
+      });
+    }
+  }
+});
+
+// User Reviews/Ratings System (localStorage-based)
+function initReviews() {
+  document.querySelectorAll('.sim-card').forEach(card => {
+    const simName = card.querySelector('.sim-name')?.textContent;
+    if (!simName) return;
+
+    const key = 'review_' + simName.replace(/\s+/g, '_').toLowerCase();
+    const saved = JSON.parse(localStorage.getItem(key) || '{"rating":0,"count":0,"total":0}');
+
+    const reviewSection = document.createElement('div');
+    reviewSection.className = 'review-section';
+
+    const avg = saved.count > 0 ? (saved.total / saved.count).toFixed(1) : '0';
+    const countText = saved.count > 0 ? `<strong>${avg}</strong>/5 (${saved.count} review${saved.count !== 1 ? 's' : ''})` : 'No reviews yet - be the first!';
+
+    reviewSection.innerHTML = `
+      <div class="review-avg">${countText}</div>
+      <div class="review-stars" data-key="${key}">
+        ${[1,2,3,4,5].map(i => `<button class="star ${i <= saved.rating ? 'filled' : ''}" data-rating="${i}">&#9733;</button>`).join('')}
+      </div>
+    `;
+
+    const metaOrLink = card.querySelector('.sim-link');
+    if (metaOrLink) metaOrLink.parentElement.insertBefore(reviewSection, metaOrLink);
+
+    // Star click handlers
+    reviewSection.querySelectorAll('.star').forEach(star => {
+      star.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const rating = parseInt(star.dataset.rating);
+        const starsContainer = star.parentElement;
+        const rKey = starsContainer.dataset.key;
+
+        const data = JSON.parse(localStorage.getItem(rKey) || '{"rating":0,"count":0,"total":0}');
+
+        if (data.rating > 0) {
+          data.total = data.total - data.rating + rating;
+        } else {
+          data.count++;
+          data.total += rating;
+        }
+        data.rating = rating;
+        localStorage.setItem(rKey, JSON.stringify(data));
+
+        // Update stars visually
+        starsContainer.querySelectorAll('.star').forEach((s, idx) => {
+          s.classList.toggle('filled', idx < rating);
+        });
+
+        // Update text
+        const newAvg = (data.total / data.count).toFixed(1);
+        const avgEl = starsContainer.parentElement.querySelector('.review-avg');
+        avgEl.innerHTML = `<strong>${newAvg}</strong>/5 (${data.count} review${data.count !== 1 ? 's' : ''})`;
+      });
+
+      // Hover effect
+      star.addEventListener('mouseenter', () => {
+        const rating = parseInt(star.dataset.rating);
+        star.parentElement.querySelectorAll('.star').forEach((s, idx) => {
+          s.style.color = idx < rating ? '#e8a33c' : '';
+        });
+      });
+
+      star.addEventListener('mouseleave', () => {
+        star.parentElement.querySelectorAll('.star').forEach(s => {
+          s.style.color = '';
+        });
+      });
+    });
+  });
+}
+
+initReviews();
 </script>
 </body>
 </html>
