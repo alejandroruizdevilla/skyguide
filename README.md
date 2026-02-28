@@ -167,4 +167,4 @@ Automatic dark mode features:
 
 **Built with ❤️ for the flight simulation community**
 
-Last Updated: 2025-12-31
+Last Updated: 2026-2-28
