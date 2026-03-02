@@ -342,6 +342,166 @@
       font-size: 14px;
     }
 
+    /* Radar Chart */
+    .radar-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .radar-section h2 {
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .radar-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #radarChart {
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .radar-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    /* Rating Bars */
+    .ratings-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .ratings-section h2 {
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .rating-row {
+      margin-bottom: 1.5rem;
+    }
+
+    .rating-row-label {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 14px;
+      margin-bottom: 0.5rem;
+    }
+
+    .rating-bar-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .rating-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .rating-bar-name {
+      font-size: 13px;
+      color: var(--text-secondary);
+      min-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rating-bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--accent-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .rating-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .rating-bar-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      min-width: 30px;
+    }
+
+    /* Quick Compare Cards */
+    .quick-scores {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .score-card h3 {
+      font-size: 16px;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .score-value {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .score-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
     @media (max-width: 768px) {
       .title {
         font-size: 28px;
@@ -363,6 +523,10 @@
       th, td {
         padding: 0.75rem 0.5rem;
         font-size: 14px;
+      }
+
+      .rating-bar-name {
+        min-width: 100px;
       }
     }
   </style>
@@ -390,6 +554,8 @@
         <a href="sys-req-calc.html" class="nav-link">System Checker</a>
         <a href="minigames.html" class="nav-link">Mini Games</a>
         <a href="sim-advisor.html" class="nav-link">AI Advisor</a>
+        <a href="timeline.html" class="nav-link">Timeline</a>
+        <a href="screenshots.html" class="nav-link">Screenshots</a>
       </div>
       <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
     </nav>
@@ -498,6 +664,24 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Quick Score Cards -->
+    <div class="quick-scores" id="quickScores"></div>
+
+    <!-- Radar Chart -->
+    <div class="radar-section">
+      <h2>Visual Comparison</h2>
+      <div class="radar-container">
+        <canvas id="radarChart" width="500" height="500"></canvas>
+      </div>
+      <div class="radar-legend" id="radarLegend"></div>
+    </div>
+
+    <!-- Rating Bars -->
+    <div class="ratings-section">
+      <h2>Category Ratings</h2>
+      <div id="ratingBars"></div>
     </div>
 
     <footer class="footer">
@@ -837,6 +1021,194 @@ function updateComparison() {
   }
 }
 
+// Numeric scores for radar chart and rating bars (1-10)
+const simScores = {
+  'msfs2024':        { graphics: 10, realism: 8, performance: 5, aircraft: 8, community: 9, value: 6, vr: 8, beginner: 8 },
+  'msfs2020':        { graphics: 9,  realism: 8, performance: 6, aircraft: 9, community: 10, value: 7, vr: 8, beginner: 8 },
+  'xplane12':        { graphics: 7,  realism: 10, performance: 7, aircraft: 7, community: 8, value: 7, vr: 7, beginner: 5 },
+  'prepar3d':        { graphics: 5,  realism: 8, performance: 7, aircraft: 8, community: 6, value: 4, vr: 6, beginner: 3 },
+  'aerofly':         { graphics: 8,  realism: 6, performance: 10, aircraft: 5, community: 4, value: 6, vr: 10, beginner: 9 },
+  'dcs':             { graphics: 9,  realism: 10, performance: 5, aircraft: 7, community: 9, value: 7, vr: 7, beginner: 2 },
+  'il2':             { graphics: 8,  realism: 9, performance: 7, aircraft: 8, community: 7, value: 6, vr: 8, beginner: 4 },
+  'falcon-bms':      { graphics: 4,  realism: 10, performance: 8, aircraft: 2, community: 7, value: 10, vr: 3, beginner: 1 },
+  'flightgear':      { graphics: 4,  realism: 6, performance: 7, aircraft: 9, community: 6, value: 10, vr: 1, beginner: 5 },
+  'ysflight':        { graphics: 2,  realism: 3, performance: 10, aircraft: 8, community: 4, value: 10, vr: 1, beginner: 10 },
+  'infinite-flight': { graphics: 7,  realism: 6, performance: 8, aircraft: 7, community: 9, value: 5, vr: 1, beginner: 8 },
+  'rfs':             { graphics: 5,  realism: 4, performance: 9, aircraft: 5, community: 4, value: 6, vr: 1, beginner: 9 },
+  'war-thunder':     { graphics: 8,  realism: 5, performance: 7, aircraft: 10, community: 9, value: 7, vr: 3, beginner: 6 },
+  'ace-combat-7':    { graphics: 9,  realism: 2, performance: 9, aircraft: 4, community: 5, value: 5, vr: 3, beginner: 10 },
+  'roblox':          { graphics: 2,  realism: 2, performance: 10, aircraft: 6, community: 8, value: 10, vr: 1, beginner: 10 },
+  'condor2':         { graphics: 6,  realism: 9, performance: 8, aircraft: 3, community: 5, value: 6, vr: 1, beginner: 4 },
+  'fsx':             { graphics: 3,  realism: 6, performance: 9, aircraft: 10, community: 8, value: 8, vr: 1, beginner: 7 }
+};
+
+const radarColors = ['rgba(59,130,246,0.6)', 'rgba(239,68,68,0.6)', 'rgba(34,197,94,0.6)'];
+const radarBorders = ['#3b82f6', '#ef4444', '#22c55e'];
+const radarLabels = ['Graphics', 'Realism', 'Performance', 'Aircraft', 'Community', 'Value', 'VR', 'Beginner'];
+
+function drawRadar(simIds) {
+  const canvas = document.getElementById('radarChart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.parentElement.clientWidth;
+  const size = Math.min(w, 500);
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+  ctx.scale(dpr, dpr);
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = size * 0.38;
+  const n = radarLabels.length;
+  const angleStep = (2 * Math.PI) / n;
+
+  ctx.clearRect(0, 0, size, size);
+
+  // Grid
+  for (let level = 1; level <= 5; level++) {
+    const lr = (r / 5) * level;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const angle = -Math.PI / 2 + i * angleStep;
+      const x = cx + lr * Math.cos(angle);
+      const y = cy + lr * Math.sin(angle);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = isDark ? '#3d3530' : '#e8dfd6';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Axis lines and labels
+  ctx.font = '12px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < n; i++) {
+    const angle = -Math.PI / 2 + i * angleStep;
+    const ex = cx + r * Math.cos(angle);
+    const ey = cy + r * Math.sin(angle);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(ex, ey);
+    ctx.strokeStyle = isDark ? '#4a403a' : '#d4c5b8';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    const lx = cx + (r + 22) * Math.cos(angle);
+    const ly = cy + (r + 22) * Math.sin(angle);
+    ctx.fillStyle = isDark ? '#d4c5b8' : '#6b5d54';
+    ctx.fillText(radarLabels[i], lx, ly);
+  }
+
+  // Data polygons
+  const validSims = simIds.filter(id => id && simScores[id]);
+  validSims.forEach((simId, si) => {
+    const scores = simScores[simId];
+    const keys = ['graphics', 'realism', 'performance', 'aircraft', 'community', 'value', 'vr', 'beginner'];
+    ctx.beginPath();
+    keys.forEach((key, i) => {
+      const val = scores[key] / 10;
+      const angle = -Math.PI / 2 + i * angleStep;
+      const x = cx + r * val * Math.cos(angle);
+      const y = cy + r * val * Math.sin(angle);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = radarColors[si];
+    ctx.fill();
+    ctx.strokeStyle = radarBorders[si];
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Dots
+    keys.forEach((key, i) => {
+      const val = scores[key] / 10;
+      const angle = -Math.PI / 2 + i * angleStep;
+      const x = cx + r * val * Math.cos(angle);
+      const y = cy + r * val * Math.sin(angle);
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = radarBorders[si];
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+  });
+
+  // Legend
+  const legend = document.getElementById('radarLegend');
+  legend.innerHTML = '';
+  validSims.forEach((simId, si) => {
+    legend.innerHTML += '<div class="legend-item"><div class="legend-dot" style="background:' + radarBorders[si] + ';"></div>' + simulatorData[simId].name + '</div>';
+  });
+}
+
+function renderRatingBars(simIds) {
+  const container = document.getElementById('ratingBars');
+  container.innerHTML = '';
+  const validSims = simIds.filter(id => id && simScores[id]);
+  const categories = ['graphics', 'realism', 'performance', 'aircraft', 'community', 'value', 'vr', 'beginner'];
+
+  categories.forEach((cat, ci) => {
+    const row = document.createElement('div');
+    row.className = 'rating-row';
+    row.innerHTML = '<div class="rating-row-label">' + radarLabels[ci] + '</div>';
+    const group = document.createElement('div');
+    group.className = 'rating-bar-group';
+
+    validSims.forEach((simId, si) => {
+      const score = simScores[simId][cat];
+      const item = document.createElement('div');
+      item.className = 'rating-bar-item';
+      item.innerHTML =
+        '<span class="rating-bar-name">' + simulatorData[simId].name + '</span>' +
+        '<div class="rating-bar-track"><div class="rating-bar-fill" style="width:' + (score * 10) + '%;background:' + radarBorders[si] + ';"></div></div>' +
+        '<span class="rating-bar-value">' + score + '/10</span>';
+      group.appendChild(item);
+    });
+
+    row.appendChild(group);
+    container.appendChild(row);
+  });
+}
+
+function renderQuickScores(simIds) {
+  const container = document.getElementById('quickScores');
+  container.innerHTML = '';
+  const validSims = simIds.filter(id => id && simScores[id]);
+
+  validSims.forEach((simId, si) => {
+    const scores = simScores[simId];
+    const avg = Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length;
+    const card = document.createElement('div');
+    card.className = 'score-card';
+    card.style.borderTopColor = radarBorders[si];
+    card.style.borderTopWidth = '3px';
+    card.innerHTML =
+      '<h3>' + simulatorData[simId].name + '</h3>' +
+      '<div class="score-value">' + avg.toFixed(1) + '</div>' +
+      '<div class="score-label">Overall Score</div>';
+    container.appendChild(card);
+  });
+}
+
+// Wrap original updateComparison to also update charts
+const origUpdate = updateComparison;
+updateComparison = function() {
+  origUpdate();
+  const sim1Id = document.getElementById('sim1').value;
+  const sim2Id = document.getElementById('sim2').value;
+  const sim3Id = document.getElementById('sim3').value;
+  const ids = [sim1Id, sim2Id, sim3Id].filter(Boolean);
+  drawRadar(ids);
+  renderRatingBars(ids);
+  renderQuickScores(ids);
+};
+
 // Initialize comparison on page load
 updateComparison();
 
@@ -844,6 +1216,25 @@ updateComparison();
 document.getElementById('sim1').addEventListener('change', updateComparison);
 document.getElementById('sim2').addEventListener('change', updateComparison);
 document.getElementById('sim3').addEventListener('change', updateComparison);
+
+// Redraw radar on resize
+window.addEventListener('resize', () => {
+  const sim1Id = document.getElementById('sim1').value;
+  const sim2Id = document.getElementById('sim2').value;
+  const sim3Id = document.getElementById('sim3').value;
+  drawRadar([sim1Id, sim2Id, sim3Id].filter(Boolean));
+});
+
+// Redraw radar on theme change
+const origDmClick = darkModeToggle.onclick;
+darkModeToggle.addEventListener('click', () => {
+  setTimeout(() => {
+    const sim1Id = document.getElementById('sim1').value;
+    const sim2Id = document.getElementById('sim2').value;
+    const sim3Id = document.getElementById('sim3').value;
+    drawRadar([sim1Id, sim2Id, sim3Id].filter(Boolean));
+  }, 50);
+});
 </script>
 </body>
 </html>

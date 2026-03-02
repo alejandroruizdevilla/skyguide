@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Keyboard Shortcuts Reference</title>
+  <meta name="description" content="Quick reference for keyboard shortcuts across popular flight simulators: MSFS 2024, X-Plane 12, DCS World, and IL-2 Sturmovik.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    /* Toolbar: search + print */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .search-wrapper svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.6rem;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(193, 122, 74, 0.15);
+    }
+
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .print-btn:hover {
+      background: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .print-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.65rem 1.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Shortcut Categories */
+    .shortcut-panel {
+      display: none;
+    }
+
+    .shortcut-panel.active {
+      display: block;
+    }
+
+    .category {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      background: var(--accent-light);
+    }
+
+    .category-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .category-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* Shortcut rows */
+    .shortcut-list {
+      list-style: none;
+    }
+
+    .shortcut-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.15s;
+    }
+
+    .shortcut-row:last-child {
+      border-bottom: none;
+    }
+
+    .shortcut-row:hover {
+      background: var(--accent-light);
+    }
+
+    .shortcut-row.hidden {
+      display: none;
+    }
+
+    .shortcut-action {
+      font-size: 14px;
+      color: var(--text-main);
+      flex: 1;
+    }
+
+    .shortcut-keys {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 0.25rem 0.55rem;
+      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: 5px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+
+    .key-separator {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* No results message */
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 15px;
+      display: none;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    /* Print styles */
+    @media print {
+      .nav, .toolbar, .tabs, .dark-mode-toggle, .print-btn {
+        display: none !important;
+      }
+      body {
+        padding: 0;
+        font-size: 12px;
+        color: #000;
+        background: #fff;
+      }
+      .header {
+        margin-bottom: 1rem;
+      }
+      .title {
+        font-size: 24px;
+        color: #333;
+      }
+      .subtitle {
+        font-size: 14px;
+        color: #666;
+      }
+      .shortcut-panel {
+        display: block !important;
+      }
+      .shortcut-panel::before {
+        content: attr(data-sim-name);
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        margin: 1.5rem 0 0.5rem;
+        color: #333;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 0.25rem;
+      }
+      .category {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+      }
+      .category-header {
+        background: #f0f0f0;
+      }
+      .shortcut-row:hover {
+        background: none;
+      }
+      kbd {
+        border: 1px solid #aaa;
+        background: #f5f5f5;
+        color: #000;
+        box-shadow: none;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .nav {
+        padding: 1rem;
+      }
+      .nav-links {
+        gap: 0.75rem;
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-wrapper {
+        max-width: 100%;
+      }
+      .tabs {
+        gap: 0.35rem;
+      }
+      .tab-btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 13px;
+      }
+      .shortcut-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        padding: 0.85rem 1.25rem;
+      }
+      .shortcut-keys {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="shortcuts.html" class="nav-link active">Shortcuts</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
+    </nav>
+
+    <!-- Header -->
+    <div class="header">
+      <h1 class="title">Keyboard Shortcuts Reference</h1>
+      <p class="subtitle">Quick-access keybindings for popular flight simulators</p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search shortcuts... e.g. gear, flaps, autopilot">
+      </div>
+      <button class="print-btn" id="printBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Shortcuts
+      </button>
+    </div>
+
+    <!-- Simulator Tabs -->
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-sim="msfs">MSFS 2024</button>
+      <button class="tab-btn" data-sim="xplane">X-Plane 12</button>
+      <button class="tab-btn" data-sim="dcs">DCS World</button>
+      <button class="tab-btn" data-sim="il2">IL-2 Sturmovik</button>
+    </div>
+
+    <!-- Shortcut Panels (populated by JS) -->
+    <div id="panelsContainer"></div>
+
+    <!-- No results message -->
+    <div class="no-results" id="noResults">No shortcuts found matching your search.</div>
+
+  </div>
+
+<script>
+// ── Dark Mode ──
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+});
+
+// ── Shortcut Data ──
+const shortcutData = {
+  msfs: {
+    name: 'Microsoft Flight Simulator 2024',
+    categories: [
+      {
+        title: 'Flight Controls',
+        icon: '\u2708',
+        shortcuts: [
+          { keys: ['Ctrl', 'E'], action: 'Start / shut down engines' },
+          { keys: ['F'], action: 'Toggle flaps (incrementally)' },
+          { keys: ['G'], action: 'Toggle landing gear' },
+          { keys: ['B'], action: 'Toggle parking brake' },
+          { keys: ['.'], action: 'Apply wheel brakes' },
+          { keys: ['Num 0'], action: 'Rudder left' },
+          { keys: ['Num Enter'], action: 'Rudder right' },
+          { keys: ['F2'], action: 'Decrease throttle' },
+          { keys: ['F3'], action: 'Increase throttle' }
+        ]
+      },
+      {
+        title: 'Views',
+        icon: '\uD83D\uDC41',
+        shortcuts: [
+          { keys: ['S'], action: 'Toggle cockpit / external view' },
+          { keys: ['A'], action: 'Toggle ATC window' },
+          { keys: ['End'], action: 'Look behind' },
+          { keys: ['Ctrl', 'Shift', 'S'], action: 'Toggle showcase camera' }
+        ]
+      },
+      {
+        title: 'Systems',
+        icon: '\u2699',
+        shortcuts: [
+          { keys: ['Alt', 'L'], action: 'Toggle landing lights' },
+          { keys: ['O'], action: 'Toggle navigation lights' },
+          { keys: ['Shift', 'H'], action: 'Toggle master battery' },
+          { keys: ['Ctrl', 'Shift', 'F'], action: 'Toggle fuel selector' }
+        ]
+      },
+      {
+        title: 'Autopilot',
+        icon: '\uD83E\uDDED',
+        shortcuts: [
+          { keys: ['Z'], action: 'Toggle autopilot master' },
+          { keys: ['Ctrl', 'H'], action: 'Toggle heading hold' },
+          { keys: ['Ctrl', 'Alt', 'V'], action: 'Toggle altitude hold' },
+          { keys: ['Ctrl', 'N'], action: 'Toggle NAV mode' },
+          { keys: ['Ctrl', 'A'], action: 'Toggle approach mode' }
+        ]
+      },
+      {
+        title: 'Miscellaneous',
+        icon: '\uD83D\uDCCB',
+        shortcuts: [
+          { keys: ['P'], action: 'Pause simulation' },
+          { keys: ['V'], action: 'Open VFR map' },
+          { keys: ['Ctrl', 'Shift', 'P'], action: 'Take screenshot' },
+          { keys: ['R'], action: 'Increase simulation rate' },
+          { keys: ['Esc'], action: 'Open menu' }
+        ]
+      }
+    ]
+  },
+  xplane: {
+    name: 'X-Plane 12',
+    categories: [
+      {
+        title: 'Flight Controls',
+        icon: '\u2708',
+        shortcuts: [
+          { keys: ['Space'], action: 'Toggle brakes (regular)' },
+          { keys: ['v'], action: 'Toggle brakes (max hold)' },
+          { keys: ['F1'], action: 'Throttle idle / cut-off' },
+          { keys: ['F2'], action: 'Throttle down a notch' },
+          { keys: ['F3'], action: 'Throttle up a notch' },
+          { keys: ['F4'], action: 'Throttle full' },
+          { keys: ['['], action: 'Flaps up one notch' },
+          { keys: [']'], action: 'Flaps down one notch' },
+          { keys: ['G'], action: 'Toggle landing gear' }
+        ]
+      },
+      {
+        title: 'Views',
+        icon: '\uD83D\uDC41',
+        shortcuts: [
+          { keys: ['c'], action: 'Cockpit view (forward with HUD)' },
+          { keys: ['Shift', 'c'], action: 'Cockpit view (forward, no HUD)' },
+          { keys: ['w'], action: 'External view (chase)' },
+          { keys: ['Shift', 'w'], action: 'External view (circle)' },
+          { keys: [','], action: 'Rotate view left' },
+          { keys: ['.'], action: 'Rotate view right' }
+        ]
+      },
+      {
+        title: 'Systems',
+        icon: '\u2699',
+        shortcuts: [
+          { keys: ['L'], action: 'Toggle landing lights' },
+          { keys: ['Shift', 'L'], action: 'Toggle taxi lights' },
+          { keys: ['N'], action: 'Toggle navigation lights' },
+          { keys: ['O'], action: 'Toggle strobe lights' }
+        ]
+      },
+      {
+        title: 'Autopilot',
+        icon: '\uD83E\uDDED',
+        shortcuts: [
+          { keys: ['='], action: 'Engage / disengage autopilot' },
+          { keys: ['Shift', '='], action: 'Toggle flight director' },
+          { keys: ['F5'], action: 'Set altitude to current' },
+          { keys: ['F6'], action: 'Set vertical speed to current' }
+        ]
+      },
+      {
+        title: 'Miscellaneous',
+        icon: '\uD83D\uDCCB',
+        shortcuts: [
+          { keys: ['p'], action: 'Pause simulation' },
+          { keys: ['m'], action: 'Open map' },
+          { keys: ['Tab'], action: 'Open ATC dialog' },
+          { keys: ['Shift', 'Tab'], action: 'Open instructor console' },
+          { keys: ['/'], action: 'Open command search' },
+          { keys: ['Ctrl', '.'], action: 'Capture screenshot' }
+        ]
+      }
+    ]
+  },
+  dcs: {
+    name: 'DCS World',
+    categories: [
+      {
+        title: 'Flight Controls',
+        icon: '\u2708',
+        shortcuts: [
+          { keys: ['Ctrl', 'E'], action: 'Start engines (auto-start sequence)' },
+          { keys: ['Shift', 'E'], action: 'Stop engines (auto-stop)' },
+          { keys: ['G'], action: 'Toggle landing gear' },
+          { keys: ['F'], action: 'Flaps up / retract' },
+          { keys: ['Shift', 'F'], action: 'Flaps down / extend' },
+          { keys: ['B'], action: 'Wheel brake ON' },
+          { keys: ['Shift', 'B'], action: 'Wheel brake OFF' },
+          { keys: ['Num +'], action: 'Increase throttle' },
+          { keys: ['Num -'], action: 'Decrease throttle' }
+        ]
+      },
+      {
+        title: 'Views',
+        icon: '\uD83D\uDC41',
+        shortcuts: [
+          { keys: ['F1'], action: 'Cockpit view' },
+          { keys: ['F2'], action: 'External aircraft view' },
+          { keys: ['F3'], action: 'Fly-by view' },
+          { keys: ['F4'], action: 'Target / ground object view' },
+          { keys: ['F5'], action: 'Chase view' },
+          { keys: ['Ctrl', 'F11'], action: 'Free camera' }
+        ]
+      },
+      {
+        title: 'Systems',
+        icon: '\u2699',
+        shortcuts: [
+          { keys: ['RShift', 'L'], action: 'Toggle landing lights' },
+          { keys: ['RCtrl', 'L'], action: 'Toggle formation lights' },
+          { keys: ['LAlt', 'C'], action: 'Toggle canopy open / close' },
+          { keys: ['LAlt', 'V'], action: 'Toggle cabin pressure' }
+        ]
+      },
+      {
+        title: 'Weapons & Combat',
+        icon: '\uD83C\uDFAF',
+        shortcuts: [
+          { keys: ['Space'], action: 'Fire weapon (cannon)' },
+          { keys: ['RAlt', 'Space'], action: 'Release weapon (bomb / missile)' },
+          { keys: ['D'], action: 'Weapon selector next' },
+          { keys: ['C'], action: 'Toggle Master Arm' },
+          { keys: ['Q'], action: 'Countermeasures release' }
+        ]
+      },
+      {
+        title: 'Miscellaneous',
+        icon: '\uD83D\uDCCB',
+        shortcuts: [
+          { keys: ['Pause'], action: 'Pause simulation' },
+          { keys: ['Ctrl', 'Z'], action: 'Accelerate time' },
+          { keys: ['Ctrl', 'Shift', 'Z'], action: 'Decelerate time' },
+          { keys: ['\\'], action: 'Toggle ATC radio menu' },
+          { keys: ['K'], action: 'Open kneeboard' },
+          { keys: ['F10'], action: 'Open map / F10 view' }
+        ]
+      }
+    ]
+  },
+  il2: {
+    name: 'IL-2 Sturmovik: Great Battles',
+    categories: [
+      {
+        title: 'Flight Controls',
+        icon: '\u2708',
+        shortcuts: [
+          { keys: ['E'], action: 'Start / stop engine' },
+          { keys: ['G'], action: 'Toggle landing gear' },
+          { keys: ['F'], action: 'Flaps extend one step' },
+          { keys: ['Shift', 'F'], action: 'Flaps retract one step' },
+          { keys: ['.'], action: 'Wheel brakes' },
+          { keys: ['Shift', '-'], action: 'Decrease throttle' },
+          { keys: ['Shift', '='], action: 'Increase throttle' },
+          { keys: ['Ctrl', '-'], action: 'Decrease prop pitch' },
+          { keys: ['Ctrl', '='], action: 'Increase prop pitch' }
+        ]
+      },
+      {
+        title: 'Views',
+        icon: '\uD83D\uDC41',
+        shortcuts: [
+          { keys: ['F1'], action: 'Cockpit view' },
+          { keys: ['F2'], action: 'External view' },
+          { keys: ['F3'], action: 'Chase view' },
+          { keys: ['F4'], action: 'Padlock enemy view' },
+          { keys: ['F9'], action: 'Fly-by camera' },
+          { keys: ['Ctrl', 'F1'], action: 'Gunsight view' }
+        ]
+      },
+      {
+        title: 'Systems',
+        icon: '\u2699',
+        shortcuts: [
+          { keys: ['L'], action: 'Toggle landing lights' },
+          { keys: ['Shift', 'L'], action: 'Toggle navigation lights' },
+          { keys: ['Shift', 'C'], action: 'Toggle canopy open / close' },
+          { keys: ['Ctrl', 'M'], action: 'Toggle mixture control' }
+        ]
+      },
+      {
+        title: 'Weapons & Combat',
+        icon: '\uD83C\uDFAF',
+        shortcuts: [
+          { keys: ['Space'], action: 'Fire primary weapons (guns)' },
+          { keys: ['B'], action: 'Release bombs' },
+          { keys: ['R'], action: 'Fire rockets' },
+          { keys: ['Shift', 'B'], action: 'Toggle bomb bay doors' },
+          { keys: ['Ctrl', 'Space'], action: 'Fire secondary weapons' }
+        ]
+      },
+      {
+        title: 'Miscellaneous',
+        icon: '\uD83D\uDCCB',
+        shortcuts: [
+          { keys: ['P'], action: 'Pause simulation' },
+          { keys: ['Tab'], action: 'Open in-flight map' },
+          { keys: ['\\'], action: 'Open radio communication menu' },
+          { keys: ['O'], action: 'Open / close technical chat' },
+          { keys: ['Print Screen'], action: 'Take screenshot' },
+          { keys: ['Shift', 'T'], action: 'Toggle trim indicator' }
+        ]
+      }
+    ]
+  }
+};
+
+// ── Render Panels ──
+const panelsContainer = document.getElementById('panelsContainer');
+
+Object.entries(shortcutData).forEach(([simKey, sim]) => {
+  const panel = document.createElement('div');
+  panel.className = 'shortcut-panel' + (simKey === 'msfs' ? ' active' : '');
+  panel.id = 'panel-' + simKey;
+  panel.setAttribute('data-sim-name', sim.name);
+
+  sim.categories.forEach(cat => {
+    const section = document.createElement('div');
+    section.className = 'category';
+
+    const headerHTML =
+      '<div class="category-header">' +
+        '<span class="category-icon">' + cat.icon + '</span>' +
+        '<span class="category-title">' + cat.title + '</span>' +
+      '</div>';
+
+    let rowsHTML = '<ul class="shortcut-list">';
+    cat.shortcuts.forEach(sc => {
+      const keysHTML = sc.keys.map(k => '<kbd>' + k + '</kbd>').join('<span class="key-separator">+</span>');
+      rowsHTML +=
+        '<li class="shortcut-row" data-search="' + (sc.action + ' ' + sc.keys.join(' ')).toLowerCase() + '">' +
+          '<span class="shortcut-action">' + sc.action + '</span>' +
+          '<span class="shortcut-keys">' + keysHTML + '</span>' +
+        '</li>';
+    });
+    rowsHTML += '</ul>';
+
+    section.innerHTML = headerHTML + rowsHTML;
+    panel.appendChild(section);
+  });
+
+  panelsContainer.appendChild(panel);
+});
+
+// ── Tab Switching ──
+const tabs = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.shortcut-panel');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.sim).classList.add('active');
+    applySearch();
+  });
+});
+
+// ── Search / Filter ──
+const searchInput = document.getElementById('searchInput');
+const noResults = document.getElementById('noResults');
+
+function applySearch() {
+  const query = searchInput.value.trim().toLowerCase();
+  const activePanel = document.querySelector('.shortcut-panel.active');
+  if (!activePanel) return;
+
+  const rows = activePanel.querySelectorAll('.shortcut-row');
+  const categories = activePanel.querySelectorAll('.category');
+  let totalVisible = 0;
+
+  rows.forEach(row => {
+    const match = !query || row.getAttribute('data-search').includes(query);
+    row.classList.toggle('hidden', !match);
+    if (match) totalVisible++;
+  });
+
+  // Hide categories that have zero visible rows
+  categories.forEach(cat => {
+    const visibleRows = cat.querySelectorAll('.shortcut-row:not(.hidden)');
+    cat.style.display = visibleRows.length ? '' : 'none';
+  });
+
+  noResults.classList.toggle('visible', totalVisible === 0 && query.length > 0);
+}
+
+searchInput.addEventListener('input', applySearch);
+
+// ── Print ──
+document.getElementById('printBtn').addEventListener('click', () => {
+  window.print();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Add-on & Livery Showcase</title>
+  <meta name="description" content="SkyGuide - Curated add-on and livery showcase for MSFS 2024, X-Plane 12, DCS World and Prepar3D. Discover the best free and paid aircraft, scenery, utilities and liveries.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+      --success: #6b9e78;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --success: #8bc79f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      padding: 1.5rem 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    /* Simulator Tabs */
+    .sim-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .sim-tab {
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .sim-tab:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .sim-tab.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Toolbar: search + filters */
+    .toolbar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+      max-width: 400px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.7rem 1rem 0.7rem 2.6rem;
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .filter-btn {
+      padding: 0.55rem 1rem;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Category filter pills */
+    .category-filters {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    /* Grid */
+    .addon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Addon Card */
+    .addon-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: cardIn 0.45s ease forwards;
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .addon-card:nth-child(1)  { animation-delay: 0.03s; }
+    .addon-card:nth-child(2)  { animation-delay: 0.06s; }
+    .addon-card:nth-child(3)  { animation-delay: 0.09s; }
+    .addon-card:nth-child(4)  { animation-delay: 0.12s; }
+    .addon-card:nth-child(5)  { animation-delay: 0.15s; }
+    .addon-card:nth-child(6)  { animation-delay: 0.18s; }
+
+    .addon-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .addon-card.hidden {
+      display: none;
+    }
+
+    /* Card image placeholder */
+    .addon-image {
+      width: 100%;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      font-size: 42px;
+    }
+
+    .addon-image .img-label {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: rgba(255,255,255,0.85);
+      background: rgba(0,0,0,0.35);
+      padding: 3px 8px;
+      border-radius: 5px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Card body */
+    .addon-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .addon-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.35rem;
+    }
+
+    .addon-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .addon-price {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: 0.75rem;
+    }
+
+    .addon-price.free {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .addon-price.paid {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .addon-developer {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .addon-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .addon-badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.2rem 0.55rem;
+      border-radius: 5px;
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .addon-stars {
+      display: flex;
+      gap: 2px;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .addon-stars .empty {
+      color: var(--border-light);
+    }
+
+    .addon-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .addon-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .addon-link:hover {
+      color: var(--accent-alt);
+    }
+
+    .addon-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+      color: var(--border-light);
+    }
+
+    .empty-state p {
+      font-size: 16px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 0 1rem;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 1rem 0.5rem; }
+      .title { font-size: 28px; }
+      .addon-grid { grid-template-columns: 1fr; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .search-wrap { max-width: none; }
+      .filter-group, .category-filters { justify-content: center; }
+      .nav { padding: 1rem; }
+      .nav-links { gap: 0.75rem; }
+    }
+
+    @media (max-width: 480px) {
+      .sim-tabs { gap: 0.35rem; }
+      .sim-tab { padding: 0.55rem 0.9rem; font-size: 13px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="beginners-guide.html" class="nav-link">Beginner's Guide</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="addons.html" class="nav-link">Add-ons</a>
+        <a href="map.html" class="nav-link">Coverage Map</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
+    </nav>
+
+    <!-- Header -->
+    <div class="header">
+      <h1 class="title">Add-on &amp; Livery Showcase</h1>
+      <p class="subtitle">Curated picks for every flight sim platform</p>
+    </div>
+
+    <div class="intro">
+      <p>Browse our hand-picked selection of the best add-ons, scenery packs, utilities and liveries across the most popular flight simulators. Filter by category or price, or search for exactly what you need.</p>
+    </div>
+
+    <!-- Simulator Tabs -->
+    <div class="sim-tabs" id="simTabs">
+      <button class="sim-tab active" data-sim="msfs">MSFS 2024</button>
+      <button class="sim-tab" data-sim="xplane">X-Plane 12</button>
+      <button class="sim-tab" data-sim="dcs">DCS World</button>
+      <button class="sim-tab" data-sim="prepar3d">Prepar3D</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search add-ons...">
+      </div>
+      <div class="category-filters" id="categoryFilters">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="aircraft">Aircraft</button>
+        <button class="filter-btn" data-category="scenery">Scenery</button>
+        <button class="filter-btn" data-category="utilities">Utilities</button>
+        <button class="filter-btn" data-category="liveries">Liveries</button>
+      </div>
+      <div class="filter-group" id="priceFilters">
+        <button class="filter-btn active" data-price="all">All Prices</button>
+        <button class="filter-btn" data-price="free">Free</button>
+        <button class="filter-btn" data-price="paid">Paid</button>
+      </div>
+    </div>
+
+    <!-- Addon Grid -->
+    <div class="addon-grid" id="addonGrid"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p>No add-ons match your current filters. Try adjusting your search or filters.</p>
+    </div>
+
+    <div class="footer">
+      <p>SkyGuide Add-on Showcase &mdash; <a href="index.html">Back to Home</a></p>
+    </div>
+
+  </div>
+
+<script>
+// ========== ADDON DATA ==========
+const addons = {
+  msfs: [
+    {
+      name: "PMDG 737-800",
+      developer: "PMDG",
+      price: "$74.99",
+      category: "aircraft",
+      rating: 5,
+      desc: "Study-level Boeing 737-800 with fully simulated FMC, detailed systems and custom sounds. The gold standard for narrowbody airliners.",
+      gradient: "linear-gradient(135deg, #1e3a5f 0%, #4a7fb5 50%, #6eaed8 100%)"
+    },
+    {
+      name: "FlyByWire A320neo",
+      developer: "FlyByWire Simulations",
+      price: "Free",
+      category: "aircraft",
+      rating: 5,
+      desc: "Open-source Airbus A320neo with custom autopilot, fly-by-wire system, MCDU and continuously improving systems depth.",
+      gradient: "linear-gradient(135deg, #2d4a6f 0%, #5885af 50%, #89b8d6 100%)"
+    },
+    {
+      name: "Fenix A320",
+      developer: "Fenix Simulations",
+      price: "$59.99",
+      category: "aircraft",
+      rating: 5,
+      desc: "Highly accurate A320 CEO featuring real-world EFB, custom FMGS, brake-to-vacate and near-study-level systems.",
+      gradient: "linear-gradient(135deg, #3b2d5f 0%, #7b5fb5 50%, #a68ed8 100%)"
+    },
+    {
+      name: "FSDreamTeam KJFK",
+      developer: "FSDreamTeam",
+      price: "$24.99",
+      category: "scenery",
+      rating: 4,
+      desc: "Detailed recreation of New York JFK International Airport with custom buildings, jetways and ground textures.",
+      gradient: "linear-gradient(135deg, #5f3b2d 0%, #b57b4a 50%, #d8a66e 100%)"
+    },
+    {
+      name: "REX AccuSeason",
+      developer: "REX Game Studios",
+      price: "$19.99",
+      category: "utilities",
+      rating: 4,
+      desc: "Dynamic seasonal environment enhancement bringing accurate snow coverage, vegetation changes and lighting improvements.",
+      gradient: "linear-gradient(135deg, #2d5f4a 0%, #5fb58a 50%, #8ed8b5 100%)"
+    },
+    {
+      name: "Working Title G3000",
+      developer: "Working Title",
+      price: "Free",
+      category: "utilities",
+      rating: 4,
+      desc: "Major improvement to the default Garmin G3000 avionics suite with accurate VNAV, procedures and flight planning.",
+      gradient: "linear-gradient(135deg, #4a4a5f 0%, #8a8ab5 50%, #b5b5d8 100%)"
+    },
+    {
+      name: "Asobo Livery Megapack",
+      developer: "Clink",
+      price: "Free",
+      category: "liveries",
+      rating: 4,
+      desc: "Community-curated collection of over 200 real-world airline liveries for default MSFS aircraft, regularly updated.",
+      gradient: "linear-gradient(135deg, #5f2d4a 0%, #b55f8a 50%, #d88eb5 100%)"
+    },
+    {
+      name: "LVFR A321neo Livery Pack",
+      developer: "LVFR",
+      price: "$9.99",
+      category: "liveries",
+      rating: 3,
+      desc: "High-quality livery set for the A321neo featuring 40+ real-world airlines with accurate paint details and weathering.",
+      gradient: "linear-gradient(135deg, #4a5f2d 0%, #8ab55f 50%, #b5d88e 100%)"
+    }
+  ],
+  xplane: [
+    {
+      name: "ToLiss A321",
+      developer: "ToLiss",
+      price: "$79.95",
+      category: "aircraft",
+      rating: 5,
+      desc: "Feature-rich Airbus A321 with custom FBW, FMGS, detailed cabin and support for multiple engine variants.",
+      gradient: "linear-gradient(135deg, #1e5f3a 0%, #4ab57f 50%, #6ed8ae 100%)"
+    },
+    {
+      name: "Zibo 737-800",
+      developer: "Zibo",
+      price: "Free",
+      category: "aircraft",
+      rating: 5,
+      desc: "The legendary freeware 737-800 mod with deep systems simulation, custom FMC and one of the largest communities.",
+      gradient: "linear-gradient(135deg, #5f1e3a 0%, #b54a7f 50%, #d86eae 100%)"
+    },
+    {
+      name: "IXEG 737 Classic",
+      developer: "IXEG",
+      price: "$74.95",
+      category: "aircraft",
+      rating: 4,
+      desc: "Beautifully modelled 737-300 Classic with hand-crafted 3D cockpit, custom systems and immersive sound design.",
+      gradient: "linear-gradient(135deg, #3a1e5f 0%, #7f4ab5 50%, #ae6ed8 100%)"
+    },
+    {
+      name: "Ortho4XP",
+      developer: "Oscar Pilote",
+      price: "Free",
+      category: "scenery",
+      rating: 4,
+      desc: "Generate photorealistic orthoimagery scenery tiles from satellite data for any region in the world.",
+      gradient: "linear-gradient(135deg, #1e5f5f 0%, #4ab5b5 50%, #6ed8d8 100%)"
+    },
+    {
+      name: "X-CSL",
+      developer: "X-CSL Team",
+      price: "Free",
+      category: "utilities",
+      rating: 3,
+      desc: "CSL model package for online flying with VATSIM and IVAO, providing AI traffic models visible on the network.",
+      gradient: "linear-gradient(135deg, #5f5f1e 0%, #b5b54a 50%, #d8d86e 100%)"
+    },
+    {
+      name: "FlightFactor A350",
+      developer: "FlightFactor",
+      price: "$69.95",
+      category: "aircraft",
+      rating: 4,
+      desc: "Wide-body A350 XWB with advanced custom systems, EFB tablet, flexible payload management and high-res textures.",
+      gradient: "linear-gradient(135deg, #2d3a5f 0%, #5f7fb5 50%, #8eaed8 100%)"
+    },
+    {
+      name: "Zibo Livery Collection",
+      developer: "Various Artists",
+      price: "Free",
+      category: "liveries",
+      rating: 4,
+      desc: "Extensive community-made livery collection for the Zibo 737-800 with hundreds of real-world airline paints.",
+      gradient: "linear-gradient(135deg, #5f3a1e 0%, #b57f4a 50%, #d8ae6e 100%)"
+    },
+    {
+      name: "X-Plane Liveries Pack Pro",
+      developer: "Liveries4XP",
+      price: "$14.99",
+      category: "liveries",
+      rating: 3,
+      desc: "Premium livery collection spanning multiple default X-Plane aircraft with PBR materials and accurate detailing.",
+      gradient: "linear-gradient(135deg, #3a5f1e 0%, #7fb54a 50%, #aed86e 100%)"
+    }
+  ],
+  dcs: [
+    {
+      name: "F/A-18C Hornet",
+      developer: "Eagle Dynamics",
+      price: "$79.99",
+      category: "aircraft",
+      rating: 5,
+      desc: "Full-fidelity carrier-capable multirole fighter with realistic radar, weapons systems, HOTAS and carrier ops.",
+      gradient: "linear-gradient(135deg, #1e2d5f 0%, #4a5fb5 50%, #6e8ed8 100%)"
+    },
+    {
+      name: "A-10C II Tank Killer",
+      developer: "Eagle Dynamics",
+      price: "$69.99",
+      category: "aircraft",
+      rating: 5,
+      desc: "Updated Warthog module with new Scorpion HMCS, data link improvements and the legendary GAU-8 Avenger.",
+      gradient: "linear-gradient(135deg, #2d5f1e 0%, #5fb54a 50%, #8ed86e 100%)"
+    },
+    {
+      name: "Persian Gulf Map",
+      developer: "Eagle Dynamics",
+      price: "$39.99",
+      category: "scenery",
+      rating: 4,
+      desc: "Detailed map of the Strait of Hormuz region featuring multiple airfields, carrier ops areas and desert terrain.",
+      gradient: "linear-gradient(135deg, #5f4a1e 0%, #b59a4a 50%, #d8c86e 100%)"
+    },
+    {
+      name: "Syria Map",
+      developer: "Ugra Media",
+      price: "$49.99",
+      category: "scenery",
+      rating: 4,
+      desc: "Expansive Eastern Mediterranean theatre covering Syria, Lebanon, Israel and Cyprus with detailed cities and airbases.",
+      gradient: "linear-gradient(135deg, #5f2d1e 0%, #b55f4a 50%, #d88e6e 100%)"
+    },
+    {
+      name: "Supercarrier",
+      developer: "Eagle Dynamics",
+      price: "$39.99",
+      category: "utilities",
+      rating: 4,
+      desc: "Enhanced carrier module with animated deck crew, detailed LSO station, radio comms and realistic deck operations.",
+      gradient: "linear-gradient(135deg, #1e4a5f 0%, #4a8ab5 50%, #6ebed8 100%)"
+    },
+    {
+      name: "F-16C Viper",
+      developer: "Eagle Dynamics",
+      price: "$79.99",
+      category: "aircraft",
+      rating: 5,
+      desc: "High-fidelity Fighting Falcon with advanced radar, HTS pod, HARM targeting and comprehensive air-to-ground suite.",
+      gradient: "linear-gradient(135deg, #3a2d5f 0%, #7f5fb5 50%, #ae8ed8 100%)"
+    },
+    {
+      name: "Community Livery Pack",
+      developer: "DCS Community",
+      price: "Free",
+      category: "liveries",
+      rating: 4,
+      desc: "Free community-maintained skin pack with historical and fictional liveries for the F/A-18C, F-16C and A-10C.",
+      gradient: "linear-gradient(135deg, #4a1e5f 0%, #8a4ab5 50%, #be6ed8 100%)"
+    },
+    {
+      name: "Aggressor Skins Bundle",
+      developer: "SkinnersGuild",
+      price: "$12.99",
+      category: "liveries",
+      rating: 3,
+      desc: "Authentic aggressor squadron liveries for the F-16C and F/A-18C based on real USAF and USN adversary paint schemes.",
+      gradient: "linear-gradient(135deg, #1e5f4a 0%, #4ab58a 50%, #6ed8be 100%)"
+    }
+  ],
+  prepar3d: [
+    {
+      name: "PMDG 777-300ER",
+      developer: "PMDG",
+      price: "$89.99",
+      category: "aircraft",
+      rating: 5,
+      desc: "The definitive Boeing 777 simulation with full FMC, detailed hydraulic and electrical systems and custom sounds.",
+      gradient: "linear-gradient(135deg, #5f1e2d 0%, #b54a5f 50%, #d86e8e 100%)"
+    },
+    {
+      name: "FSLabs A320-X",
+      developer: "Flight Sim Labs",
+      price: "$99.95",
+      category: "aircraft",
+      rating: 5,
+      desc: "Ultra-detailed A320 with custom FMGC, real-time FBW simulation, fault system and comprehensive EFB.",
+      gradient: "linear-gradient(135deg, #1e3a5f 0%, #4a7fb5 50%, #6eaed8 100%)"
+    },
+    {
+      name: "Orbx Global Base",
+      developer: "Orbx",
+      price: "$49.95",
+      category: "scenery",
+      rating: 4,
+      desc: "Worldwide terrain replacement with improved textures, autogen, coastlines, and water masking for a complete visual overhaul.",
+      gradient: "linear-gradient(135deg, #2d5f3a 0%, #5fb57f 50%, #8ed8ae 100%)"
+    },
+    {
+      name: "ActiveSky",
+      developer: "HiFi Simulation",
+      price: "$49.95",
+      category: "utilities",
+      rating: 5,
+      desc: "Advanced weather engine providing real-world weather injection, turbulence simulation, wind shear and cloud depiction.",
+      gradient: "linear-gradient(135deg, #4a5f5f 0%, #8ab5b5 50%, #b5d8d8 100%)"
+    },
+    {
+      name: "FSUIPC 7",
+      developer: "Pete Dowson",
+      price: "$34.00",
+      category: "utilities",
+      rating: 4,
+      desc: "Essential interface utility for advanced controller assignments, Lua scripting, TCAS fixes and third-party integration.",
+      gradient: "linear-gradient(135deg, #5f5f2d 0%, #b5b55f 50%, #d8d88e 100%)"
+    },
+    {
+      name: "FS2Crew",
+      developer: "FS2Crew",
+      price: "$34.95",
+      category: "utilities",
+      rating: 4,
+      desc: "Voice-controlled first officer and cabin crew with SOP-based flows, checklists and realistic crew coordination.",
+      gradient: "linear-gradient(135deg, #5f2d5f 0%, #b55fb5 50%, #d88ed8 100%)"
+    },
+    {
+      name: "Project Mega Pack Liveries",
+      developer: "P3D Community Hub",
+      price: "Free",
+      category: "liveries",
+      rating: 4,
+      desc: "Massive free livery collection for the PMDG 777 and FSLabs A320 featuring airlines from around the globe.",
+      gradient: "linear-gradient(135deg, #2d5f1e 0%, #5fb54a 50%, #8ed86e 100%)"
+    },
+    {
+      name: "Retro Liveries Collection",
+      developer: "PaintSim Studio",
+      price: "$16.99",
+      category: "liveries",
+      rating: 3,
+      desc: "Nostalgia-themed livery set with classic 1970s-1990s airline paint schemes for PMDG and FSLabs fleet.",
+      gradient: "linear-gradient(135deg, #5f4a2d 0%, #b5985f 50%, #d8c88e 100%)"
+    }
+  ]
+};
+
+// ========== STATE ==========
+let activeSim = 'msfs';
+let activeCategory = 'all';
+let activePrice = 'all';
+let searchQuery = '';
+
+// ========== DOM REFS ==========
+const grid = document.getElementById('addonGrid');
+const emptyState = document.getElementById('emptyState');
+const searchInput = document.getElementById('searchInput');
+
+// ========== RENDER ==========
+function stars(n) {
+  let s = '';
+  for (let i = 1; i <= 5; i++) {
+    s += i <= n
+      ? '<span>&#9733;</span>'
+      : '<span class="empty">&#9733;</span>';
+  }
+  return s;
+}
+
+function renderCards() {
+  const list = addons[activeSim] || [];
+  const q = searchQuery.toLowerCase().trim();
+
+  const filtered = list.filter(a => {
+    if (activeCategory !== 'all' && a.category !== activeCategory) return false;
+    const isFree = a.price === 'Free';
+    if (activePrice === 'free' && !isFree) return false;
+    if (activePrice === 'paid' && isFree) return false;
+    if (q) {
+      const haystack = (a.name + ' ' + a.developer + ' ' + a.desc + ' ' + a.category).toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    emptyState.classList.add('visible');
+    return;
+  }
+
+  emptyState.classList.remove('visible');
+
+  grid.innerHTML = filtered.map((a, i) => {
+    const isFree = a.price === 'Free';
+    return `
+      <div class="addon-card" style="animation-delay:${0.03 * (i + 1)}s">
+        <div class="addon-image" style="background:${a.gradient}">
+          <span class="img-label">${a.category}</span>
+        </div>
+        <div class="addon-body">
+          <div class="addon-top-row">
+            <span class="addon-name">${a.name}</span>
+            <span class="addon-price ${isFree ? 'free' : 'paid'}">${a.price}</span>
+          </div>
+          <div class="addon-developer">${a.developer}</div>
+          <div class="addon-meta">
+            <span class="addon-badge">${a.category}</span>
+            <span class="addon-stars">${stars(a.rating)}</span>
+          </div>
+          <p class="addon-desc">${a.desc}</p>
+          <a href="#" class="addon-link">
+            More Info
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ========== EVENT HANDLERS ==========
+
+// Simulator tabs
+document.getElementById('simTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.sim-tab');
+  if (!btn) return;
+  document.querySelectorAll('.sim-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeSim = btn.dataset.sim;
+  renderCards();
+});
+
+// Category filters
+document.getElementById('categoryFilters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('#categoryFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCategory = btn.dataset.category;
+  renderCards();
+});
+
+// Price filters
+document.getElementById('priceFilters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('#priceFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activePrice = btn.dataset.price;
+  renderCards();
+});
+
+// Search
+searchInput.addEventListener('input', e => {
+  searchQuery = e.target.value;
+  renderCards();
+});
+
+// ========== DARK MODE ==========
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+});
+
+// ========== INIT ==========
+renderCards();
+</script>
+</body>
+</html>

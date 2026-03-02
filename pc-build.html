@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - PC Build Calculator for Flight Simulators</title>
+  <meta name="description" content="Build the perfect PC for flight simulators. Get personalized hardware recommendations for MSFS 2024, X-Plane 12, DCS World, and Prepar3D.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --danger: #d97757;
+      --success: #6b9e78;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --danger: #ff9575;
+      --success: #8bc49c;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+
+    .intro p {
+      color: var(--text-secondary);
+    }
+
+    /* Steps */
+    .step-section {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .step-section:nth-child(1) { animation-delay: 0.1s; }
+    .step-section:nth-child(2) { animation-delay: 0.2s; }
+    .step-section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-label {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .option-card {
+      background: var(--bg);
+      border: 2px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .option-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .option-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      box-shadow: 0 0 0 3px rgba(193, 122, 74, 0.15);
+    }
+
+    .option-card .option-icon {
+      font-size: 32px;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .option-card .option-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .option-card .option-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Disabled steps */
+    .step-section.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .step-section.disabled .step-label {
+      background: var(--text-muted);
+    }
+
+    /* Results Panel */
+    .results-panel {
+      display: none;
+      margin-top: 2rem;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .results-panel.visible {
+      display: block;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .results-header h2 {
+      font-size: 28px;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .results-header p {
+      color: var(--text-secondary);
+    }
+
+    .build-card {
+      background: var(--bg-card);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .build-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-alt));
+    }
+
+    .build-tier {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 1rem;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .build-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .build-subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 1.5rem;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .spec-item {
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+
+    .spec-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .spec-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .spec-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .spec-detail {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Price */
+    .price-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: var(--accent-light);
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .price-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .price-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .price-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      width: 100%;
+    }
+
+    /* FPS Bar */
+    .fps-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .fps-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .fps-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-main);
+    }
+
+    .fps-range {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    .fps-bar-container {
+      background: var(--bg);
+      border-radius: 12px;
+      height: 28px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border-light);
+    }
+
+    .fps-bar {
+      height: 100%;
+      border-radius: 12px;
+      transition: width 1s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+    }
+
+    .fps-bar-low {
+      background: linear-gradient(90deg, #d97757, #e8a065);
+    }
+
+    .fps-bar-medium {
+      background: linear-gradient(90deg, #e8a065, #c17a4a);
+    }
+
+    .fps-bar-good {
+      background: linear-gradient(90deg, #c17a4a, #6b9e78);
+    }
+
+    .fps-bar-excellent {
+      background: linear-gradient(90deg, #6b9e78, #4a8a5c);
+    }
+
+    .fps-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Performance rating */
+    .perf-rating {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    .perf-low { background: #f8d7cf; color: #a14028; }
+    .perf-medium { background: #fde8c8; color: #8a5a2e; }
+    .perf-good { background: #d4edda; color: #3d6b47; }
+    .perf-excellent { background: #c3e6cb; color: #2d5a37; }
+
+    [data-theme="dark"] .perf-low { background: #4a2820; color: #ff9575; }
+    [data-theme="dark"] .perf-medium { background: #4a3820; color: #e8b87e; }
+    [data-theme="dark"] .perf-good { background: #2a4a30; color: #8bc49c; }
+    [data-theme="dark"] .perf-excellent { background: #204a28; color: #7dbd8a; }
+
+    /* Tips Section */
+    .tips-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tips-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tip-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .tip-item:last-child {
+      border-bottom: none;
+    }
+
+    .tip-icon {
+      color: var(--accent);
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tip-text {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .tip-text strong {
+      color: var(--text-main);
+    }
+
+    /* Alternative builds */
+    .alt-builds {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .alt-build-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s;
+    }
+
+    .alt-build-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .alt-build-label {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .alt-label-budget { background: var(--success); color: #fff; }
+    .alt-label-midrange { background: var(--accent); color: #fff; }
+    .alt-label-highend { background: var(--danger); color: #fff; }
+
+    .alt-build-card h4 {
+      font-size: 16px;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .alt-build-card .alt-price {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .alt-specs {
+      list-style: none;
+      padding: 0;
+    }
+
+    .alt-specs li {
+      color: var(--text-secondary);
+      font-size: 13px;
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .alt-specs li::before {
+      content: "\2022";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Reset button */
+    .reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid var(--border-light);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-top: 1rem;
+    }
+
+    .reset-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 28px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .step-section {
+        padding: 1.5rem;
+      }
+
+      .option-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .build-card {
+        padding: 1.5rem;
+      }
+
+      .specs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .price-value {
+        font-size: 28px;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .alt-builds {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .option-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="pc-build.html" class="nav-link active">PC Build</a>
+        <a href="sys-req-calc.html" class="nav-link">System Checker</a>
+        <a href="sim-advisor.html" class="nav-link">AI Advisor</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">PC Build Calculator</h1>
+      <p class="subtitle">Get a Personalized PC Build for Your Favorite Flight Simulator</p>
+    </div>
+
+    <div class="intro">
+      <p>Select your target simulator, desired quality settings, and resolution below. We will recommend the ideal hardware configuration with estimated costs and expected performance.</p>
+    </div>
+
+    <!-- Step 1: Simulator -->
+    <div class="step-section" id="step1">
+      <span class="step-label">Step 1</span>
+      <h2 class="step-title">Select Your Target Simulator</h2>
+      <div class="option-grid" id="simOptions">
+        <div class="option-card" data-sim="msfs2024" onclick="selectOption('sim', 'msfs2024', this)">
+          <span class="option-icon">&#9992;</span>
+          <div class="option-name">MSFS 2024</div>
+          <div class="option-desc">Most demanding sim</div>
+        </div>
+        <div class="option-card" data-sim="xplane12" onclick="selectOption('sim', 'xplane12', this)">
+          <span class="option-icon">&#9993;</span>
+          <div class="option-name">X-Plane 12</div>
+          <div class="option-desc">Realistic flight model</div>
+        </div>
+        <div class="option-card" data-sim="dcs" onclick="selectOption('sim', 'dcs', this)">
+          <span class="option-icon">&#127942;</span>
+          <div class="option-name">DCS World</div>
+          <div class="option-desc">Military combat sim</div>
+        </div>
+        <div class="option-card" data-sim="prepar3d" onclick="selectOption('sim', 'prepar3d', this)">
+          <span class="option-icon">&#127759;</span>
+          <div class="option-name">Prepar3D</div>
+          <div class="option-desc">Professional training</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Quality -->
+    <div class="step-section disabled" id="step2">
+      <span class="step-label">Step 2</span>
+      <h2 class="step-title">Select Quality Setting</h2>
+      <div class="option-grid" id="qualityOptions">
+        <div class="option-card" data-quality="low" onclick="selectOption('quality', 'low', this)">
+          <span class="option-icon">&#9898;</span>
+          <div class="option-name">Low</div>
+          <div class="option-desc">Best frame rates</div>
+        </div>
+        <div class="option-card" data-quality="medium" onclick="selectOption('quality', 'medium', this)">
+          <span class="option-icon">&#9899;</span>
+          <div class="option-name">Medium</div>
+          <div class="option-desc">Balanced experience</div>
+        </div>
+        <div class="option-card" data-quality="high" onclick="selectOption('quality', 'high', this)">
+          <span class="option-icon">&#11088;</span>
+          <div class="option-name">High</div>
+          <div class="option-desc">Great visuals</div>
+        </div>
+        <div class="option-card" data-quality="ultra" onclick="selectOption('quality', 'ultra', this)">
+          <span class="option-icon">&#128142;</span>
+          <div class="option-name">Ultra</div>
+          <div class="option-desc">Maximum fidelity</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Resolution -->
+    <div class="step-section disabled" id="step3">
+      <span class="step-label">Step 3</span>
+      <h2 class="step-title">Select Resolution</h2>
+      <div class="option-grid" id="resOptions">
+        <div class="option-card" data-res="1080p" onclick="selectOption('res', '1080p', this)">
+          <span class="option-icon">&#128187;</span>
+          <div class="option-name">1080p</div>
+          <div class="option-desc">1920 x 1080</div>
+        </div>
+        <div class="option-card" data-res="1440p" onclick="selectOption('res', '1440p', this)">
+          <span class="option-icon">&#128421;</span>
+          <div class="option-name">1440p</div>
+          <div class="option-desc">2560 x 1440</div>
+        </div>
+        <div class="option-card" data-res="4k" onclick="selectOption('res', '4k', this)">
+          <span class="option-icon">&#128250;</span>
+          <div class="option-name">4K</div>
+          <div class="option-desc">3840 x 2160</div>
+        </div>
+        <div class="option-card" data-res="vr" onclick="selectOption('res', 'vr', this)">
+          <span class="option-icon">&#129482;</span>
+          <div class="option-name">VR</div>
+          <div class="option-desc">Virtual Reality headset</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-header">
+        <h2>Your Recommended Build</h2>
+        <p id="resultsSubtitle"></p>
+      </div>
+
+      <!-- Main recommended build -->
+      <div class="build-card" id="mainBuild">
+        <span class="build-tier" id="buildTier"></span>
+        <h3 class="build-title" id="buildTitle"></h3>
+        <p class="build-subtitle" id="buildSubtitle"></p>
+
+        <div class="specs-grid" id="specsGrid"></div>
+
+        <div class="price-section">
+          <div>
+            <div class="price-label">Estimated Total Cost</div>
+            <div class="price-value" id="totalPrice"></div>
+          </div>
+          <div class="price-note">* Prices are approximate and may vary by region. Does not include monitor, peripherals, or OS.</div>
+        </div>
+
+        <!-- FPS Bar -->
+        <div class="fps-section">
+          <div class="fps-header">
+            <span class="fps-title">Expected Performance</span>
+            <span class="fps-range" id="fpsRange"></span>
+          </div>
+          <div class="fps-bar-container">
+            <div class="fps-bar" id="fpsBar"></div>
+          </div>
+          <div class="fps-labels">
+            <span>0 FPS</span>
+            <span>30 FPS</span>
+            <span>60 FPS</span>
+            <span>90 FPS</span>
+            <span>120+ FPS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alternative builds -->
+      <h3 style="font-size: 20px; margin-bottom: 1rem; color: var(--text-main);">Alternative Configurations</h3>
+      <div class="alt-builds" id="altBuilds"></div>
+
+      <!-- Sim-specific tips -->
+      <div class="tips-section" id="tipsSection">
+        <h3 class="tips-title" id="tipsTitle"></h3>
+        <div id="tipsList"></div>
+      </div>
+
+      <div style="text-align: center;">
+        <button class="reset-btn" onclick="resetAll()">&#8635; Start Over</button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>SkyGuide - PC Build Calculator 2025</p>
+      <p style="margin-top: 0.5rem;">Build smart, fly smooth. Prices and specs updated regularly.</p>
+    </footer>
+
+  </div>
+
+<script>
+// ==========================================
+// Dark Mode Toggle
+// ==========================================
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? '\u2600\uFE0F Light Mode' : '\uD83C\uDF19 Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? '\u2600\uFE0F Light Mode' : '\uD83C\uDF19 Dark Mode';
+});
+
+// ==========================================
+// State
+// ==========================================
+let selections = { sim: null, quality: null, res: null };
+
+// ==========================================
+// Selection Logic
+// ==========================================
+function selectOption(type, value, el) {
+  selections[type] = value;
+
+  // Update visual selection
+  const parent = el.parentElement;
+  parent.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  // Enable next step
+  if (type === 'sim') {
+    document.getElementById('step2').classList.remove('disabled');
+    // Reset downstream
+    selections.quality = null;
+    selections.res = null;
+    document.getElementById('step3').classList.add('disabled');
+    document.getElementById('step2').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('step3').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('resultsPanel').classList.remove('visible');
+    scrollToElement('step2');
+  }
+
+  if (type === 'quality') {
+    document.getElementById('step3').classList.remove('disabled');
+    selections.res = null;
+    document.getElementById('step3').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('resultsPanel').classList.remove('visible');
+    scrollToElement('step3');
+  }
+
+  if (type === 'res') {
+    generateBuild();
+  }
+}
+
+function scrollToElement(id) {
+  setTimeout(() => {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 150);
+}
+
+// ==========================================
+// Build Database
+// ==========================================
+const builds = {
+  // MSFS 2024 builds
+  msfs2024: {
+    low: {
+      '1080p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '1TB NVMe SSD', price: 850, fps: [45, 65], tier: 'Budget' },
+      '1440p': { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '16GB DDR5-5600', storage: '1TB NVMe SSD', price: 1050, fps: [35, 55], tier: 'Budget' },
+      '4k':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1400, fps: [25, 40], tier: 'Mid-Range' },
+      'vr':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti', ram: '32GB DDR5-5600', storage: '2TB NVMe SSD', price: 1700, fps: [30, 50], tier: 'Mid-Range' }
+    },
+    medium: {
+      '1080p': { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1200, fps: [40, 60], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1500, fps: [35, 50], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1900, fps: [25, 40], tier: 'Mid-Range' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 2400, fps: [35, 50], tier: 'High-End' }
+    },
+    high: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '2TB NVMe SSD', price: 1500, fps: [35, 55], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1900, fps: [30, 45], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2700, fps: [25, 38], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 3200, fps: [30, 45], tier: 'High-End' }
+    },
+    ultra: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1800, fps: [30, 50], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2600, fps: [25, 40], tier: 'High-End' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 3500, fps: [20, 35], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6400', storage: '4TB NVMe SSD', price: 3800, fps: [25, 40], tier: 'High-End' }
+    }
+  },
+
+  // X-Plane 12 builds
+  xplane12: {
+    low: {
+      '1080p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '512GB NVMe SSD', price: 750, fps: [55, 80], tier: 'Budget' },
+      '1440p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '1TB NVMe SSD', price: 850, fps: [45, 65], tier: 'Budget' },
+      '4k':    { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '16GB DDR5-5600', storage: '1TB NVMe SSD', price: 1100, fps: [30, 50], tier: 'Budget' },
+      'vr':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1400, fps: [40, 55], tier: 'Mid-Range' }
+    },
+    medium: {
+      '1080p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '1TB NVMe SSD', price: 900, fps: [50, 70], tier: 'Budget' },
+      '1440p': { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1150, fps: [40, 60], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1500, fps: [30, 45], tier: 'Mid-Range' },
+      'vr':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti', ram: '32GB DDR5-5600', storage: '2TB NVMe SSD', price: 1800, fps: [35, 50], tier: 'Mid-Range' }
+    },
+    high: {
+      '1080p': { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1100, fps: [45, 65], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1500, fps: [35, 55], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1900, fps: [25, 40], tier: 'Mid-Range' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 2300, fps: [35, 50], tier: 'High-End' }
+    },
+    ultra: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1400, fps: [40, 60], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1800, fps: [30, 50], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2500, fps: [22, 38], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 3200, fps: [30, 45], tier: 'High-End' }
+    }
+  },
+
+  // DCS World builds
+  dcs: {
+    low: {
+      '1080p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '1TB NVMe SSD', price: 800, fps: [60, 90], tier: 'Budget' },
+      '1440p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '1TB NVMe SSD', price: 850, fps: [50, 75], tier: 'Budget' },
+      '4k':    { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1100, fps: [35, 55], tier: 'Budget' },
+      'vr':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '2TB NVMe SSD', price: 1500, fps: [40, 60], tier: 'Mid-Range' }
+    },
+    medium: {
+      '1080p': { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1100, fps: [55, 80], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '2TB NVMe SSD', price: 1500, fps: [45, 65], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1800, fps: [30, 50], tier: 'Mid-Range' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 2300, fps: [40, 55], tier: 'High-End' }
+    },
+    high: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '2TB NVMe SSD', price: 1400, fps: [50, 75], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 2000, fps: [40, 60], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2500, fps: [30, 45], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 3100, fps: [40, 55], tier: 'High-End' }
+    },
+    ultra: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1800, fps: [40, 65], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2500, fps: [35, 50], tier: 'High-End' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6400', storage: '2TB NVMe SSD', price: 3300, fps: [25, 40], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6400', storage: '4TB NVMe SSD', price: 3600, fps: [35, 50], tier: 'High-End' }
+    }
+  },
+
+  // Prepar3D builds
+  prepar3d: {
+    low: {
+      '1080p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '512GB NVMe SSD', price: 750, fps: [50, 75], tier: 'Budget' },
+      '1440p': { cpu: 'Intel Core i5-13400F', gpu: 'NVIDIA RTX 4060', ram: '16GB DDR5-5200', storage: '1TB NVMe SSD', price: 850, fps: [40, 60], tier: 'Budget' },
+      '4k':    { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '16GB DDR5-5600', storage: '1TB NVMe SSD', price: 1050, fps: [30, 50], tier: 'Budget' },
+      'vr':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1400, fps: [35, 55], tier: 'Mid-Range' }
+    },
+    medium: {
+      '1080p': { cpu: 'Intel Core i5-13600K', gpu: 'NVIDIA RTX 4060 Ti', ram: '16GB DDR5-5600', storage: '1TB NVMe SSD', price: 1000, fps: [45, 70], tier: 'Budget' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1400, fps: [40, 60], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1700, fps: [30, 45], tier: 'Mid-Range' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 2200, fps: [35, 50], tier: 'High-End' }
+    },
+    high: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070', ram: '32GB DDR5-5600', storage: '1TB NVMe SSD', price: 1350, fps: [45, 65], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti Super', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1800, fps: [35, 55], tier: 'Mid-Range' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2400, fps: [28, 42], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 3000, fps: [35, 50], tier: 'High-End' }
+    },
+    ultra: {
+      '1080p': { cpu: 'Intel Core i7-14700K', gpu: 'NVIDIA RTX 4070 Ti', ram: '32GB DDR5-6000', storage: '2TB NVMe SSD', price: 1600, fps: [40, 60], tier: 'Mid-Range' },
+      '1440p': { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4080 Super', ram: '64GB DDR5-6000', storage: '2TB NVMe SSD', price: 2400, fps: [30, 48], tier: 'High-End' },
+      '4k':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6400', storage: '2TB NVMe SSD', price: 3200, fps: [22, 38], tier: 'High-End' },
+      'vr':    { cpu: 'Intel Core i9-14900K', gpu: 'NVIDIA RTX 4090', ram: '64GB DDR5-6400', storage: '4TB NVMe SSD', price: 3500, fps: [30, 45], tier: 'High-End' }
+    }
+  }
+};
+
+// ==========================================
+// Sim-specific tips
+// ==========================================
+const simTips = {
+  msfs2024: {
+    name: 'MSFS 2024',
+    tips: [
+      { text: '<strong>CPU single-thread performance is king.</strong> MSFS 2024 relies heavily on single-core speed. Intel 14th gen K-series processors offer the best per-core performance for this sim.' },
+      { text: '<strong>VRAM matters at higher resolutions.</strong> At 4K or in VR, you will want at least 12GB of VRAM. The RTX 4080 Super (16GB) and RTX 4090 (24GB) are ideal.' },
+      { text: '<strong>Rolling cache to NVMe.</strong> Enable the rolling cache feature and place it on a fast NVMe drive. This dramatically reduces scenery streaming stutters.' },
+      { text: '<strong>RAM speed affects performance.</strong> MSFS 2024 benefits noticeably from DDR5-5600 or faster. 32GB is the sweet spot; 64GB helps with heavy add-on usage.' },
+      { text: '<strong>Expect updates to improve performance.</strong> MSFS 2024 is continually optimized. Frame rates may improve over time with patches and driver updates.' },
+      { text: '<strong>Consider DLSS / Frame Generation.</strong> Enable NVIDIA DLSS and Frame Generation for a significant FPS boost with minimal visual quality loss.' }
+    ]
+  },
+  xplane12: {
+    name: 'X-Plane 12',
+    tips: [
+      { text: '<strong>Vulkan renderer is essential.</strong> Make sure Vulkan is enabled in X-Plane 12 settings. It provides significantly better performance than the legacy OpenGL renderer.' },
+      { text: '<strong>Single-thread CPU performance matters most.</strong> X-Plane 12 is still primarily single-threaded for its flight model. Prioritize high clock speeds over core count.' },
+      { text: '<strong>Moderate VRAM requirements.</strong> X-Plane 12 is generally less VRAM-hungry than MSFS. 8-12GB is sufficient for most scenarios, even with ortho scenery.' },
+      { text: '<strong>Ortho scenery eats storage.</strong> If you plan to use orthographic scenery tiles, budget for extra NVMe storage. A single region can use 50-200GB.' },
+      { text: '<strong>Plugin management matters.</strong> Excessive or poorly optimized plugins can tank FPS. Keep your plugins lean and updated for the best experience.' },
+      { text: '<strong>16GB RAM can work.</strong> Unlike MSFS, X-Plane 12 can run well on 16GB RAM for light add-on usage. Upgrade to 32GB if using heavy scenery packs.' }
+    ]
+  },
+  dcs: {
+    name: 'DCS World',
+    tips: [
+      { text: '<strong>RAM is critical for DCS.</strong> Large multiplayer missions and detailed maps (Syria, Sinai) can use 28GB+ of RAM. 32GB is the minimum recommendation; 64GB prevents stutters in heavy missions.' },
+      { text: '<strong>Install on a fast NVMe drive.</strong> DCS World has massive terrain files. An NVMe SSD dramatically reduces map loading times and eliminates terrain streaming stutters.' },
+      { text: '<strong>VR is incredible in DCS.</strong> DCS arguably offers the best VR flight sim experience. Budget for a powerful GPU if you plan on VR -- the RTX 4080 or 4090 is strongly recommended.' },
+      { text: '<strong>Module maps vary in performance.</strong> The Caucasus map runs well on modest hardware. The Syria and Sinai maps are significantly more demanding. Build your PC for your most-played map.' },
+      { text: '<strong>Multiplayer is more demanding.</strong> Large online servers with 40+ players and many AI units push CPU and RAM hard. Consider the higher-end builds if multiplayer is your focus.' },
+      { text: '<strong>Page file on NVMe.</strong> Set your Windows page file to an NVMe drive (16-32GB). DCS is known for high memory usage and benefits from a fast page file.' }
+    ]
+  },
+  prepar3d: {
+    name: 'Prepar3D',
+    tips: [
+      { text: '<strong>Prepar3D favors Intel CPUs.</strong> P3D has historically performed best on Intel processors with high single-thread performance. The i7-14700K hits the sweet spot.' },
+      { text: '<strong>Add-on scenery is the bottleneck.</strong> Stock P3D runs well on modest hardware. Add-ons from Orbx, FlyTampa, and similar vendors are what drive up hardware requirements.' },
+      { text: '<strong>Affinity mask tuning helps.</strong> Prepar3D benefits from CPU affinity mask configuration. Research the best HT settings for your specific processor.' },
+      { text: '<strong>Texture resolution slider matters.</strong> Reducing the texture resolution from 4096 to 2048 can reclaim significant VRAM and improve FPS with minimal visual impact.' },
+      { text: '<strong>32GB RAM is the sweet spot.</strong> With complex add-on aircraft (PMDG, FSLabs) and dense scenery, 32GB is recommended. 16GB may lead to out-of-memory crashes.' },
+      { text: '<strong>Consider the move to MSFS.</strong> With MSFS 2024 maturing, many P3D add-on developers are migrating. Consider future-proofing with hardware that also handles MSFS well.' }
+    ]
+  }
+};
+
+// ==========================================
+// Sim display names
+// ==========================================
+const simNames = {
+  msfs2024: 'MSFS 2024',
+  xplane12: 'X-Plane 12',
+  dcs: 'DCS World',
+  prepar3d: 'Prepar3D'
+};
+
+const qualityNames = {
+  low: 'Low',
+  medium: 'Medium',
+  high: 'High',
+  ultra: 'Ultra'
+};
+
+const resNames = {
+  '1080p': '1080p',
+  '1440p': '1440p',
+  '4k': '4K',
+  'vr': 'VR'
+};
+
+// ==========================================
+// Generate Build Recommendation
+// ==========================================
+function generateBuild() {
+  const { sim, quality, res } = selections;
+  if (!sim || !quality || !res) return;
+
+  const build = builds[sim][quality][res];
+  if (!build) return;
+
+  const panel = document.getElementById('resultsPanel');
+  panel.classList.add('visible');
+
+  // Subtitle
+  document.getElementById('resultsSubtitle').textContent =
+    simNames[sim] + ' at ' + qualityNames[quality] + ' settings, ' + resNames[res] + ' resolution';
+
+  // Tier badge
+  const tierEl = document.getElementById('buildTier');
+  tierEl.textContent = build.tier + ' Build';
+
+  // Title
+  document.getElementById('buildTitle').textContent = 'Recommended Configuration';
+  document.getElementById('buildSubtitle').textContent =
+    'Optimized for ' + simNames[sim] + ' - ' + qualityNames[quality] + ' Quality @ ' + resNames[res];
+
+  // Specs
+  const specsGrid = document.getElementById('specsGrid');
+  specsGrid.innerHTML = '';
+
+  const specs = [
+    { label: 'Processor (CPU)', value: build.cpu, detail: 'High single-thread performance' },
+    { label: 'Graphics Card (GPU)', value: build.gpu, detail: 'Primary rendering power' },
+    { label: 'Memory (RAM)', value: build.ram, detail: 'System memory' },
+    { label: 'Storage', value: build.storage, detail: 'Fast loading & streaming' }
+  ];
+
+  specs.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'spec-item';
+    div.innerHTML =
+      '<div class="spec-label">' + s.label + '</div>' +
+      '<div class="spec-value">' + s.value + '</div>' +
+      '<div class="spec-detail">' + s.detail + '</div>';
+    specsGrid.appendChild(div);
+  });
+
+  // Price
+  document.getElementById('totalPrice').textContent = '~$' + build.price.toLocaleString();
+
+  // FPS bar
+  const avgFps = (build.fps[0] + build.fps[1]) / 2;
+  const fpsPercent = Math.min((avgFps / 120) * 100, 100);
+  const fpsBar = document.getElementById('fpsBar');
+  fpsBar.style.width = '0%';
+
+  let barClass = 'fps-bar-low';
+  if (avgFps >= 30) barClass = 'fps-bar-medium';
+  if (avgFps >= 45) barClass = 'fps-bar-good';
+  if (avgFps >= 60) barClass = 'fps-bar-excellent';
+
+  fpsBar.className = 'fps-bar ' + barClass;
+
+  const fpsRangeEl = document.getElementById('fpsRange');
+  fpsRangeEl.textContent = build.fps[0] + ' - ' + build.fps[1] + ' FPS';
+
+  let perfLabel = 'Playable';
+  let perfClass = 'perf-low';
+  if (avgFps >= 30) { perfLabel = 'Smooth'; perfClass = 'perf-medium'; }
+  if (avgFps >= 45) { perfLabel = 'Great'; perfClass = 'perf-good'; }
+  if (avgFps >= 60) { perfLabel = 'Excellent'; perfClass = 'perf-excellent'; }
+
+  fpsRangeEl.innerHTML = build.fps[0] + ' - ' + build.fps[1] + ' FPS <span class="perf-rating ' + perfClass + '">' + perfLabel + '</span>';
+
+  // Animate the bar
+  setTimeout(() => {
+    fpsBar.style.width = fpsPercent + '%';
+  }, 100);
+
+  // Alternative builds
+  generateAltBuilds(sim, quality, res, build);
+
+  // Tips
+  generateTips(sim);
+
+  // Scroll to results
+  setTimeout(() => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 200);
+}
+
+// ==========================================
+// Generate Alternative Builds
+// ==========================================
+function generateAltBuilds(sim, quality, res, currentBuild) {
+  const altContainer = document.getElementById('altBuilds');
+  altContainer.innerHTML = '';
+
+  // Generate a budget alternative (one quality step down, or same with lower res)
+  // and a high-end alternative (one quality step up, or same with higher res)
+  const qualityLevels = ['low', 'medium', 'high', 'ultra'];
+  const resLevels = ['1080p', '1440p', '4k', 'vr'];
+
+  const currentQIdx = qualityLevels.indexOf(quality);
+  const currentRIdx = resLevels.indexOf(res);
+
+  const alternatives = [];
+
+  // Budget option: lower quality or lower resolution
+  if (currentQIdx > 0) {
+    const budgetQ = qualityLevels[currentQIdx - 1];
+    const budgetBuild = builds[sim][budgetQ][res];
+    if (budgetBuild && budgetBuild.price !== currentBuild.price) {
+      alternatives.push({
+        label: 'Budget Alternative',
+        labelClass: 'alt-label-budget',
+        desc: qualityNames[budgetQ] + ' quality at ' + resNames[res],
+        build: budgetBuild
+      });
+    }
+  }
+  if (alternatives.length === 0 && currentRIdx > 0) {
+    const budgetR = resLevels[currentRIdx - 1];
+    const budgetBuild = builds[sim][quality][budgetR];
+    if (budgetBuild && budgetBuild.price !== currentBuild.price) {
+      alternatives.push({
+        label: 'Budget Alternative',
+        labelClass: 'alt-label-budget',
+        desc: qualityNames[quality] + ' quality at ' + resNames[budgetR],
+        build: budgetBuild
+      });
+    }
+  }
+
+  // Mid-range: if current is budget, show medium; if current is high-end, show the step below
+  if (currentQIdx < qualityLevels.length - 1 && currentQIdx > 0) {
+    // Show same quality, different resolution
+    if (currentRIdx < resLevels.length - 1) {
+      const midR = resLevels[currentRIdx + 1];
+      const midBuild = builds[sim][quality][midR];
+      if (midBuild && midBuild.price !== currentBuild.price) {
+        alternatives.push({
+          label: 'Upgrade Resolution',
+          labelClass: 'alt-label-midrange',
+          desc: qualityNames[quality] + ' quality at ' + resNames[midR],
+          build: midBuild
+        });
+      }
+    }
+  }
+
+  // High-end option: higher quality
+  if (currentQIdx < qualityLevels.length - 1) {
+    const highQ = qualityLevels[currentQIdx + 1];
+    const highBuild = builds[sim][highQ][res];
+    if (highBuild && highBuild.price !== currentBuild.price) {
+      alternatives.push({
+        label: 'High-End Upgrade',
+        labelClass: 'alt-label-highend',
+        desc: qualityNames[highQ] + ' quality at ' + resNames[res],
+        build: highBuild
+      });
+    }
+  }
+  if (alternatives.length < 3 && currentRIdx < resLevels.length - 1) {
+    const highR = resLevels[currentRIdx + 1];
+    const highBuild = builds[sim][quality][highR];
+    if (highBuild && highBuild.price !== currentBuild.price) {
+      const exists = alternatives.some(a => a.build.price === highBuild.price && a.build.cpu === highBuild.cpu);
+      if (!exists) {
+        alternatives.push({
+          label: 'Resolution Upgrade',
+          labelClass: 'alt-label-highend',
+          desc: qualityNames[quality] + ' quality at ' + resNames[highR],
+          build: highBuild
+        });
+      }
+    }
+  }
+
+  alternatives.forEach(alt => {
+    const card = document.createElement('div');
+    card.className = 'alt-build-card';
+    card.innerHTML =
+      '<span class="alt-build-label ' + alt.labelClass + '">' + alt.label + '</span>' +
+      '<h4>' + alt.desc + '</h4>' +
+      '<div class="alt-price">~$' + alt.build.price.toLocaleString() + '</div>' +
+      '<ul class="alt-specs">' +
+        '<li>' + alt.build.cpu + '</li>' +
+        '<li>' + alt.build.gpu + '</li>' +
+        '<li>' + alt.build.ram + '</li>' +
+        '<li>' + alt.build.storage + '</li>' +
+        '<li>' + alt.build.fps[0] + '-' + alt.build.fps[1] + ' FPS expected</li>' +
+      '</ul>';
+    altContainer.appendChild(card);
+  });
+}
+
+// ==========================================
+// Generate Sim-Specific Tips
+// ==========================================
+function generateTips(sim) {
+  const tipData = simTips[sim];
+  if (!tipData) return;
+
+  document.getElementById('tipsTitle').innerHTML = 'Tips for ' + tipData.name;
+
+  const tipsList = document.getElementById('tipsList');
+  tipsList.innerHTML = '';
+
+  tipData.tips.forEach(tip => {
+    const div = document.createElement('div');
+    div.className = 'tip-item';
+    div.innerHTML =
+      '<span class="tip-icon">&#9679;</span>' +
+      '<span class="tip-text">' + tip.text + '</span>';
+    tipsList.appendChild(div);
+  });
+}
+
+// ==========================================
+// Reset
+// ==========================================
+function resetAll() {
+  selections = { sim: null, quality: null, res: null };
+
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('step2').classList.add('disabled');
+  document.getElementById('step3').classList.add('disabled');
+  document.getElementById('resultsPanel').classList.remove('visible');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

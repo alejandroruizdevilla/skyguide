@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - Community Screenshots</title>
+  <meta name="description" content="Community screenshot wall for flight simulator enthusiasts. Share and upvote the best screenshots from MSFS, X-Plane, DCS World, and more.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Nav */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover { color: var(--accent-alt); transform: translateY(-1px); }
+    .logo svg { width: 28px; height: 28px; }
+
+    .nav-right {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--accent); }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover { background: var(--accent); color: #fff; }
+
+    /* Main content */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      font-size: 36px;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Toolbar: filters, sort, submit button */
+    .toolbar {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .toolbar-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .toolbar-right {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.9rem;
+      border: 2px solid var(--border-light);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .filter-btn.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .sort-select {
+      padding: 0.4rem 0.9rem;
+      border: 2px solid var(--border-light);
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sort-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .submit-btn {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent-alt);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .stats-bar span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Masonry Grid */
+    .masonry {
+      columns: 3;
+      column-gap: 1.25rem;
+    }
+
+    .card {
+      break-inside: avoid;
+      margin-bottom: 1.25rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+      cursor: default;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: auto;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-image .plane-icon {
+      opacity: 0.25;
+      font-size: 48px;
+      color: #fff;
+      position: absolute;
+      user-select: none;
+    }
+
+    .card-body {
+      padding: 1rem 1.25rem 1.25rem;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .sim-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sim-tag.msfs { background: #e3f0ff; color: #2570c0; }
+    .sim-tag.xplane { background: #e8f5e9; color: #2e7d32; }
+    .sim-tag.dcs { background: #fce4ec; color: #c62828; }
+    .sim-tag.other { background: #f3e5f5; color: #7b1fa2; }
+
+    [data-theme="dark"] .sim-tag.msfs { background: #1e3a5f; color: #7cb8f0; }
+    [data-theme="dark"] .sim-tag.xplane { background: #1b3d1e; color: #81c784; }
+    [data-theme="dark"] .sim-tag.dcs { background: #4a1a1a; color: #ef9a9a; }
+    [data-theme="dark"] .sim-tag.other { background: #3a1f4a; color: #ce93d8; }
+
+    .card-author {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .upvote-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border: 2px solid var(--border-light);
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .upvote-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .upvote-btn.upvoted {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .upvote-btn svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+    }
+
+    .upvote-btn:hover svg {
+      transform: translateY(-1px);
+    }
+
+    .upvote-btn.upvoted svg {
+      transform: translateY(-1px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalIn 0.25s ease;
+      transition: background-color 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal h2 {
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      border: 2px solid var(--border-light);
+      background: var(--bg);
+      color: var(--text-main);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .btn-cancel {
+      padding: 0.5rem 1.2rem;
+      border: 2px solid var(--border-light);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover {
+      border-color: var(--text-muted);
+      color: var(--text-main);
+    }
+
+    .btn-submit {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-alt);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    .empty-state h3 {
+      font-size: 20px;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .masonry { columns: 2; }
+    }
+
+    @media (max-width: 640px) {
+      .masonry { columns: 1; }
+      .nav { padding: 1rem; }
+      .page-header h1 { font-size: 28px; }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .toolbar-left, .toolbar-right {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+      </svg>
+      SkyGuide
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="compare.html" class="nav-link">Compare</a>
+      <a href="hardware-guide.html" class="nav-link">Hardware</a>
+      <button class="dark-mode-toggle" id="darkToggle" aria-label="Toggle dark mode">Dark Mode</button>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Community Screenshots</h1>
+      <p>The best shots from flight simmers around the world. Share yours and upvote your favorites.</p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <span class="toolbar-label">Filter:</span>
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="msfs">MSFS</button>
+        <button class="filter-btn" data-filter="xplane">X-Plane</button>
+        <button class="filter-btn" data-filter="dcs">DCS</button>
+        <button class="filter-btn" data-filter="other">Other</button>
+      </div>
+      <div class="toolbar-right">
+        <span class="toolbar-label">Sort:</span>
+        <select class="sort-select" id="sortSelect">
+          <option value="newest">Newest</option>
+          <option value="most-upvoted">Most Upvoted</option>
+        </select>
+        <button class="submit-btn" id="openModal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Submit Screenshot
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+      <span id="totalCount">12 screenshots</span>
+      <span id="totalUpvotes">0 total upvotes</span>
+    </div>
+
+    <!-- Masonry Grid -->
+    <div class="masonry" id="grid"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <h3>No screenshots found</h3>
+      <p>Try changing the filter or be the first to submit one!</p>
+    </div>
+  </div>
+
+  <!-- Submit Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>Submit a Screenshot</h2>
+      <p>Share your best flight sim moments with the community.</p>
+      <form id="submitForm">
+        <div class="form-group">
+          <label for="ssTitle">Screenshot Title</label>
+          <input type="text" id="ssTitle" placeholder="e.g. Sunset over the Alps" required maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label for="ssSim">Simulator</label>
+          <select id="ssSim" required>
+            <option value="">Select a simulator...</option>
+            <option value="msfs">MSFS 2024</option>
+            <option value="msfs">MSFS 2020</option>
+            <option value="xplane">X-Plane 12</option>
+            <option value="xplane">X-Plane 11</option>
+            <option value="dcs">DCS World</option>
+            <option value="other">Prepar3D</option>
+            <option value="other">FlightGear</option>
+            <option value="other">Aerofly FS</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="ssAuthor">Your Name</label>
+          <input type="text" id="ssAuthor" placeholder="e.g. SkyPilot42" required maxlength="30" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="closeModal">Cancel</button>
+          <button type="submit" class="btn-submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ===== Dark Mode =====
+    const darkToggle = document.getElementById('darkToggle');
+    function applyTheme(dark) {
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      darkToggle.textContent = dark ? 'Light Mode' : 'Dark Mode';
+      localStorage.setItem('skyguide-dark', dark ? '1' : '0');
+    }
+    const savedTheme = localStorage.getItem('skyguide-dark');
+    if (savedTheme === '1') applyTheme(true);
+    else if (savedTheme === null && window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme(true);
+    darkToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      applyTheme(!isDark);
+    });
+
+    // ===== Gradient Generator =====
+    const gradients = [
+      { colors: ['#ff7e5f', '#feb47b'], angle: 135 },  // sunset warm
+      { colors: ['#2193b0', '#6dd5ed'], angle: 160 },  // clear sky
+      { colors: ['#e96443', '#904e95'], angle: 110 },  // dusk purple
+      { colors: ['#f2994a', '#f2c94c'], angle: 145 },  // golden hour
+      { colors: ['#0f2027', '#203a43', '#2c5364'], angle: 180 },  // night sky
+      { colors: ['#654ea3', '#eaafc8'], angle: 120 },  // twilight
+      { colors: ['#373b44', '#4286f4'], angle: 155 },  // stormy
+      { colors: ['#ff9966', '#ff5e62'], angle: 130 },  // red sunset
+      { colors: ['#56ab2f', '#a8e063'], angle: 140 },  // lush terrain
+      { colors: ['#3a1c71', '#d76d77', '#ffaf7b'], angle: 125 }, // dawn
+      { colors: ['#0052D4', '#65C7F7', '#9CECFB'], angle: 170 }, // high altitude
+      { colors: ['#c33764', '#1d2671'], angle: 115 },  // deep dusk
+      { colors: ['#FDBB2D', '#22C1C3'], angle: 150 },  // tropical
+      { colors: ['#4e54c8', '#8f94fb'], angle: 135 },  // overcast
+      { colors: ['#d66d75', '#e29587'], angle: 160 },  // rose clouds
+      { colors: ['#1a2a6c', '#b21f1f', '#fdbb2d'], angle: 140 }, // dramatic
+    ];
+
+    // Varying card aspect heights for masonry interest
+    const heights = [200, 240, 280, 220, 260, 300, 210, 250, 230, 270, 290, 220];
+
+    function getGradientCSS(idx) {
+      const g = gradients[idx % gradients.length];
+      return `linear-gradient(${g.angle}deg, ${g.colors.join(', ')})`;
+    }
+
+    // ===== Sim label maps =====
+    const simLabels = {
+      msfs: 'MSFS',
+      xplane: 'X-Plane',
+      dcs: 'DCS',
+      other: 'Other'
+    };
+
+    // ===== Default Screenshots =====
+    const defaultScreenshots = [
+      { id: 'd1',  title: 'Sunset over the Alps',            sim: 'msfs',   simLabel: 'MSFS 2024',       author: 'AlpineAce',       upvotes: 47, date: '2025-12-14', gradientIdx: 0,  height: 260 },
+      { id: 'd2',  title: 'Carrier Landing at Dusk',         sim: 'dcs',    simLabel: 'DCS World',        author: 'NavyPilot',       upvotes: 38, date: '2025-12-12', gradientIdx: 2,  height: 220 },
+      { id: 'd3',  title: 'Night Approach into KJFK',        sim: 'xplane', simLabel: 'X-Plane 12',       author: 'RunwayRanger',    upvotes: 31, date: '2025-12-10', gradientIdx: 4,  height: 240 },
+      { id: 'd4',  title: 'Low Pass over the Grand Canyon',  sim: 'msfs',   simLabel: 'MSFS 2024',        author: 'CanyonFlyer',     upvotes: 52, date: '2025-12-09', gradientIdx: 3,  height: 280 },
+      { id: 'd5',  title: 'Thunderstorm over the Atlantic',  sim: 'xplane', simLabel: 'X-Plane 12',       author: 'StormChaser',     upvotes: 29, date: '2025-12-07', gradientIdx: 6,  height: 230 },
+      { id: 'd6',  title: 'A-10 Warthog Ground Attack',      sim: 'dcs',    simLabel: 'DCS World',        author: 'HogDriver',       upvotes: 44, date: '2025-12-05', gradientIdx: 11, height: 250 },
+      { id: 'd7',  title: 'Golden Hour over Patagonia',      sim: 'msfs',   simLabel: 'MSFS 2020',        author: 'SouthernWind',    upvotes: 36, date: '2025-12-03', gradientIdx: 9,  height: 290 },
+      { id: 'd8',  title: 'ILS Approach into Kai Tak',       sim: 'xplane', simLabel: 'X-Plane 12',       author: 'RetroAviation',   upvotes: 41, date: '2025-12-01', gradientIdx: 10, height: 210 },
+      { id: 'd9',  title: 'Formation Flight at Dawn',        sim: 'dcs',    simLabel: 'DCS World',        author: 'WingmanTactical', upvotes: 33, date: '2025-11-28', gradientIdx: 5,  height: 270 },
+      { id: 'd10', title: 'Foggy Morning at EGLL Heathrow',  sim: 'msfs',   simLabel: 'MSFS 2024',        author: 'LondonFlyer',     upvotes: 27, date: '2025-11-25', gradientIdx: 13, height: 240 },
+      { id: 'd11', title: 'Bush Flying in Papua New Guinea',  sim: 'other',  simLabel: 'Aerofly FS',       author: 'BushPilotPNG',    upvotes: 22, date: '2025-11-22', gradientIdx: 8,  height: 300 },
+      { id: 'd12', title: 'Northern Lights from FL380',       sim: 'msfs',   simLabel: 'MSFS 2024',        author: 'AuroraCaptain',   upvotes: 58, date: '2025-11-20', gradientIdx: 15, height: 250 },
+    ];
+
+    // ===== State =====
+    let userScreenshots = JSON.parse(localStorage.getItem('skyguide-user-screenshots') || '[]');
+    let upvotedSet = new Set(JSON.parse(localStorage.getItem('skyguide-upvoted') || '[]'));
+    let currentFilter = 'all';
+    let currentSort = 'newest';
+
+    function getAllScreenshots() {
+      return [...defaultScreenshots, ...userScreenshots];
+    }
+
+    function saveUpvotes() {
+      localStorage.setItem('skyguide-upvoted', JSON.stringify([...upvotedSet]));
+    }
+
+    function saveUserScreenshots() {
+      localStorage.setItem('skyguide-user-screenshots', JSON.stringify(userScreenshots));
+    }
+
+    // ===== Render =====
+    const grid = document.getElementById('grid');
+    const emptyState = document.getElementById('emptyState');
+
+    function createCard(shot) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.sim = shot.sim;
+      card.dataset.id = shot.id;
+
+      const isUpvoted = upvotedSet.has(shot.id);
+      const displayUpvotes = shot.upvotes + (isUpvoted ? 1 : 0);
+
+      card.innerHTML = `
+        <div class="card-image" style="background: ${getGradientCSS(shot.gradientIdx)}; height: ${shot.height}px;">
+          <span class="plane-icon">&#9992;</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${escapeHTML(shot.title)}</div>
+          <div class="card-meta">
+            <span class="sim-tag ${shot.sim}">${escapeHTML(shot.simLabel)}</span>
+            <span class="card-author">by ${escapeHTML(shot.author)}</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-date">${formatDate(shot.date)}</span>
+            <button class="upvote-btn ${isUpvoted ? 'upvoted' : ''}" data-id="${shot.id}" aria-label="Upvote">
+              <svg viewBox="0 0 24 24" fill="${isUpvoted ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+              </svg>
+              <span class="upvote-count">${displayUpvotes}</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function render() {
+      const all = getAllScreenshots();
+
+      // Filter
+      let filtered = currentFilter === 'all' ? all : all.filter(s => s.sim === currentFilter);
+
+      // Sort
+      if (currentSort === 'newest') {
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else {
+        filtered.sort((a, b) => {
+          const aVotes = a.upvotes + (upvotedSet.has(a.id) ? 1 : 0);
+          const bVotes = b.upvotes + (upvotedSet.has(b.id) ? 1 : 0);
+          return bVotes - aVotes;
+        });
+      }
+
+      // Clear & rebuild
+      grid.innerHTML = '';
+      filtered.forEach(shot => {
+        grid.appendChild(createCard(shot));
+      });
+
+      // Empty state
+      emptyState.classList.toggle('visible', filtered.length === 0);
+
+      // Stats
+      updateStats(all);
+    }
+
+    function updateStats(all) {
+      const total = all.length;
+      const totalVotes = all.reduce((sum, s) => sum + s.upvotes + (upvotedSet.has(s.id) ? 1 : 0), 0);
+      document.getElementById('totalCount').textContent = `${total} screenshot${total !== 1 ? 's' : ''}`;
+      document.getElementById('totalUpvotes').textContent = `${totalVotes} total upvotes`;
+    }
+
+    // ===== Upvote Handler (delegated) =====
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.upvote-btn');
+      if (!btn) return;
+
+      const id = btn.dataset.id;
+      if (upvotedSet.has(id)) {
+        upvotedSet.delete(id);
+      } else {
+        upvotedSet.add(id);
+      }
+      saveUpvotes();
+      render();
+    });
+
+    // ===== Filter Buttons =====
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    // ===== Sort =====
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+      currentSort = e.target.value;
+      render();
+    });
+
+    // ===== Modal =====
+    const modalOverlay = document.getElementById('modalOverlay');
+    document.getElementById('openModal').addEventListener('click', () => {
+      modalOverlay.classList.add('active');
+      document.getElementById('ssTitle').focus();
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+      document.getElementById('submitForm').reset();
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+        document.getElementById('submitForm').reset();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        modalOverlay.classList.remove('active');
+        document.getElementById('submitForm').reset();
+      }
+    });
+
+    // ===== Submit Form =====
+    document.getElementById('submitForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('ssTitle').value.trim();
+      const simSelect = document.getElementById('ssSim');
+      const sim = simSelect.value;
+      const simLabel = simSelect.options[simSelect.selectedIndex].text;
+      const author = document.getElementById('ssAuthor').value.trim();
+
+      if (!title || !sim || !author) return;
+
+      const newShot = {
+        id: 'u' + Date.now(),
+        title,
+        sim,
+        simLabel,
+        author,
+        upvotes: 0,
+        date: new Date().toISOString().split('T')[0],
+        gradientIdx: Math.floor(Math.random() * gradients.length),
+        height: heights[Math.floor(Math.random() * heights.length)],
+      };
+
+      userScreenshots.unshift(newShot);
+      saveUserScreenshots();
+
+      modalOverlay.classList.remove('active');
+      document.getElementById('submitForm').reset();
+
+      render();
+    });
+
+    // ===== Initial Render =====
+    render();
+  </script>
+</body>
+</html>

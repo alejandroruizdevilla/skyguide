@@ -769,6 +769,252 @@
     [data-theme="dark"] .news-tag.dlc { background: #14532d; color: #86efac; }
     [data-theme="dark"] .news-tag.release { background: #78350f; color: #fde68a; }
     [data-theme="dark"] .news-tag.patch { background: #4a1d7a; color: #d8b4fe; }
+
+    /* Deals Tracker */
+    .deals-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+    }
+
+    .deals-section h2 {
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .deal-card {
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.25rem;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .deal-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .deal-badge {
+      position: absolute;
+      top: -8px;
+      right: 12px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .deal-card h4 {
+      font-size: 15px;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .deal-store {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .deal-prices {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .deal-original {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .deal-sale {
+      font-size: 18px;
+      font-weight: 700;
+      color: #22c55e;
+    }
+
+    .deal-free { color: #22c55e; font-weight: 700; font-size: 18px; }
+
+    /* Weekly Challenge */
+    .weekly-challenge {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weekly-challenge::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    }
+
+    .weekly-challenge h2 {
+      font-size: 22px;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .challenge-week {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .challenge-content {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .challenge-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .challenge-desc {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .challenge-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .challenge-detail {
+      background: rgba(255,255,255,0.1);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .challenge-complete-btn {
+      background: #fff;
+      color: #0f3460;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .challenge-complete-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .challenge-complete-btn.done { background: #22c55e; color: #fff; }
+
+    @media (max-width: 768px) {
+      .challenge-content { grid-template-columns: 1fr; }
+      .deals-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Achievement Badges */
+    .achievements-bar {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.25rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      overflow-x: auto;
+    }
+
+    .achievements-bar h3 {
+      font-size: 14px;
+      color: var(--accent);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .badge-list {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+    }
+
+    .badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border: 2px solid var(--border-light);
+      background: var(--bg);
+      opacity: 0.4;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .badge.earned {
+      opacity: 1;
+      border-color: var(--accent);
+      background: var(--accent-light);
+      animation: badgePop 0.3s ease;
+    }
+
+    @keyframes badgePop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .badge:hover::after {
+      content: attr(title);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text-main);
+      color: var(--bg);
+      font-size: 11px;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 10;
+    }
   </style>
 </head>
 
@@ -796,6 +1042,12 @@
         <a href="sys-req-calc.html" class="nav-link">System Check</a>
         <a href="minigames.html" class="nav-link">Mini Games</a>
         <a href="sim-advisor.html" class="nav-link">AI Advisor</a>
+        <a href="route-planner.html" class="nav-link">Route Planner</a>
+        <a href="timeline.html" class="nav-link">Timeline</a>
+        <a href="screenshots.html" class="nav-link">Screenshots</a>
+        <a href="shortcuts.html" class="nav-link">Shortcuts</a>
+        <a href="pc-build.html" class="nav-link">PC Build</a>
+        <a href="addon-showcase.html" class="nav-link">Addon Showcase</a>
         <a href="settings.html" class="nav-link">Settings</a>
       </div>
       <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
@@ -1529,6 +1781,32 @@
       </div>
     </section>
 
+    <!-- Weekly Challenge -->
+    <div class="weekly-challenge" id="weeklyChallenge">
+      <h2>Weekly Challenge</h2>
+      <div class="challenge-week" id="challengeWeek"></div>
+      <div class="challenge-content">
+        <div>
+          <div class="challenge-title" id="challengeTitle"></div>
+          <div class="challenge-desc" id="challengeDesc"></div>
+          <div class="challenge-details" id="challengeDetails"></div>
+        </div>
+        <button class="challenge-complete-btn" id="challengeBtn">Mark Complete</button>
+      </div>
+    </div>
+
+    <!-- Deals Tracker -->
+    <div class="deals-section">
+      <h2>Current Sim Deals</h2>
+      <div class="deals-grid" id="dealsGrid"></div>
+    </div>
+
+    <!-- Achievement Badges -->
+    <div class="achievements-bar" id="achievementsBar">
+      <h3>Your Badges</h3>
+      <div class="badge-list" id="badgeList"></div>
+    </div>
+
     <footer class="footer">
       <p>Flight Simulator Guide 2025</p>
       <p>Updated December 2025</p>
@@ -1842,6 +2120,150 @@ function initReviews() {
 }
 
 initReviews();
+
+// Weekly Challenge System
+const challenges = [
+  { title: "Cross-Country VFR", desc: "Complete a VFR cross-country flight of at least 150 nautical miles in any GA aircraft. Use visual landmarks for navigation - no GPS allowed!", sim: "Any Civilian Sim", difficulty: "Intermediate", aircraft: "GA Single Engine" },
+  { title: "Carrier Landing Challenge", desc: "Successfully land on an aircraft carrier in any combat flight sim. Bonus points for a perfect 3-wire trap!", sim: "DCS World", difficulty: "Advanced", aircraft: "Any Carrier Aircraft" },
+  { title: "Sunrise Departure", desc: "Take off from any airport during real-time sunrise conditions. Capture the moment and enjoy the view!", sim: "MSFS 2024", difficulty: "Beginner", aircraft: "Any Aircraft" },
+  { title: "Mountain IFR Approach", desc: "Complete an IFR approach into a mountain airport (elevation 5000ft+). Innsbruck, Lukla, or Telluride recommended.", sim: "Any Civilian Sim", difficulty: "Advanced", aircraft: "Any IFR-capable" },
+  { title: "Formation Flying", desc: "Fly in close formation with AI or multiplayer aircraft for at least 10 minutes without breaking formation.", sim: "Any Sim", difficulty: "Intermediate", aircraft: "Any Aircraft" },
+  { title: "Autorotation Landing", desc: "Practice an engine-off autorotation landing in any helicopter. Touch down safely within 50 meters of your target.", sim: "DCS / MSFS / X-Plane", difficulty: "Advanced", aircraft: "Any Helicopter" },
+  { title: "Round the World - Leg 1", desc: "Begin a round-the-world journey! Fly the first leg of at least 500 NM heading eastward from your home airport.", sim: "Any Civilian Sim", difficulty: "Intermediate", aircraft: "Any Aircraft" },
+  { title: "Night Circuit Training", desc: "Complete 5 touch-and-go landings at night. Focus on maintaining proper pattern altitude and centerline.", sim: "Any Civilian Sim", difficulty: "Intermediate", aircraft: "GA Aircraft" },
+  { title: "Bush Flying Adventure", desc: "Land at 3 different unpaved/bush strips in a single flight. Stay below 1000 AGL between strips.", sim: "MSFS / X-Plane", difficulty: "Intermediate", aircraft: "Bush Plane" },
+  { title: "The Speed Run", desc: "Fly from KJFK to KLAX as fast as possible in any aircraft. Post your time!", sim: "Any Sim", difficulty: "Beginner", aircraft: "Any Jet" }
+];
+
+function getWeekNumber() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  return Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
+}
+
+function initWeeklyChallenge() {
+  const weekNum = getWeekNumber();
+  const year = new Date().getFullYear();
+  const seed = year * 52 + weekNum;
+  const challenge = challenges[seed % challenges.length];
+  const completedKey = 'challenge_' + year + '_w' + weekNum;
+
+  document.getElementById('challengeWeek').textContent = 'Week ' + weekNum + ' of ' + year;
+  document.getElementById('challengeTitle').textContent = challenge.title;
+  document.getElementById('challengeDesc').textContent = challenge.desc;
+  document.getElementById('challengeDetails').innerHTML =
+    '<span class="challenge-detail">Sim: ' + challenge.sim + '</span>' +
+    '<span class="challenge-detail">Difficulty: ' + challenge.difficulty + '</span>' +
+    '<span class="challenge-detail">Aircraft: ' + challenge.aircraft + '</span>';
+
+  const btn = document.getElementById('challengeBtn');
+  const isComplete = localStorage.getItem(completedKey) === '1';
+  if (isComplete) {
+    btn.textContent = 'Completed!';
+    btn.classList.add('done');
+  }
+  btn.addEventListener('click', () => {
+    if (localStorage.getItem(completedKey) === '1') {
+      localStorage.removeItem(completedKey);
+      btn.textContent = 'Mark Complete';
+      btn.classList.remove('done');
+    } else {
+      localStorage.setItem(completedKey, '1');
+      btn.textContent = 'Completed!';
+      btn.classList.add('done');
+    }
+    updateBadges();
+  });
+}
+initWeeklyChallenge();
+
+// Deals Tracker
+const deals = [
+  { name: "MSFS 2024 Standard", store: "Steam", original: "$69.99", sale: "$49.99", discount: "-29%", link: "#" },
+  { name: "X-Plane 12", store: "Steam", original: "$59.99", sale: "$47.99", discount: "-20%", link: "#" },
+  { name: "DCS: F/A-18C Hornet", store: "DCS Store", original: "$79.99", sale: "$39.99", discount: "-50%", link: "#" },
+  { name: "IL-2 Battle of Stalingrad", store: "Steam", original: "$49.99", sale: "$14.99", discount: "-70%", link: "#" },
+  { name: "FlightGear", store: "flightgear.org", original: "", sale: "Free", discount: "Free", link: "#" },
+  { name: "Project Wingman", store: "Steam", original: "$24.99", sale: "$12.49", discount: "-50%", link: "#" }
+];
+
+function initDeals() {
+  const grid = document.getElementById('dealsGrid');
+  deals.forEach(deal => {
+    const card = document.createElement('div');
+    card.className = 'deal-card';
+    card.innerHTML =
+      '<span class="deal-badge">' + deal.discount + '</span>' +
+      '<h4>' + deal.name + '</h4>' +
+      '<div class="deal-store">' + deal.store + '</div>' +
+      '<div class="deal-prices">' +
+        (deal.original ? '<span class="deal-original">' + deal.original + '</span>' : '') +
+        '<span class="' + (deal.sale === 'Free' ? 'deal-free' : 'deal-sale') + '">' + deal.sale + '</span>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+}
+initDeals();
+
+// Achievement Badges System
+const badgeDefs = [
+  { id: 'explorer', icon: '\uD83C\uDF0D', name: 'Explorer', desc: 'Visit the site 5 times' },
+  { id: 'reviewer', icon: '\u2B50', name: 'Reviewer', desc: 'Rate a simulator' },
+  { id: 'challenger', icon: '\uD83C\uDFC6', name: 'Challenger', desc: 'Complete a weekly challenge' },
+  { id: 'night_owl', icon: '\uD83C\uDF19', name: 'Night Owl', desc: 'Use dark mode' },
+  { id: 'searcher', icon: '\uD83D\uDD0D', name: 'Searcher', desc: 'Use the search filter' },
+  { id: 'advisor', icon: '\uD83E\uDD16', name: 'AI Fan', desc: 'Visit the AI Advisor' },
+  { id: 'comparer', icon: '\u2696\uFE0F', name: 'Comparer', desc: 'Visit the Compare page' },
+  { id: 'gamer', icon: '\uD83C\uDFAE', name: 'Gamer', desc: 'Play a mini game' }
+];
+
+function getBadges() {
+  return JSON.parse(localStorage.getItem('skyguide_badges') || '[]');
+}
+
+function earnBadge(badgeId) {
+  const earned = getBadges();
+  if (!earned.includes(badgeId)) {
+    earned.push(badgeId);
+    localStorage.setItem('skyguide_badges', JSON.stringify(earned));
+    updateBadges();
+  }
+}
+
+function updateBadges() {
+  const earned = getBadges();
+  const list = document.getElementById('badgeList');
+  list.innerHTML = '';
+  badgeDefs.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'badge' + (earned.includes(b.id) ? ' earned' : '');
+    el.textContent = b.icon;
+    el.title = b.name + ': ' + b.desc;
+    list.appendChild(el);
+  });
+}
+
+// Track visits for explorer badge
+const visits = parseInt(localStorage.getItem('skyguide_visits') || '0') + 1;
+localStorage.setItem('skyguide_visits', visits.toString());
+if (visits >= 5) earnBadge('explorer');
+
+// Dark mode badge
+if (localStorage.getItem('theme') === 'dark') earnBadge('night_owl');
+const origDarkClick = darkModeToggle.onclick;
+darkModeToggle.addEventListener('click', () => {
+  if (html.getAttribute('data-theme') === 'dark') earnBadge('night_owl');
+});
+
+// Search badge
+searchBox.addEventListener('input', () => { if (searchBox.value.length > 0) earnBadge('searcher'); });
+
+// Reviewer badge - hook into star clicks
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('star')) earnBadge('reviewer');
+});
+
+updateBadges();
 </script>
 </body>
 </html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyGuide - History of Flight Simulation Timeline</title>
+  <meta name="description" content="An interactive visual timeline of flight simulation history, from 1982 to 2024. Explore key milestones in the evolution of flight sims.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #faf8f6;
+      --bg-card: #ffffff;
+      --accent: #c17a4a;
+      --accent-alt: #a66843;
+      --accent-light: #f4e8df;
+      --text-main: #2d2520;
+      --text-secondary: #6b5d54;
+      --text-muted: #9b8a7f;
+      --border-light: #e8dfd6;
+      --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+      --shadow-hover: 0 8px 24px rgba(45, 37, 32, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1614;
+      --bg-card: #2d2520;
+      --accent: #e8b87e;
+      --accent-alt: #d4a574;
+      --accent-light: #3d3530;
+      --text-main: #f4e8df;
+      --text-secondary: #d4c5b8;
+      --text-muted: #9b8a7f;
+      --border-light: #4a403a;
+      --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-soft);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      color: var(--accent-alt);
+      transform: translateY(-1px);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dark-mode-toggle {
+      background: var(--accent-light);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .dark-mode-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--accent-alt);
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-description {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Era Filters */
+    .filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border-light);
+      border-radius: 24px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    /* Center vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent-alt), var(--accent));
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .timeline-entry {
+      position: relative;
+      width: 50%;
+      padding: 0 2.5rem 3rem;
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .timeline-entry.visible {
+      opacity: 1;
+      transform: translateY(0) translateX(0) !important;
+    }
+
+    .timeline-entry.hidden {
+      display: none;
+    }
+
+    /* Left entries */
+    .timeline-entry.left {
+      left: 0;
+      text-align: right;
+      padding-right: 3rem;
+      padding-left: 0;
+      transform: translateX(-30px);
+    }
+
+    .timeline-entry.left .card {
+      margin-left: auto;
+    }
+
+    /* Right entries */
+    .timeline-entry.right {
+      left: 50%;
+      text-align: left;
+      padding-left: 3rem;
+      padding-right: 0;
+      transform: translateX(30px);
+    }
+
+    /* Dot on the line */
+    .timeline-entry::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      width: 16px;
+      height: 16px;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+      border-radius: 50%;
+      z-index: 2;
+      box-shadow: 0 0 0 3px var(--accent);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .timeline-entry.left::after {
+      right: -8px;
+    }
+
+    .timeline-entry.right::after {
+      left: -8px;
+    }
+
+    .timeline-entry:hover::after {
+      transform: scale(1.3);
+      box-shadow: 0 0 0 4px var(--accent), 0 0 12px rgba(193, 122, 74, 0.3);
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.3s ease;
+      max-width: 420px;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-year {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      padding: 0.2rem 0.75rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      font-size: 16px;
+      display: none;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      display: block;
+      text-align: center;
+      margin: 2rem auto 0;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .back-to-top:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Responsive: single column */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-entry {
+        width: 100%;
+        padding-left: 3rem !important;
+        padding-right: 0 !important;
+        text-align: left !important;
+      }
+
+      .timeline-entry.left,
+      .timeline-entry.right {
+        left: 0;
+        transform: translateY(30px);
+      }
+
+      .timeline-entry.left.visible,
+      .timeline-entry.right.visible {
+        transform: translateY(0) translateX(0);
+      }
+
+      .timeline-entry::after {
+        left: 12px !important;
+        right: auto !important;
+      }
+
+      .timeline-entry.left .card {
+        margin-left: 0;
+      }
+
+      .card {
+        max-width: 100%;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .nav {
+        padding: 1rem;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      .filters {
+        gap: 0.35rem;
+      }
+
+      .filter-btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+          <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="20" r="2" fill="currentColor"/>
+        </svg>
+        <span>SkyGuide</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="compare.html" class="nav-link">Compare</a>
+        <a href="timeline.html" class="nav-link active">Timeline</a>
+        <a href="hardware-guide.html" class="nav-link">Hardware Guide</a>
+        <a href="minigames.html" class="nav-link">Mini Games</a>
+        <a href="sim-advisor.html" class="nav-link">AI Advisor</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">Dark Mode</button>
+    </nav>
+
+    <div class="header">
+      <h1 class="title">History of Flight Simulation</h1>
+      <p class="subtitle">An Interactive Timeline</p>
+      <p class="header-description">From the first pixels on an IBM PC to photorealistic worlds -- explore over four decades of flight simulation milestones.</p>
+    </div>
+
+    <!-- Era Filters -->
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-era="all">All</button>
+      <button class="filter-btn" data-era="1980">1980s</button>
+      <button class="filter-btn" data-era="1990">1990s</button>
+      <button class="filter-btn" data-era="2000">2000s</button>
+      <button class="filter-btn" data-era="2010">2010s</button>
+      <button class="filter-btn" data-era="2020">2020s</button>
+    </div>
+
+    <div class="empty-state" id="emptyState">No entries found for this era.</div>
+
+    <!-- Timeline -->
+    <div class="timeline" id="timeline"></div>
+
+    <button class="back-to-top" id="backToTop">Back to Top</button>
+  </div>
+
+<script>
+// ---- Dark Mode ----
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+darkModeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+});
+
+// ---- Timeline Data ----
+const timelineData = [
+  {
+    year: 1982,
+    title: "Microsoft Flight Simulator 1.0",
+    description: "The one that started it all. Originally developed by Bruce Artwick's subLOGIC, this first version for the IBM PC rendered wire-frame landscapes and laid the foundation for the most iconic franchise in simulation history.",
+    tag: "Civilian"
+  },
+  {
+    year: 1986,
+    title: "SubLogic Flight Simulator II",
+    description: "subLOGIC expanded the original concept with vastly larger scenery areas, smoother frame rates, and support for multiple aircraft. It proved that desktop PCs could deliver compelling flight experiences.",
+    tag: "Civilian"
+  },
+  {
+    year: 1988,
+    title: "F-19 Stealth Fighter",
+    description: "MicroProse's landmark combat flight sim introduced stealth mechanics and cold war tension to PC gaming. Designed by Sid Meier, it blended accessible gameplay with surprisingly deep systems.",
+    tag: "Combat"
+  },
+  {
+    year: 1993,
+    title: "Microsoft Flight Simulator 5.0",
+    description: "A visual leap forward -- the first version to feature texture-mapped terrain and photo-realistic scenery. It set a new standard for what civilian flight simulation could look like on a home PC.",
+    tag: "Civilian"
+  },
+  {
+    year: 1995,
+    title: "EF2000",
+    description: "Digital Image Design's Eurofighter Typhoon simulation pushed 3D graphics to their limits with fully dynamic campaigns and advanced avionics modeling, earning critical acclaim as one of the best combat sims of the decade.",
+    tag: "Combat"
+  },
+  {
+    year: 1998,
+    title: "Microsoft Flight Simulator 98",
+    description: "Introduced true 3D virtual cockpits for the first time, allowing pilots to look around the flight deck freely. The addition of multiplayer support and improved scenery detail attracted a massive community.",
+    tag: "Civilian"
+  },
+  {
+    year: 1998,
+    title: "Falcon 4.0",
+    description: "MicroProse's magnum opus featured a revolutionary dynamic campaign engine that simulated an entire Korean theater of war. Despite a buggy launch, the dedicated community has kept it alive and improved for over 25 years through Falcon BMS.",
+    tag: "Combat"
+  },
+  {
+    year: 2000,
+    title: "Microsoft Combat Flight Simulator 2",
+    description: "Set in the Pacific Theater of World War II, MCFS2 combined the Flight Simulator engine with combat mechanics, carrier operations, and a compelling single-player campaign over the Solomon Islands.",
+    tag: "Combat"
+  },
+  {
+    year: 2002,
+    title: "IL-2 Sturmovik",
+    description: "1C: Maddox Games delivered a groundbreaking WWII combat flight sim with unprecedented aircraft fidelity, a robust damage model, and massive multiplayer battles. It became the gold standard for prop-driven combat sims.",
+    tag: "Combat"
+  },
+  {
+    year: 2004,
+    title: "Microsoft Flight Simulator 2004: A Century of Flight",
+    description: "Celebrating 100 years of powered flight, FS2004 introduced real-world weather downloads, historic aircraft from the Wright Flyer onward, and an enhanced ATC system that made the virtual skies feel alive.",
+    tag: "Civilian"
+  },
+  {
+    year: 2006,
+    title: "Microsoft Flight Simulator X",
+    description: "The legendary FSX introduced missions, SDK support, and multiplayer infrastructure that spawned an enormous third-party ecosystem. Nearly two decades later, its community remains active and its add-ons number in the thousands.",
+    tag: "Civilian"
+  },
+  {
+    year: 2008,
+    title: "DCS: Black Shark",
+    description: "Eagle Dynamics launched what would become the DCS World platform with a painstakingly detailed Ka-50 helicopter module. It pioneered the concept of study-level fidelity in a modular combat simulator framework.",
+    tag: "Combat"
+  },
+  {
+    year: 2012,
+    title: "X-Plane 10",
+    description: "Laminar Research's blade-element theory flight model brought unmatched aerodynamic accuracy to the desktop. With global scenery, a powerful plugin architecture, and professional certification options, it became a serious rival to the Microsoft dynasty.",
+    tag: "Civilian"
+  },
+  {
+    year: 2017,
+    title: "X-Plane 11",
+    description: "A polished, modern interface and improved default aircraft brought X-Plane mainstream adoption. Widely embraced by both hobbyists and professional training organizations, it cemented Laminar Research as a major player in civilian simulation.",
+    tag: "Civilian"
+  },
+  {
+    year: 2020,
+    title: "Microsoft Flight Simulator 2020",
+    description: "A generational leap. Leveraging Bing Maps satellite imagery, Azure cloud computing, and real-time weather, Asobo Studio delivered a photorealistic rendition of the entire planet. It redefined what flight simulation -- and gaming -- could be.",
+    tag: "Civilian"
+  },
+  {
+    year: 2022,
+    title: "DCS World: F-16C Viper Module",
+    description: "Eagle Dynamics' study-level F-16C brought one of the most requested airframes to DCS with detailed avionics, weapons systems, and flight characteristics faithful to the real Fighting Falcon. A benchmark in modern combat simulation.",
+    tag: "Combat"
+  },
+  {
+    year: 2024,
+    title: "Microsoft Flight Simulator 2024",
+    description: "The latest entry introduced a career mode, world activities, and enhanced ground-level detail, transforming the sim from a pure flying experience into a living aviation world with missions, challenges, and community-driven content.",
+    tag: "Civilian"
+  }
+];
+
+// ---- Render Timeline ----
+const timeline = document.getElementById('timeline');
+const emptyState = document.getElementById('emptyState');
+
+function renderTimeline(entries) {
+  timeline.innerHTML = '';
+
+  if (entries.length === 0) {
+    emptyState.classList.add('show');
+    return;
+  }
+  emptyState.classList.remove('show');
+
+  entries.forEach((entry, index) => {
+    const side = index % 2 === 0 ? 'left' : 'right';
+    const el = document.createElement('div');
+    el.classList.add('timeline-entry', side);
+    el.setAttribute('data-year', entry.year);
+
+    el.innerHTML = `
+      <div class="card">
+        <span class="card-year">${entry.year}</span>
+        <h3 class="card-title">${entry.title}</h3>
+        <p class="card-description">${entry.description}</p>
+        ${entry.tag ? `<span class="card-tag">${entry.tag}</span>` : ''}
+      </div>
+    `;
+
+    timeline.appendChild(el);
+  });
+
+  observeEntries();
+}
+
+// ---- IntersectionObserver for scroll animations ----
+let observer;
+
+function observeEntries() {
+  if (observer) observer.disconnect();
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((ioEntry) => {
+      if (ioEntry.isIntersecting) {
+        ioEntry.target.classList.add('visible');
+        observer.unobserve(ioEntry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  document.querySelectorAll('.timeline-entry').forEach((el) => {
+    observer.observe(el);
+  });
+}
+
+// ---- Filters ----
+const filterButtons = document.querySelectorAll('.filter-btn');
+
+filterButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    filterButtons.forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const era = btn.getAttribute('data-era');
+
+    if (era === 'all') {
+      renderTimeline(timelineData);
+    } else {
+      const decade = parseInt(era, 10);
+      const filtered = timelineData.filter((e) => e.year >= decade && e.year < decade + 10);
+      renderTimeline(filtered);
+    }
+  });
+});
+
+// ---- Back to Top ----
+document.getElementById('backToTop').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ---- Initial render ----
+renderTimeline(timelineData);
+</script>
+
+</body>
+</html>

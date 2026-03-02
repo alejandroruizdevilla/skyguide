@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SkyGuide - Route Planner</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root {
+  --bg: #faf8f6; --bg-card: #ffffff; --accent: #c17a4a; --accent-alt: #a66843;
+  --accent-light: #f4e8df; --text-main: #2d2520; --text-secondary: #6b5d54;
+  --text-muted: #9b8a7f; --border-light: #e8dfd6;
+  --shadow-soft: 0 2px 12px rgba(45, 37, 32, 0.08);
+}
+[data-theme="dark"] {
+  --bg: #1a1614; --bg-card: #2d2520; --accent: #e8b87e; --accent-alt: #d4a574;
+  --accent-light: #3d3530; --text-main: #f4e8df; --text-secondary: #d4c5b8;
+  --text-muted: #9b8a7f; --border-light: #4a403a;
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  line-height: 1.7;
+  padding: 2rem 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.logo:hover {
+  color: var(--accent-alt);
+  transform: translateY(-1px);
+}
+
+.logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-alt);
+  transform: translateX(-4px);
+}
+
+.header {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--accent);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.planner-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2 {
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 15px;
+  background: var(--bg);
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.autocomplete-item {
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-main);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background: var(--accent-light);
+}
+
+.autocomplete-icao {
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: 0.75rem;
+  font-size: 13px;
+  min-width: 48px;
+}
+
+.autocomplete-name {
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.calculate-btn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+.calculate-btn:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+}
+
+.swap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: -0.5rem auto;
+  background: var(--accent-light);
+  border: 2px solid var(--border-light);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 18px;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.swap-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  transform: rotate(180deg);
+}
+
+.results-panel {
+  display: none;
+  margin-top: 1.5rem;
+}
+
+.results-panel.visible {
+  display: block;
+}
+
+.result-card {
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--accent);
+}
+
+.result-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.result-value {
+  font-size: 22px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.result-unit {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.flight-times {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.flight-time-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--accent-light);
+  border-radius: 6px;
+}
+
+.aircraft-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.aircraft-speed {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.flight-duration {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+#routeMap {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: block;
+}
+
+.map-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-line {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.bearing-display {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.bearing-card {
+  flex: 1;
+  background: var(--accent-light);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  border-left: 4px solid var(--accent);
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--accent-alt);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.no-route-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+  color: var(--text-muted);
+  text-align: center;
+  gap: 1rem;
+}
+
+.no-route-msg svg {
+  width: 64px;
+  height: 64px;
+  opacity: 0.4;
+}
+
+.no-route-msg p {
+  font-size: 15px;
+}
+
+@media (max-width: 900px) {
+  .planner-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #routeMap {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+  }
+
+  .bearing-display {
+    flex-direction: column;
+  }
+
+  .dark-mode-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4L28 12L16 8L4 12L16 4Z" fill="currentColor" opacity="0.8"/>
+      <path d="M16 8L28 12V20L16 28L4 20V12L16 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+      <path d="M8 14L16 18L24 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="20" r="2" fill="currentColor"/>
+    </svg>
+    <span>SkyGuide</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="back-link">&larr; Back to Guide</a>
+    <a href="flight-planner.html" class="back-link">Flight Planner</a>
+  </div>
+
+  <div class="header">
+    <h1>Route Planner</h1>
+    <p class="subtitle">Visualize flight routes between airports with distance, bearing, and estimated flight times</p>
+  </div>
+
+  <div class="planner-layout">
+    <!-- Left panel: inputs and results -->
+    <div>
+      <div class="section">
+        <h2>Route</h2>
+
+        <div class="form-group" id="depGroup">
+          <label for="depInput">Departure Airport</label>
+          <input type="text" id="depInput" placeholder="Type ICAO code or airport name..." autocomplete="off"/>
+          <div class="autocomplete-list" id="depDropdown"></div>
+        </div>
+
+        <button class="swap-btn" id="swapBtn" title="Swap airports">&#8645;</button>
+
+        <div class="form-group" id="arrGroup">
+          <label for="arrInput">Arrival Airport</label>
+          <input type="text" id="arrInput" placeholder="Type ICAO code or airport name..." autocomplete="off"/>
+          <div class="autocomplete-list" id="arrDropdown"></div>
+        </div>
+
+        <button class="calculate-btn" id="calcBtn">Calculate Route</button>
+      </div>
+
+      <!-- Results -->
+      <div class="results-panel" id="resultsPanel">
+        <div class="section">
+          <h2>Distance</h2>
+          <div class="result-card">
+            <div class="result-label">Nautical Miles</div>
+            <div class="result-value" id="distNm">--</div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">Kilometers</div>
+            <div class="result-value" id="distKm">--</div>
+          </div>
+        </div>
+
+        <div class="section" style="margin-top:1rem;">
+          <h2>Bearing</h2>
+          <div class="bearing-display">
+            <div class="bearing-card">
+              <div class="result-label">Initial Bearing</div>
+              <div class="result-value" id="bearingInit">--</div>
+            </div>
+            <div class="bearing-card">
+              <div class="result-label">Final Bearing</div>
+              <div class="result-value" id="bearingFinal">--</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" style="margin-top:1rem;">
+          <h2>Estimated Flight Time</h2>
+          <div class="flight-times">
+            <div class="flight-time-row">
+              <div>
+                <div class="aircraft-name">Cessna 172</div>
+                <div class="aircraft-speed">120 kt cruise</div>
+              </div>
+              <div class="flight-duration" id="timeCessna">--</div>
+            </div>
+            <div class="flight-time-row">
+              <div>
+                <div class="aircraft-name">Boeing 737</div>
+                <div class="aircraft-speed">450 kt cruise</div>
+              </div>
+              <div class="flight-duration" id="time737">--</div>
+            </div>
+            <div class="flight-time-row">
+              <div>
+                <div class="aircraft-name">Boeing 747</div>
+                <div class="aircraft-speed">490 kt cruise</div>
+              </div>
+              <div class="flight-duration" id="time747">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel: map -->
+    <div class="section map-container" id="mapSection">
+      <h2>Route Map</h2>
+      <canvas id="routeMap"></canvas>
+      <div class="map-legend" id="mapLegend" style="display:none;">
+        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div> Departure</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Arrival</div>
+        <div class="legend-item"><div class="legend-line" style="background:#c17a4a;"></div> Great Circle Route</div>
+      </div>
+      <div class="no-route-msg" id="noRouteMsg">
+        <svg viewBox="0 0 64 64" fill="none"><path d="M32 8L56 24V48L32 56L8 48V24L32 8Z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M20 32h24M32 20v24" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+        <p>Select departure and arrival airports<br>to see the route on the map</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="darkModeToggle" class="dark-mode-toggle">Dark Mode</button>
+
+<script>
+// ---- Airport Database ----
+const airports = [
+  { icao: "KJFK", name: "John F. Kennedy International", city: "New York", lat: 40.6413, lng: -73.7781 },
+  { icao: "EGLL", name: "London Heathrow", city: "London", lat: 51.4700, lng: -0.4543 },
+  { icao: "LFPG", name: "Charles de Gaulle", city: "Paris", lat: 49.0097, lng: 2.5479 },
+  { icao: "RJTT", name: "Tokyo Haneda", city: "Tokyo", lat: 35.5494, lng: 139.7798 },
+  { icao: "KLAX", name: "Los Angeles International", city: "Los Angeles", lat: 33.9425, lng: -118.4081 },
+  { icao: "OMDB", name: "Dubai International", city: "Dubai", lat: 25.2532, lng: 55.3657 },
+  { icao: "WSSS", name: "Singapore Changi", city: "Singapore", lat: 1.3502, lng: 103.9940 },
+  { icao: "EDDF", name: "Frankfurt Airport", city: "Frankfurt", lat: 50.0379, lng: 8.5622 },
+  { icao: "LEMD", name: "Adolfo Suarez Madrid-Barajas", city: "Madrid", lat: 40.4983, lng: -3.5676 },
+  { icao: "LIRF", name: "Leonardo da Vinci-Fiumicino", city: "Rome", lat: 41.8003, lng: 12.2389 },
+  { icao: "VHHH", name: "Hong Kong International", city: "Hong Kong", lat: 22.3080, lng: 113.9185 },
+  { icao: "YSSY", name: "Sydney Kingsford Smith", city: "Sydney", lat: -33.9461, lng: 151.1772 },
+  { icao: "ZBAA", name: "Beijing Capital International", city: "Beijing", lat: 40.0799, lng: 116.6031 },
+  { icao: "CYYZ", name: "Toronto Pearson International", city: "Toronto", lat: 43.6777, lng: -79.6248 },
+  { icao: "SBGL", name: "Rio de Janeiro-Galeao", city: "Rio de Janeiro", lat: -22.8100, lng: -43.2506 },
+  { icao: "KORD", name: "Chicago O'Hare International", city: "Chicago", lat: 41.9742, lng: -87.9073 },
+  { icao: "KATL", name: "Hartsfield-Jackson Atlanta", city: "Atlanta", lat: 33.6407, lng: -84.4277 },
+  { icao: "LTFM", name: "Istanbul Airport", city: "Istanbul", lat: 41.2608, lng: 28.7418 },
+  { icao: "VIDP", name: "Indira Gandhi International", city: "New Delhi", lat: 28.5562, lng: 77.1000 },
+  { icao: "WMKK", name: "Kuala Lumpur International", city: "Kuala Lumpur", lat: 2.7456, lng: 101.7099 },
+  { icao: "NZAA", name: "Auckland Airport", city: "Auckland", lat: -37.0082, lng: 174.7850 },
+  { icao: "FAOR", name: "O.R. Tambo International", city: "Johannesburg", lat: -26.1392, lng: 28.2460 },
+  { icao: "LEBL", name: "Barcelona-El Prat", city: "Barcelona", lat: 41.2971, lng: 2.0785 },
+  { icao: "LPPT", name: "Lisbon Humberto Delgado", city: "Lisbon", lat: 38.7742, lng: -9.1342 },
+  { icao: "RKSI", name: "Incheon International", city: "Seoul", lat: 37.4602, lng: 126.4407 },
+  { icao: "UUEE", name: "Sheremetyevo International", city: "Moscow", lat: 55.9726, lng: 37.4146 },
+  { icao: "BIKF", name: "Keflavik International", city: "Reykjavik", lat: 63.9850, lng: -22.6056 },
+  { icao: "PHNL", name: "Daniel K. Inouye International", city: "Honolulu", lat: 21.3187, lng: -157.9225 },
+  { icao: "MMMX", name: "Mexico City International", city: "Mexico City", lat: 19.4363, lng: -99.0721 },
+  { icao: "SCEL", name: "Arturo Merino Benitez International", city: "Santiago", lat: -33.3930, lng: -70.7858 }
+];
+
+// ---- Haversine & Bearing ----
+function toRad(d) { return d * Math.PI / 180; }
+function toDeg(r) { return r * 180 / Math.PI; }
+
+function haversineNm(lat1, lng1, lat2, lng2) {
+  const R = 3440.065; // Earth radius in nautical miles
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function initialBearing(lat1, lng1, lat2, lng2) {
+  const dLng = toRad(lng2 - lng1);
+  const y = Math.sin(dLng) * Math.cos(toRad(lat2));
+  const x = Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+            Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLng);
+  return (toDeg(Math.atan2(y, x)) + 360) % 360;
+}
+
+function formatTime(hours) {
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  if (h === 0) return m + ' min';
+  return h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+}
+
+function formatBearing(deg) {
+  return deg.toFixed(1) + '\u00B0';
+}
+
+// ---- Autocomplete ----
+function setupAutocomplete(inputId, dropdownId) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
+  let selectedIdx = -1;
+
+  function showDropdown(items) {
+    dropdown.innerHTML = '';
+    if (items.length === 0) { dropdown.style.display = 'none'; return; }
+    items.forEach((ap, i) => {
+      const div = document.createElement('div');
+      div.className = 'autocomplete-item';
+      div.innerHTML = '<span class="autocomplete-icao">' + ap.icao + '</span><span class="autocomplete-name">' + ap.name + ' (' + ap.city + ')</span>';
+      div.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        input.value = ap.icao + ' - ' + ap.name;
+        input.dataset.icao = ap.icao;
+        dropdown.style.display = 'none';
+      });
+      dropdown.appendChild(div);
+    });
+    dropdown.style.display = 'block';
+    selectedIdx = -1;
+  }
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    input.dataset.icao = '';
+    if (q.length === 0) { dropdown.style.display = 'none'; return; }
+    const filtered = airports.filter(ap =>
+      ap.icao.toLowerCase().includes(q) ||
+      ap.name.toLowerCase().includes(q) ||
+      ap.city.toLowerCase().includes(q)
+    );
+    showDropdown(filtered);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = dropdown.querySelectorAll('.autocomplete-item');
+    if (items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIdx = Math.min(selectedIdx + 1, items.length - 1);
+      items.forEach((it, i) => it.classList.toggle('active', i === selectedIdx));
+      items[selectedIdx].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIdx = Math.max(selectedIdx - 1, 0);
+      items.forEach((it, i) => it.classList.toggle('active', i === selectedIdx));
+      items[selectedIdx].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedIdx >= 0 && selectedIdx < items.length) {
+        items[selectedIdx].dispatchEvent(new Event('mousedown'));
+      }
+    } else if (e.key === 'Escape') {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  input.addEventListener('blur', () => {
+    setTimeout(() => { dropdown.style.display = 'none'; }, 150);
+  });
+
+  input.addEventListener('focus', () => {
+    const q = input.value.trim().toLowerCase();
+    if (q.length > 0 && !input.dataset.icao) {
+      input.dispatchEvent(new Event('input'));
+    }
+  });
+}
+
+setupAutocomplete('depInput', 'depDropdown');
+setupAutocomplete('arrInput', 'arrDropdown');
+
+// ---- Swap Button ----
+document.getElementById('swapBtn').addEventListener('click', () => {
+  const depInput = document.getElementById('depInput');
+  const arrInput = document.getElementById('arrInput');
+  const tmpVal = depInput.value;
+  const tmpIcao = depInput.dataset.icao;
+  depInput.value = arrInput.value;
+  depInput.dataset.icao = arrInput.dataset.icao;
+  arrInput.value = tmpVal;
+  arrInput.dataset.icao = tmpIcao;
+});
+
+// ---- Map Drawing ----
+// Simplified world map coastlines (very simplified polygons as lon/lat pairs)
+// These are rough continent outlines for visual reference
+const worldOutline = [
+  // North America
+  [[-130,50],[-125,60],[-110,68],[-95,72],[-80,72],[-65,60],[-55,50],[-65,45],[-70,42],[-75,35],[-80,25],[-85,30],[-90,30],[-95,28],[-100,30],[-105,25],[-110,32],[-120,35],[-125,42],[-130,50]],
+  // South America
+  [[-80,10],[-75,5],[-70,-5],[-60,-5],[-50,0],[-35,-5],[-35,-15],[-40,-22],[-50,-25],[-55,-35],[-65,-40],[-70,-50],[-75,-52],[-75,-45],[-70,-40],[-70,-30],[-65,-20],[-75,-15],[-80,-5],[-80,10]],
+  // Europe
+  [[-10,36],[-5,43],[0,44],[5,44],[10,45],[15,45],[20,40],[25,36],[28,38],[30,42],[30,46],[25,48],[15,55],[10,55],[5,52],[0,50],[-5,48],[-10,44],[-10,36]],
+  // Africa
+  [[-15,15],[-17,10],[-15,5],[-10,5],[5,5],[10,5],[10,0],[15,-5],[30,-5],[35,-10],[40,-15],[35,-25],[30,-30],[25,-35],[20,-35],[15,-30],[12,-20],[10,-10],[5,5],[0,5],[-5,5],[-15,10],[-15,15]],
+  // Africa north coast
+  [[-15,36],[-5,36],[5,37],[10,37],[15,33],[20,32],[25,32],[30,31],[33,32],[35,30],[40,12],[45,12],[50,25],[42,15],[38,12],[35,15],[30,15],[25,20],[20,25],[15,30],[10,37],[5,37],[0,36],[-5,36],[-10,36],[-15,36]],
+  // Asia
+  [[30,42],[35,42],[40,42],[45,40],[50,38],[55,38],[60,40],[65,40],[70,38],[75,30],[80,28],[85,28],[90,22],[95,18],[100,15],[105,10],[110,20],[115,22],[120,25],[125,30],[130,35],[135,35],[140,40],[145,45],[150,50],[155,55],[160,60],[170,65],[180,68],[180,72],[170,72],[160,65],[150,60],[140,55],[135,48],[130,45],[125,40],[120,35],[115,30],[110,22],[105,15],[100,22],[95,22],[90,26],[85,28],[80,30],[75,35],[70,40],[65,42],[60,42],[55,45],[50,45],[45,42],[40,43],[35,42],[30,42]],
+  // Australia
+  [[115,-35],[120,-35],[130,-32],[135,-35],[140,-38],[145,-38],[150,-35],[153,-28],[150,-25],[145,-15],[140,-12],[135,-12],[130,-15],[125,-15],[118,-20],[115,-25],[115,-35]],
+  // Greenland
+  [[-50,60],[-45,62],[-40,65],[-25,72],[-20,76],[-25,80],[-35,82],[-50,82],[-55,78],[-55,72],[-50,68],[-50,60]],
+  // Japan (rough)
+  [[130,31],[132,34],[135,35],[137,37],[140,40],[142,43],[145,44],[144,42],[141,39],[138,36],[135,34],[131,32],[130,31]],
+  // UK/Ireland
+  [[-10,50],[-6,50],[-5,52],[0,51],[2,52],[0,55],[-2,57],[-5,58],[-6,56],[-5,54],[-8,52],[-10,52],[-10,50]],
+  // New Zealand (rough)
+  [[166,-47],[168,-46],[172,-42],[176,-38],[178,-37],[177,-39],[174,-42],[170,-44],[168,-46],[166,-47]],
+  // Iceland
+  [[-24,64],[-22,65],[-18,66],[-14,66],[-14,64],[-18,63],[-22,63],[-24,64]]
+];
+
+function drawMap(depAirport, arrAirport) {
+  const canvas = document.getElementById('routeMap');
+  const container = canvas.parentElement;
+  const w = container.clientWidth - 0; // fill width
+  const h = Math.max(400, w * 0.5);
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = h * (window.devicePixelRatio || 1);
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+  // Map projection (simple equirectangular)
+  const padding = 30;
+  function project(lng, lat) {
+    const x = padding + ((lng + 180) / 360) * (w - 2 * padding);
+    const y = padding + ((90 - lat) / 180) * (h - 2 * padding);
+    return [x, y];
+  }
+
+  // Background
+  ctx.fillStyle = isDark ? '#1a1614' : '#e8f4f8';
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid lines
+  ctx.strokeStyle = isDark ? '#2d2520' : '#d0dde3';
+  ctx.lineWidth = 0.5;
+  for (let lng = -180; lng <= 180; lng += 30) {
+    const [x] = project(lng, 0);
+    ctx.beginPath();
+    ctx.moveTo(x, padding);
+    ctx.lineTo(x, h - padding);
+    ctx.stroke();
+  }
+  for (let lat = -90; lat <= 90; lat += 30) {
+    const [, y] = project(0, lat);
+    ctx.beginPath();
+    ctx.moveTo(padding, y);
+    ctx.lineTo(w - padding, y);
+    ctx.stroke();
+  }
+
+  // Equator
+  ctx.strokeStyle = isDark ? '#3d3530' : '#b0c0ca';
+  ctx.lineWidth = 1;
+  const [, eqY] = project(0, 0);
+  ctx.beginPath();
+  ctx.moveTo(padding, eqY);
+  ctx.lineTo(w - padding, eqY);
+  ctx.stroke();
+
+  // Draw continents
+  ctx.fillStyle = isDark ? '#3d3530' : '#c8d8c0';
+  ctx.strokeStyle = isDark ? '#5a504a' : '#8aa880';
+  ctx.lineWidth = 1;
+  worldOutline.forEach(poly => {
+    ctx.beginPath();
+    poly.forEach(([lng, lat], i) => {
+      const [x, y] = project(lng, lat);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  });
+
+  if (!depAirport || !arrAirport) {
+    canvas.style.display = 'none';
+    document.getElementById('noRouteMsg').style.display = 'flex';
+    document.getElementById('mapLegend').style.display = 'none';
+    return;
+  }
+
+  canvas.style.display = 'block';
+  document.getElementById('noRouteMsg').style.display = 'none';
+  document.getElementById('mapLegend').style.display = 'flex';
+
+  // Great circle arc
+  const steps = 100;
+  ctx.strokeStyle = isDark ? '#e8b87e' : '#c17a4a';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+
+  for (let i = 0; i <= steps; i++) {
+    const f = i / steps;
+    const lat1r = toRad(depAirport.lat);
+    const lng1r = toRad(depAirport.lng);
+    const lat2r = toRad(arrAirport.lat);
+    const lng2r = toRad(arrAirport.lng);
+
+    const d = 2 * Math.asin(Math.sqrt(
+      Math.sin((lat2r - lat1r) / 2) ** 2 +
+      Math.cos(lat1r) * Math.cos(lat2r) * Math.sin((lng2r - lng1r) / 2) ** 2
+    ));
+
+    if (d === 0) break;
+
+    const A = Math.sin((1 - f) * d) / Math.sin(d);
+    const B = Math.sin(f * d) / Math.sin(d);
+    const x = A * Math.cos(lat1r) * Math.cos(lng1r) + B * Math.cos(lat2r) * Math.cos(lng2r);
+    const y = A * Math.cos(lat1r) * Math.sin(lng1r) + B * Math.cos(lat2r) * Math.sin(lng2r);
+    const z = A * Math.sin(lat1r) + B * Math.sin(lat2r);
+    const lat = toDeg(Math.atan2(z, Math.sqrt(x * x + y * y)));
+    const lng = toDeg(Math.atan2(y, x));
+
+    const [px, py] = project(lng, lat);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Departure dot
+  const [dx, dy] = project(depAirport.lng, depAirport.lat);
+  ctx.fillStyle = '#3b82f6';
+  ctx.beginPath();
+  ctx.arc(dx, dy, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Departure label
+  ctx.fillStyle = '#3b82f6';
+  ctx.font = 'bold 12px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(depAirport.icao, dx, dy - 12);
+
+  // Arrival dot
+  const [ax, ay] = project(arrAirport.lng, arrAirport.lat);
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(ax, ay, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Arrival label
+  ctx.fillStyle = '#ef4444';
+  ctx.font = 'bold 12px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(arrAirport.icao, ax, ay - 12);
+}
+
+// Initial map draw
+drawMap(null, null);
+
+// ---- Calculate Route ----
+function findAirport(icaoOrInput) {
+  const val = icaoOrInput.trim().toUpperCase();
+  // Try exact ICAO match first
+  let ap = airports.find(a => a.icao === val);
+  if (ap) return ap;
+  // Try matching "ICAO - Name" format
+  const parts = val.split(' - ');
+  if (parts.length >= 1) {
+    ap = airports.find(a => a.icao === parts[0].trim());
+    if (ap) return ap;
+  }
+  return null;
+}
+
+document.getElementById('calcBtn').addEventListener('click', calculate);
+
+// Also calculate on Enter key in either input
+document.getElementById('depInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.getElementById('depDropdown').style.display === 'none') {
+    calculate();
+  }
+});
+document.getElementById('arrInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.getElementById('arrDropdown').style.display === 'none') {
+    calculate();
+  }
+});
+
+function calculate() {
+  const depVal = document.getElementById('depInput').dataset.icao || document.getElementById('depInput').value;
+  const arrVal = document.getElementById('arrInput').dataset.icao || document.getElementById('arrInput').value;
+
+  const dep = findAirport(depVal);
+  const arr = findAirport(arrVal);
+
+  if (!dep || !arr) {
+    alert('Please select valid departure and arrival airports from the list.');
+    return;
+  }
+
+  if (dep.icao === arr.icao) {
+    alert('Departure and arrival airports must be different.');
+    return;
+  }
+
+  // Distance
+  const distNm = haversineNm(dep.lat, dep.lng, arr.lat, arr.lng);
+  const distKm = distNm * 1.852;
+
+  document.getElementById('distNm').textContent = Math.round(distNm).toLocaleString() + ' NM';
+  document.getElementById('distKm').textContent = Math.round(distKm).toLocaleString() + ' km';
+
+  // Bearing
+  const bearInit = initialBearing(dep.lat, dep.lng, arr.lat, arr.lng);
+  const bearFinal = (initialBearing(arr.lat, arr.lng, dep.lat, dep.lng) + 180) % 360;
+
+  document.getElementById('bearingInit').textContent = formatBearing(bearInit);
+  document.getElementById('bearingFinal').textContent = formatBearing(bearFinal);
+
+  // Flight times
+  document.getElementById('timeCessna').textContent = formatTime(distNm / 120);
+  document.getElementById('time737').textContent = formatTime(distNm / 450);
+  document.getElementById('time747').textContent = formatTime(distNm / 490);
+
+  // Show results
+  document.getElementById('resultsPanel').classList.add('visible');
+
+  // Draw map
+  drawMap(dep, arr);
+}
+
+// Redraw map on resize
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    // Re-calculate if we have a route shown
+    const depVal = document.getElementById('depInput').dataset.icao || document.getElementById('depInput').value;
+    const arrVal = document.getElementById('arrInput').dataset.icao || document.getElementById('arrInput').value;
+    const dep = findAirport(depVal);
+    const arr = findAirport(arrVal);
+    drawMap(dep || null, arr || null);
+  }, 200);
+});
+
+// ---- Dark Mode ----
+const darkModeToggle = document.getElementById('darkModeToggle');
+const html = document.documentElement;
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+html.setAttribute('data-theme', savedTheme);
+darkModeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+darkModeToggle.addEventListener('click', () => {
+  const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  darkModeToggle.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+  // Redraw map with new theme colors
+  const depVal = document.getElementById('depInput').dataset.icao || document.getElementById('depInput').value;
+  const arrVal = document.getElementById('arrInput').dataset.icao || document.getElementById('arrInput').value;
+  const dep = findAirport(depVal);
+  const arr = findAirport(arrVal);
+  drawMap(dep || null, arr || null);
+});
+
+// Redraw initial map after theme is set
+drawMap(null, null);
+</script>
+</body>
+</html>
