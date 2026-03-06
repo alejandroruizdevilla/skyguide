@@ -167,15 +167,133 @@
       border-color: var(--accent);
     }
 
+    .game-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+    }
+
+    .game-card:hover .game-icon {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .game-icon svg {
+      width: 44px;
+      height: 44px;
+      color: var(--accent);
+      transition: color 0.3s;
+    }
+
+    .game-card:hover .game-icon svg {
+      color: #fff;
+    }
+
     .game-card h2 {
       color: var(--accent);
-      font-size: 24px;
-      margin-bottom: 1rem;
+      font-size: 22px;
+      margin-bottom: 0.5rem;
     }
 
     .game-card p {
       color: var(--text-secondary);
       margin-bottom: 1.5rem;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .game-card .game-stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .game-card .game-stats span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Game Over Overlay */
+    .game-over-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      z-index: 20;
+      animation: fadeInOverlay 0.3s ease;
+    }
+
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .game-over-overlay h3 {
+      color: #fff;
+      font-size: 28px;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-over-overlay .go-score {
+      color: var(--accent);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .game-over-overlay .go-best {
+      color: #22c55e;
+      font-size: 14px;
+      margin-bottom: 1rem;
+    }
+
+    .game-over-overlay .go-rating {
+      font-size: 16px;
+      margin-bottom: 1rem;
+    }
+
+    .game-over-overlay button {
+      padding: 0.75rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .game-over-overlay button:hover {
+      background: var(--accent-alt);
+      transform: translateY(-2px);
+    }
+
+    /* Canvas wrapper for overlay positioning */
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 600px;
+      margin: 1rem auto;
+    }
+
+    .canvas-wrapper canvas {
+      display: block;
+      width: 100%;
     }
 
     .btn {
@@ -503,32 +621,94 @@
 
     <div class="games-grid">
       <div class="game-card" onclick="openGame('flappy')">
-        <h2>✈️ Flappy Plane</h2>
-        <p>Navigate your plane through obstacles! Tap or press Space to fly. How far can you go?</p>
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 24h32M24 8l8 8-8 8M12 16l-4 8 4 8"/>
+            <path d="M14 24l10-6 12 2 6-2" fill="currentColor" opacity="0.3"/>
+            <rect x="6" y="10" width="4" height="28" rx="1" opacity="0.5"/>
+            <rect x="38" y="14" width="4" height="20" rx="1" opacity="0.5"/>
+          </svg>
+        </div>
+        <h2>Flappy Plane</h2>
+        <div class="game-stats">
+          <span>Best: <strong id="cardFlappyBest">0</strong></span>
+          <span>Difficulty: Medium</span>
+        </div>
+        <p>Navigate through obstacles with variable thrust. Hold to fly up, release to descend. Choose your fighter jet and livery!</p>
         <button class="btn">Play Now</button>
       </div>
 
       <div class="game-card" onclick="openGame('landing')">
-        <h2>🛬 Perfect Landing</h2>
-        <p>Test your landing skills! Use arrow keys to control your descent and land smoothly on the runway.</p>
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="40" x2="44" y2="40"/>
+            <line x1="14" y1="40" x2="34" y2="40" stroke-width="4"/>
+            <path d="M24 8L18 20h12L24 8z" fill="currentColor" opacity="0.3"/>
+            <path d="M24 20v14" stroke-dasharray="3 3"/>
+            <path d="M20 34l4 4 4-4"/>
+          </svg>
+        </div>
+        <h2>Perfect Landing</h2>
+        <div class="game-stats">
+          <span>Controls: Arrows</span>
+          <span>Difficulty: Hard</span>
+        </div>
+        <p>Control your descent and land smoothly on the runway. Watch your speed and alignment for a perfect touchdown!</p>
         <button class="btn">Play Now</button>
       </div>
 
       <div class="game-card" onclick="openGame('memory')">
-        <h2>🎮 Aircraft Memory</h2>
-        <p>Match pairs of aircraft cards! Click to flip cards and find matching pairs. Beat your best time!</p>
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="18" rx="3" fill="currentColor" opacity="0.15"/>
+            <rect x="28" y="4" width="16" height="18" rx="3"/>
+            <rect x="4" y="26" width="16" height="18" rx="3"/>
+            <rect x="28" y="26" width="16" height="18" rx="3" fill="currentColor" opacity="0.15"/>
+            <text x="12" y="16" text-anchor="middle" font-size="10" fill="currentColor">?</text>
+            <text x="36" y="16" text-anchor="middle" font-size="10" fill="currentColor">?</text>
+          </svg>
+        </div>
+        <h2>Aircraft Memory</h2>
+        <div class="game-stats">
+          <span>Cards: 16</span>
+          <span>Difficulty: Easy</span>
+        </div>
+        <p>Flip cards to find matching aircraft pairs. Test your memory and try to match all 8 pairs in the fewest moves!</p>
         <button class="btn">Play Now</button>
       </div>
 
       <div class="game-card" onclick="openGame('trivia')">
-        <h2>🧠 Flight Trivia</h2>
-        <p>Test your aviation knowledge! Answer 10 questions about aircraft, airports, and flight history.</p>
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="18" fill="currentColor" opacity="0.1"/>
+            <path d="M18 18c0-4 3-6 6-6s6 2 6 6c0 3-2 4-4 5s-2 2-2 3"/>
+            <circle cx="24" cy="34" r="1.5" fill="currentColor"/>
+          </svg>
+        </div>
+        <h2>Flight Trivia</h2>
+        <div class="game-stats">
+          <span>Questions: 10</span>
+          <span>Difficulty: Medium</span>
+        </div>
+        <p>Test your aviation knowledge with 10 random questions about aircraft, airports, navigation, and flight history.</p>
         <button class="btn">Play Now</button>
       </div>
 
       <div class="game-card" onclick="openGame('identify')">
-        <h2>🔍 Aircraft ID</h2>
-        <p>Can you identify the aircraft from its silhouette? Test your plane-spotting skills!</p>
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="20" cy="20" r="14" fill="currentColor" opacity="0.1"/>
+            <circle cx="20" cy="20" r="14"/>
+            <line x1="30" y1="30" x2="42" y2="42" stroke-width="3"/>
+            <path d="M14 20h12M20 14v12" opacity="0.5"/>
+          </svg>
+        </div>
+        <h2>Aircraft ID</h2>
+        <div class="game-stats">
+          <span>Rounds: 8</span>
+          <span>Difficulty: Hard</span>
+        </div>
+        <p>Identify aircraft from their silhouettes against a night sky. Can you tell a 747 from an A380?</p>
         <button class="btn">Play Now</button>
       </div>
     </div>
@@ -574,8 +754,10 @@
           </div>
         </div>
 
-        <canvas id="flappyCanvas" class="game-canvas"></canvas>
-        <div class="tap-zone">👆 Tap and hold the game area above to fly!</div>
+        <div class="canvas-wrapper" id="flappyWrapper">
+          <canvas id="flappyCanvas" class="game-canvas"></canvas>
+        </div>
+        <div class="tap-zone">Tap and hold the game area above to fly!</div>
         <div class="game-controls">
           <button class="btn" id="flappyStart">Start Game</button>
         </div>
@@ -594,7 +776,9 @@
           <p>💡 <em>Land gently on the runway for a perfect score!</em></p>
         </div>
         <div class="game-score">Altitude: <span id="landingAlt">1000</span>m | Speed: <span id="landingSpeed">0</span> m/s</div>
-        <canvas id="landingCanvas" class="game-canvas"></canvas>
+        <div class="canvas-wrapper" id="landingWrapper">
+          <canvas id="landingCanvas" class="game-canvas"></canvas>
+        </div>
 
         <!-- Mobile touch controls for landing game -->
         <div class="mobile-controls" id="landingMobileControls">
@@ -642,7 +826,10 @@
           <p>Answer 10 aviation questions. Pick the correct answer from 4 choices. How many can you get right?</p>
         </div>
         <div class="game-score">Question: <span id="triviaQ">0</span>/10 | Score: <span id="triviaScore">0</span></div>
-        <div id="triviaContent" style="max-width: 600px; margin: 1rem auto;">
+        <div style="max-width: 600px; margin: 0 auto 1rem; background: var(--accent-light); border-radius: 6px; height: 8px; overflow: hidden;">
+          <div id="triviaProgress" style="height: 100%; background: var(--accent); border-radius: 6px; transition: width 0.4s ease; width: 0%;"></div>
+        </div>
+        <div id="triviaContent" style="max-width: 600px; margin: 0 auto;">
           <div id="triviaQuestion" style="font-size: 18px; font-weight: 600; margin-bottom: 1.5rem; min-height: 60px; color: var(--text-main);"></div>
           <div id="triviaOptions" style="display: grid; gap: 0.75rem;"></div>
           <div id="triviaFeedback" style="margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none; font-weight: 500;"></div>
@@ -1300,7 +1487,42 @@
         flappyBest = score;
         localStorage.setItem('flappyBest', score.toString());
         document.getElementById('flappyBest').textContent = flappyBest;
+        document.getElementById('cardFlappyBest').textContent = flappyBest;
       }
+    }
+
+    // Initialize card best score display
+    document.getElementById('cardFlappyBest').textContent = flappyBest;
+
+    function showGameOver(wrapperId, score, best, isNewBest, extraMsg) {
+      const wrapper = document.getElementById(wrapperId);
+      // Remove existing overlay
+      const existing = wrapper.querySelector('.game-over-overlay');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'game-over-overlay';
+      overlay.innerHTML =
+        '<h3>Game Over</h3>' +
+        '<div class="go-score">Score: ' + score + '</div>' +
+        (isNewBest ? '<div class="go-best">NEW HIGH SCORE!</div>' : '<div class="go-best">Best: ' + best + '</div>') +
+        (extraMsg ? '<div class="go-rating">' + extraMsg + '</div>' : '') +
+        '<button onclick="this.parentElement.remove()">Play Again</button>';
+      wrapper.appendChild(overlay);
+    }
+
+    function showLandingResult(wrapperId, title, message, emoji) {
+      const wrapper = document.getElementById(wrapperId);
+      const existing = wrapper.querySelector('.game-over-overlay');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'game-over-overlay';
+      overlay.innerHTML =
+        '<h3>' + emoji + ' ' + title + '</h3>' +
+        '<div class="go-rating">' + message + '</div>' +
+        '<button onclick="this.parentElement.remove()">Try Again</button>';
+      wrapper.appendChild(overlay);
     }
 
     function stopFlappyGame() {
@@ -1308,6 +1530,20 @@
       flappyGame = null;
       spacePressed = false;
       thrustPower = 0;
+    }
+
+    // Cloud data for visual polish
+    let clouds = [];
+    function initClouds(canvasW, canvasH) {
+      clouds = [];
+      for (let i = 0; i < 5; i++) {
+        clouds.push({
+          x: Math.random() * canvasW,
+          y: Math.random() * canvasH * 0.6,
+          w: 40 + Math.random() * 60,
+          speed: 0.3 + Math.random() * 0.5
+        });
+      }
     }
 
     function startThrust() {
@@ -1374,9 +1610,10 @@
         // Collision
         if (g.plane.x + g.plane.size > obs.x && g.plane.x < obs.x + 50) {
           if (g.plane.y < obs.top || g.plane.y + g.plane.size > obs.top + obs.gap) {
-            g.running = false;
+            const wasNewBest = g.score > flappyBest;
             saveFlappyScore(g.score);
-            alert('Game Over! Score: ' + g.score + (g.score > flappyBest ? ' - NEW HIGH SCORE!' : ' | Best: ' + flappyBest));
+            g.running = false;
+            showGameOver('flappyWrapper', g.score, flappyBest, wasNewBest);
             stopFlappyGame();
           }
         }
@@ -1387,22 +1624,55 @@
 
       // Check bounds
       if (g.plane.y < 0 || g.plane.y + g.plane.size > flappyCanvas.height) {
-        g.running = false;
+        const wasNewBest = g.score > flappyBest;
         saveFlappyScore(g.score);
-        alert('Game Over! Score: ' + g.score + (g.score > flappyBest ? ' - NEW HIGH SCORE!' : ' | Best: ' + flappyBest));
+        g.running = false;
+        showGameOver('flappyWrapper', g.score, flappyBest, wasNewBest);
         stopFlappyGame();
         return;
       }
 
-      // Draw
-      flappyCtx.fillStyle = '#87ceeb';
+      // Draw sky gradient
+      const skyGrad = flappyCtx.createLinearGradient(0, 0, 0, flappyCanvas.height);
+      skyGrad.addColorStop(0, '#4a90d9');
+      skyGrad.addColorStop(0.7, '#87ceeb');
+      skyGrad.addColorStop(1, '#a8d8a8');
+      flappyCtx.fillStyle = skyGrad;
       flappyCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
 
-      // Draw obstacles
-      flappyCtx.fillStyle = '#8b4513';
+      // Draw ground
+      flappyCtx.fillStyle = '#5a8f3c';
+      flappyCtx.fillRect(0, flappyCanvas.height - 20, flappyCanvas.width, 20);
+      flappyCtx.fillStyle = '#4a7f2c';
+      flappyCtx.fillRect(0, flappyCanvas.height - 20, flappyCanvas.width, 3);
+
+      // Draw and update clouds
+      if (clouds.length === 0) initClouds(flappyCanvas.width, flappyCanvas.height);
+      flappyCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      clouds.forEach(c => {
+        c.x -= c.speed;
+        if (c.x + c.w < 0) { c.x = flappyCanvas.width + 10; c.y = Math.random() * flappyCanvas.height * 0.5; }
+        flappyCtx.beginPath();
+        flappyCtx.ellipse(c.x, c.y, c.w * 0.5, c.w * 0.2, 0, 0, Math.PI * 2);
+        flappyCtx.fill();
+        flappyCtx.beginPath();
+        flappyCtx.ellipse(c.x + c.w * 0.25, c.y - c.w * 0.1, c.w * 0.35, c.w * 0.18, 0, 0, Math.PI * 2);
+        flappyCtx.fill();
+      });
+
+      // Draw obstacles with gradient
       g.obstacles.forEach(obs => {
+        const pipeGrad = flappyCtx.createLinearGradient(obs.x, 0, obs.x + 50, 0);
+        pipeGrad.addColorStop(0, '#2d7d32');
+        pipeGrad.addColorStop(0.5, '#4caf50');
+        pipeGrad.addColorStop(1, '#2d7d32');
+        flappyCtx.fillStyle = pipeGrad;
         flappyCtx.fillRect(obs.x, 0, 50, obs.top);
         flappyCtx.fillRect(obs.x, obs.top + obs.gap, 50, flappyCanvas.height);
+        // Pipe caps
+        flappyCtx.fillStyle = '#1b5e20';
+        flappyCtx.fillRect(obs.x - 3, obs.top - 12, 56, 12);
+        flappyCtx.fillRect(obs.x - 3, obs.top + obs.gap, 56, 12);
       });
 
       // Draw engine thrust effect when active
@@ -1445,6 +1715,15 @@
       // Draw plane (selected aircraft)
       const angle = Math.min(Math.max(g.plane.velocity * 0.05, -0.4), 0.4);
       drawAircraft(flappyCtx, g.plane.x, g.plane.y, g.plane.size * 2, angle);
+
+      // Score HUD on canvas
+      flappyCtx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      flappyCtx.fillRect(flappyCanvas.width - 80, 8, 72, 28);
+      flappyCtx.fillStyle = '#fff';
+      flappyCtx.font = 'bold ' + Math.max(14, flappyCanvas.width * 0.03) + 'px -apple-system, sans-serif';
+      flappyCtx.textAlign = 'center';
+      flappyCtx.fillText(g.score, flappyCanvas.width - 44, 28);
+      flappyCtx.textAlign = 'left';
 
       requestAnimationFrame(gameLoop);
     }
@@ -1634,32 +1913,65 @@
         const gentleLanding = Math.abs(g.plane.velocityY) < 3;
 
         if (onRunway && gentleLanding) {
-          alert('Perfect Landing! 🎉');
+          showLandingResult('landingWrapper', 'Perfect Landing!', 'Smooth touchdown on the centerline. Outstanding!', '\u2B50');
         } else if (onRunway) {
-          alert('Landed on runway but too hard! Try again.');
+          showLandingResult('landingWrapper', 'Hard Landing', 'You hit the runway too fast. Ease up on descent!', '\u26A0\uFE0F');
         } else {
-          alert('Missed the runway! Try again.');
+          showLandingResult('landingWrapper', 'Missed Runway', 'You missed the runway completely. Line up better!', '\u274C');
         }
         stopLandingGame();
         return;
       }
 
-      // Draw
-      landingCtx.fillStyle = '#87ceeb';
+      // Draw sky gradient
+      const landingSky = landingCtx.createLinearGradient(0, 0, 0, landingCanvas.height);
+      landingSky.addColorStop(0, '#4a90d9');
+      landingSky.addColorStop(0.6, '#87ceeb');
+      landingSky.addColorStop(0.85, '#c8e6c9');
+      landingSky.addColorStop(1, '#5a8f3c');
+      landingCtx.fillStyle = landingSky;
       landingCtx.fillRect(0, 0, landingCanvas.width, landingCanvas.height);
 
-      // Draw runway (scaled)
+      // Draw ground
       const sf = g.scaleFactor || 1;
+      landingCtx.fillStyle = '#5a8f3c';
+      landingCtx.fillRect(0, g.runway.y, landingCanvas.width, landingCanvas.height - g.runway.y);
+
+      // Draw runway (scaled)
       const runwayHeight = 30 * sf;
       landingCtx.fillStyle = '#333';
       landingCtx.fillRect(g.runway.x, g.runway.y, g.runway.width, runwayHeight);
+      // Runway edge lines
       landingCtx.fillStyle = '#fff';
+      landingCtx.fillRect(g.runway.x, g.runway.y, 2, runwayHeight);
+      landingCtx.fillRect(g.runway.x + g.runway.width - 2, g.runway.y, 2, runwayHeight);
+      // Center stripes
       const stripeWidth = 10 * sf;
       const stripeGap = 20 * sf;
       const stripeCount = Math.floor(g.runway.width / stripeGap);
       for (let i = 0; i < stripeCount; i++) {
         landingCtx.fillRect(g.runway.x + i * stripeGap, g.runway.y + (12 * sf), stripeWidth, 6 * sf);
       }
+      // Touchdown zone markers
+      landingCtx.fillStyle = '#ccc';
+      landingCtx.fillRect(g.runway.x + 10, g.runway.y + 4, 20, 3);
+      landingCtx.fillRect(g.runway.x + g.runway.width - 30, g.runway.y + 4, 20, 3);
+
+      // Draw altitude guide line
+      landingCtx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      landingCtx.setLineDash([5, 5]);
+      landingCtx.beginPath();
+      landingCtx.moveTo(g.plane.x + g.plane.size / 2, g.plane.y + g.plane.size);
+      landingCtx.lineTo(g.plane.x + g.plane.size / 2, g.runway.y);
+      landingCtx.stroke();
+      landingCtx.setLineDash([]);
+
+      // Wind indicator
+      landingCtx.fillStyle = 'rgba(0,0,0,0.4)';
+      landingCtx.fillRect(8, 8, 90, 24);
+      landingCtx.fillStyle = '#fff';
+      landingCtx.font = '11px -apple-system, sans-serif';
+      landingCtx.fillText('Wind: ' + (g.wind || '0') + ' kt', 14, 24);
 
       // Draw plane (F-16)
       const descentAngle = Math.atan2(g.plane.velocityY, 5) * 0.3;
@@ -1790,21 +2102,12 @@
 
       cards.forEach((card, index) => {
         const cardEl = document.createElement('div');
-        cardEl.style.cssText = `
-          background: var(--accent-light);
-          border: 2px solid var(--border-light);
-          border-radius: 8px;
-          aspect-ratio: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 2rem;
-          cursor: pointer;
-          transition: all 0.3s;
-        `;
+        cardEl.style.cssText = 'background: var(--accent-light); border: 2px solid var(--border-light); border-radius: 12px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; transition: transform 0.3s, background 0.3s, border-color 0.3s; user-select: none;';
         cardEl.dataset.index = index;
-        cardEl.innerHTML = '?';
+        cardEl.innerHTML = '<span style="font-size:24px; color:var(--accent); font-weight:700;">?</span>';
         cardEl.addEventListener('click', () => flipCard(index, cardEl));
+        cardEl.addEventListener('mouseenter', () => { if (!memoryGame.matched.includes(index)) cardEl.style.borderColor = 'var(--accent)'; });
+        cardEl.addEventListener('mouseleave', () => { if (!memoryGame.matched.includes(index) && !memoryGame.flipped.includes(index)) cardEl.style.borderColor = 'var(--border-light)'; });
         grid.appendChild(cardEl);
       });
     }
@@ -1814,8 +2117,12 @@
       if (memoryGame.flipped.includes(index) || memoryGame.matched.includes(index)) return;
 
       memoryGame.flipped.push(index);
-      element.innerHTML = memoryGame.cards[index];
-      element.style.background = 'var(--accent)';
+      element.style.transform = 'rotateY(180deg)';
+      setTimeout(() => {
+        element.innerHTML = '<span style="font-size:2rem;">' + memoryGame.cards[index] + '</span>';
+        element.style.background = 'var(--accent)';
+        element.style.transform = 'rotateY(0deg)';
+      }, 150);
 
       if (memoryGame.flipped.length === 2) {
         memoryGame.moves++;
@@ -1828,15 +2135,23 @@
           memoryGame.flipped = [];
 
           if (memoryGame.matched.length === 16) {
-            setTimeout(() => alert(`You won in ${memoryGame.moves} moves! 🎉`), 300);
+            setTimeout(() => {
+              const rating = memoryGame.moves <= 12 ? 'Perfect memory!' : memoryGame.moves <= 18 ? 'Great job!' : 'Keep practicing!';
+              document.getElementById('memoryMoves').parentElement.innerHTML = '<span style="color:var(--accent);font-weight:700;">You won in ' + memoryGame.moves + ' moves! ' + rating + '</span>';
+            }, 400);
           }
         } else {
           setTimeout(() => {
             const grid = document.getElementById('memoryGrid');
             [first, second].forEach(i => {
               const card = grid.children[i];
-              card.innerHTML = '?';
-              card.style.background = 'var(--accent-light)';
+              card.style.transform = 'rotateY(180deg)';
+              setTimeout(() => {
+                card.innerHTML = '<span style="font-size:24px; color:var(--accent); font-weight:700;">?</span>';
+                card.style.background = 'var(--accent-light)';
+                card.style.borderColor = 'var(--border-light)';
+                card.style.transform = 'rotateY(0deg)';
+              }, 150);
             });
             memoryGame.flipped = [];
           }, 1000);
@@ -1900,11 +2215,12 @@
       document.getElementById('triviaQ').textContent = triviaState.current + 1;
       document.getElementById('triviaQuestion').textContent = q.q;
       document.getElementById('triviaFeedback').style.display = 'none';
+      document.getElementById('triviaProgress').style.width = ((triviaState.current + 1) * 10) + '%';
 
       const optionsDiv = document.getElementById('triviaOptions');
       const shuffledOpts = shuffleArray(q.options);
       optionsDiv.innerHTML = shuffledOpts.map(opt => `
-        <button style="padding: 0.75rem 1rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 8px; color: var(--text-main); font-size: 14px; cursor: pointer; text-align: left; transition: all 0.2s;" class="trivia-opt" data-answer="${opt}">${opt}</button>
+        <button style="padding: 0.85rem 1.25rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 10px; color: var(--text-main); font-size: 15px; cursor: pointer; text-align: left; transition: all 0.2s; font-weight: 500;" class="trivia-opt" data-answer="${opt}" onmouseenter="this.style.borderColor='var(--accent)';this.style.transform='translateX(4px)'" onmouseleave="this.style.borderColor='var(--border-light)';this.style.transform='none'">${opt}</button>
       `).join('');
 
       optionsDiv.querySelectorAll('.trivia-opt').forEach(btn => {
@@ -2025,7 +2341,7 @@
 
       const optDiv = document.getElementById('idOptions');
       optDiv.innerHTML = allOpts.map(opt => `
-        <button style="padding: 0.75rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 8px; color: var(--text-main); font-size: 14px; cursor: pointer; font-weight: 500; transition: all 0.2s;" class="id-opt" data-answer="${opt}">${opt}</button>
+        <button style="padding: 0.85rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 10px; color: var(--text-main); font-size: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s;" class="id-opt" data-answer="${opt}" onmouseenter="this.style.borderColor='var(--accent)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='var(--border-light)';this.style.transform='none'">${opt}</button>
       `).join('');
 
       optDiv.querySelectorAll('.id-opt').forEach(btn => {
