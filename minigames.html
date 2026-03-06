@@ -711,6 +711,66 @@
         <p>Identify aircraft from their silhouettes against a night sky. Can you tell a 747 from an A380?</p>
         <button class="btn">Play Now</button>
       </div>
+      <div class="game-card" onclick="openGame('paper')">
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 24l36-16-16 36-4-16-16-4z" fill="currentColor" opacity="0.15"/>
+            <path d="M6 24l36-16-16 36-4-16-16-4z"/>
+            <path d="M22 28L42 8"/>
+          </svg>
+        </div>
+        <h2>Paper Airplane</h2>
+        <div class="game-stats">
+          <span>Best: <strong id="cardPaperBest">0</strong>m</span>
+          <span>Physics Sim</span>
+        </div>
+        <p>Design your paper airplane by adjusting wing angle, nose weight, and throw power. Launch it and watch it fly!</p>
+        <button class="btn">Play Now</button>
+      </div>
+
+      <div class="game-card" onclick="openGame('atc')">
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="18" fill="currentColor" opacity="0.1"/>
+            <circle cx="24" cy="24" r="18"/>
+            <circle cx="24" cy="24" r="3" fill="currentColor"/>
+            <line x1="24" y1="6" x2="24" y2="12"/>
+            <line x1="24" y1="36" x2="24" y2="42"/>
+            <line x1="6" y1="24" x2="12" y2="24"/>
+            <line x1="36" y1="24" x2="42" y2="24"/>
+            <circle cx="15" cy="14" r="2" fill="currentColor" opacity="0.6"/>
+            <circle cx="34" cy="30" r="2" fill="currentColor" opacity="0.6"/>
+          </svg>
+        </div>
+        <h2>Air Traffic Control</h2>
+        <div class="game-stats">
+          <span>Best: <strong id="cardAtcBest">0</strong></span>
+          <span>Difficulty: Hard</span>
+        </div>
+        <p>Guide incoming aircraft to the runway! Click planes to select them, then click the runway to assign landing. Don't let them collide!</p>
+        <button class="btn">Play Now</button>
+      </div>
+
+      <div class="game-card" onclick="openGame('bingo')">
+        <div class="game-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="6" width="36" height="36" rx="4" fill="currentColor" opacity="0.1"/>
+            <rect x="6" y="6" width="36" height="36" rx="4"/>
+            <line x1="6" y1="18" x2="42" y2="18"/>
+            <line x1="6" y1="30" x2="42" y2="30"/>
+            <line x1="18" y1="6" x2="18" y2="42"/>
+            <line x1="30" y1="6" x2="30" y2="42"/>
+            <path d="M22 24l2 2 4-4" stroke-width="3"/>
+          </svg>
+        </div>
+        <h2>Flight Sim Bingo</h2>
+        <div class="game-stats">
+          <span>5x5 Grid</span>
+          <span>Challenges</span>
+        </div>
+        <p>Get a random bingo card with flight sim challenges. Mark them off as you complete them in your favorite sim!</p>
+        <button class="btn">Play Now</button>
+      </div>
     </div>
 
     <!-- Flappy Plane Game -->
@@ -859,6 +919,76 @@
       </div>
     </div>
 
+    <!-- Paper Airplane Designer -->
+    <div id="paperModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('paper')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Paper Airplane Designer</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Adjust wing angle, nose weight, and throw power to design the perfect paper airplane. Launch and see how far it flies!</p>
+        </div>
+        <div class="game-score">Best Distance: <span id="paperBest">0</span>m</div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 500px; margin: 0 auto 1rem;">
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px;">
+            Wing Angle: <span id="wingAngleVal">15</span>°
+            <input type="range" id="wingAngle" min="5" max="45" value="15" style="width: 60%;">
+          </label>
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px;">
+            Nose Weight: <span id="noseWeightVal">50</span>%
+            <input type="range" id="noseWeight" min="10" max="90" value="50" style="width: 60%;">
+          </label>
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px;">
+            Throw Power: <span id="throwPowerVal">70</span>%
+            <input type="range" id="throwPower" min="20" max="100" value="70" style="width: 60%;">
+          </label>
+        </div>
+        <div class="canvas-wrapper" id="paperWrapper">
+          <canvas id="paperCanvas" class="game-canvas" style="background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 60%, #90EE90 85%, #228B22 100%); max-width: 600px; height: 300px;"></canvas>
+        </div>
+        <div id="paperResult" style="text-align: center; margin-top: 0.5rem; font-weight: 600; min-height: 24px; color: var(--accent);"></div>
+        <div class="game-controls">
+          <button class="btn" id="paperLaunch">🚀 Launch!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Air Traffic Control Game -->
+    <div id="atcModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('atc')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Air Traffic Control</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Click an aircraft to select it, then click the runway to assign landing. Keep planes separated! Don't let them collide or fly off-screen.</p>
+        </div>
+        <div class="game-score">Score: <span id="atcScore">0</span> | Landed: <span id="atcLanded">0</span> | Missed: <span id="atcMissed">0</span>/3</div>
+        <div class="canvas-wrapper" id="atcWrapper">
+          <canvas id="atcCanvas" class="game-canvas" style="background: #0a1628; max-width: 600px; height: 400px;"></canvas>
+        </div>
+        <div class="game-controls">
+          <button class="btn" id="atcStart">Start ATC</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flight Sim Bingo -->
+    <div id="bingoModal" class="game-modal">
+      <div class="game-content">
+        <button class="close-btn" onclick="closeGame('bingo')">×</button>
+        <h2 style="text-align: center; color: var(--accent);">Flight Sim Bingo</h2>
+        <div class="game-instructions">
+          <h3>How to Play:</h3>
+          <p>Click challenges you've completed to mark them off. Get 5 in a row (horizontal, vertical, or diagonal) to win!</p>
+        </div>
+        <div id="bingoBoard" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 500px; margin: 1rem auto;"></div>
+        <div id="bingoStatus" style="text-align: center; margin-top: 0.75rem; font-weight: 600; min-height: 24px; color: var(--accent);"></div>
+        <div class="game-controls">
+          <button class="btn" id="bingoNew">New Card</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script src="/livereload.js"></script>
@@ -903,6 +1033,11 @@
       // Stop any running games
       if (game === 'flappy') stopFlappyGame();
       if (game === 'landing') stopLandingGame();
+      if (game === 'paper' && paperAnim) { cancelAnimationFrame(paperAnim); paperAnim = null; }
+      if (game === 'atc') {
+        if (atcAnim) { cancelAnimationFrame(atcAnim); atcAnim = null; }
+        if (atcState) atcState.running = false;
+      }
     }
 
     // Aircraft livery data
@@ -2384,6 +2519,581 @@
     }
 
     document.getElementById('idStart').addEventListener('click', startIdGame);
+
+    // ========== PAPER AIRPLANE DESIGNER ==========
+    const paperCanvas = document.getElementById('paperCanvas');
+    const paperCtx = paperCanvas.getContext('2d');
+    let paperAnim = null;
+    let paperBestDist = parseInt(localStorage.getItem('paperBest') || '0');
+    document.getElementById('paperBest').textContent = paperBestDist;
+    document.getElementById('cardPaperBest').textContent = paperBestDist;
+
+    // Slider value display
+    document.getElementById('wingAngle').addEventListener('input', e => {
+      document.getElementById('wingAngleVal').textContent = e.target.value;
+    });
+    document.getElementById('noseWeight').addEventListener('input', e => {
+      document.getElementById('noseWeightVal').textContent = e.target.value;
+    });
+    document.getElementById('throwPower').addEventListener('input', e => {
+      document.getElementById('throwPowerVal').textContent = e.target.value;
+    });
+
+    function launchPaperPlane() {
+      if (paperAnim) cancelAnimationFrame(paperAnim);
+      const W = paperCanvas.width = paperCanvas.offsetWidth;
+      const H = paperCanvas.height = paperCanvas.offsetHeight;
+
+      const wingAngle = parseInt(document.getElementById('wingAngle').value);
+      const noseWeight = parseInt(document.getElementById('noseWeight').value);
+      const throwPower = parseInt(document.getElementById('throwPower').value);
+
+      // Physics parameters derived from design
+      const launchSpeed = throwPower * 0.08 + 2;
+      const liftCoeff = Math.sin(wingAngle * Math.PI / 180) * (1 - noseWeight / 150);
+      const dragCoeff = 0.01 + wingAngle * 0.0008 + (noseWeight > 60 ? 0.005 : 0);
+      const gravity = 0.04 + noseWeight * 0.0004;
+      const launchAngle = -15 + wingAngle * 0.3 - noseWeight * 0.1;
+
+      let x = 40, y = H * 0.35;
+      let vx = launchSpeed * Math.cos(launchAngle * Math.PI / 180);
+      let vy = launchSpeed * Math.sin(launchAngle * Math.PI / 180);
+      let angle = launchAngle;
+      let trail = [];
+      const groundY = H * 0.82;
+      let distance = 0;
+      let frame = 0;
+
+      // Trees and terrain
+      const trees = [];
+      for (let i = 0; i < 12; i++) {
+        trees.push({ x: 80 + Math.random() * W * 2, h: 15 + Math.random() * 25 });
+      }
+
+      document.getElementById('paperResult').textContent = '';
+
+      function drawFrame() {
+        paperCtx.clearRect(0, 0, W, H);
+
+        // Sky gradient
+        const sky = paperCtx.createLinearGradient(0, 0, 0, H);
+        sky.addColorStop(0, '#5BA3E6');
+        sky.addColorStop(0.6, '#87CEEB');
+        sky.addColorStop(0.82, '#90EE90');
+        sky.addColorStop(1, '#228B22');
+        paperCtx.fillStyle = sky;
+        paperCtx.fillRect(0, 0, W, H);
+
+        // Clouds
+        paperCtx.fillStyle = 'rgba(255,255,255,0.7)';
+        [[80,40],[200,60],[350,30],[480,55]].forEach(([cx,cy]) => {
+          paperCtx.beginPath();
+          paperCtx.ellipse(cx - distance * 0.1, cy, 40, 15, 0, 0, Math.PI * 2);
+          paperCtx.fill();
+        });
+
+        // Ground
+        paperCtx.fillStyle = '#4a8c3f';
+        paperCtx.fillRect(0, groundY, W, H - groundY);
+
+        // Ground line
+        paperCtx.strokeStyle = '#3a7c2f';
+        paperCtx.lineWidth = 2;
+        paperCtx.beginPath();
+        paperCtx.moveTo(0, groundY);
+        paperCtx.lineTo(W, groundY);
+        paperCtx.stroke();
+
+        // Trees (scroll with distance)
+        trees.forEach(t => {
+          const tx = t.x - distance * 3;
+          if (tx > -20 && tx < W + 20) {
+            paperCtx.fillStyle = '#2d6b1e';
+            paperCtx.beginPath();
+            paperCtx.moveTo(tx, groundY);
+            paperCtx.lineTo(tx - 8, groundY);
+            paperCtx.lineTo(tx - 4, groundY - t.h);
+            paperCtx.lineTo(tx + 4, groundY - t.h);
+            paperCtx.lineTo(tx + 8, groundY);
+            paperCtx.closePath();
+            paperCtx.fill();
+          }
+        });
+
+        // Distance markers
+        paperCtx.fillStyle = 'rgba(255,255,255,0.5)';
+        paperCtx.font = '10px sans-serif';
+        for (let m = 10; m < distance + 50; m += 10) {
+          const mx = 40 + (m - distance) * 3;
+          if (mx > 0 && mx < W) {
+            paperCtx.fillText(m + 'm', mx, groundY + 14);
+            paperCtx.fillRect(mx, groundY, 1, 6);
+          }
+        }
+
+        // Trail
+        paperCtx.strokeStyle = 'rgba(193, 122, 74, 0.4)';
+        paperCtx.lineWidth = 2;
+        if (trail.length > 1) {
+          paperCtx.beginPath();
+          paperCtx.moveTo(trail[0][0], trail[0][1]);
+          for (let i = 1; i < trail.length; i++) {
+            paperCtx.lineTo(trail[i][0], trail[i][1]);
+          }
+          paperCtx.stroke();
+        }
+
+        // Draw paper airplane
+        paperCtx.save();
+        paperCtx.translate(x, y);
+        paperCtx.rotate(angle * Math.PI / 180);
+        paperCtx.fillStyle = '#fff';
+        paperCtx.strokeStyle = '#c17a4a';
+        paperCtx.lineWidth = 1.5;
+        paperCtx.beginPath();
+        paperCtx.moveTo(18, 0);
+        paperCtx.lineTo(-12, -8);
+        paperCtx.lineTo(-6, 0);
+        paperCtx.lineTo(-12, 8);
+        paperCtx.closePath();
+        paperCtx.fill();
+        paperCtx.stroke();
+        // Wing fold line
+        paperCtx.beginPath();
+        paperCtx.moveTo(18, 0);
+        paperCtx.lineTo(-8, 0);
+        paperCtx.strokeStyle = 'rgba(193,122,74,0.5)';
+        paperCtx.stroke();
+        paperCtx.restore();
+
+        // HUD
+        paperCtx.fillStyle = 'rgba(0,0,0,0.5)';
+        paperCtx.fillRect(W - 110, 8, 100, 22);
+        paperCtx.fillStyle = '#fff';
+        paperCtx.font = 'bold 13px sans-serif';
+        paperCtx.fillText(Math.round(distance) + ' m', W - 100, 24);
+
+        // Physics update
+        const lift = liftCoeff * vx * 0.5;
+        vy += gravity - lift;
+        vx -= dragCoeff * vx;
+        if (vx < 0.1) vx = 0.1;
+        x += vx;
+        y += vy;
+        distance += vx * 0.5;
+        angle = Math.atan2(vy, vx) * 180 / Math.PI;
+
+        trail.push([x, y]);
+        if (trail.length > 100) trail.shift();
+
+        // Keep plane horizontally centered after it moves far enough
+        if (x > W * 0.4) {
+          const shift = x - W * 0.4;
+          x = W * 0.4;
+          trail = trail.map(([tx, ty]) => [tx - shift, ty]);
+        }
+
+        frame++;
+
+        if (y >= groundY - 4 || y < -20 || frame > 600) {
+          cancelAnimationFrame(paperAnim);
+          paperAnim = null;
+          const finalDist = Math.round(distance);
+
+          let rating = '⭐';
+          if (finalDist > 100) rating = '⭐⭐⭐⭐⭐';
+          else if (finalDist > 70) rating = '⭐⭐⭐⭐';
+          else if (finalDist > 45) rating = '⭐⭐⭐';
+          else if (finalDist > 20) rating = '⭐⭐';
+
+          const isNew = finalDist > paperBestDist;
+          if (isNew) {
+            paperBestDist = finalDist;
+            localStorage.setItem('paperBest', paperBestDist);
+            document.getElementById('paperBest').textContent = paperBestDist;
+            document.getElementById('cardPaperBest').textContent = paperBestDist;
+          }
+          showGameOver('paperWrapper', finalDist + 'm', paperBestDist + 'm', isNew, rating);
+          return;
+        }
+
+        paperAnim = requestAnimationFrame(drawFrame);
+      }
+
+      drawFrame();
+    }
+
+    document.getElementById('paperLaunch').addEventListener('click', launchPaperPlane);
+
+    // ========== AIR TRAFFIC CONTROL GAME ==========
+    const atcCanvas = document.getElementById('atcCanvas');
+    const atcCtx = atcCanvas.getContext('2d');
+    let atcAnim = null;
+    let atcState = null;
+
+    function startAtcGame() {
+      if (atcAnim) cancelAnimationFrame(atcAnim);
+      const W = atcCanvas.width = atcCanvas.offsetWidth;
+      const H = atcCanvas.height = atcCanvas.offsetHeight;
+
+      // Runway position
+      const runway = { x: W * 0.5, y: H * 0.75, w: 60, h: 8, angle: 0 };
+
+      atcState = {
+        planes: [],
+        selected: null,
+        score: 0,
+        landed: 0,
+        missed: 0,
+        spawnTimer: 0,
+        spawnInterval: 180,
+        radarAngle: 0,
+        runway: runway,
+        running: true,
+        W: W,
+        H: H
+      };
+
+      document.getElementById('atcScore').textContent = '0';
+      document.getElementById('atcLanded').textContent = '0';
+      document.getElementById('atcMissed').textContent = '0/3';
+
+      // Remove any existing overlay
+      const wrapper = document.getElementById('atcWrapper');
+      const existing = wrapper.querySelector('.game-over-overlay');
+      if (existing) existing.remove();
+
+      function spawnPlane() {
+        const side = Math.floor(Math.random() * 4);
+        let px, py, pvx, pvy;
+        const speed = 0.5 + Math.random() * 0.5;
+        const callsigns = ['AA','UA','DL','SW','BA','LH','AF','KL','EK','QF'];
+        const num = Math.floor(Math.random() * 900) + 100;
+        const callsign = callsigns[Math.floor(Math.random() * callsigns.length)] + num;
+
+        if (side === 0) { px = -10; py = Math.random() * H * 0.6 + 20; pvx = speed; pvy = (Math.random() - 0.3) * 0.3; }
+        else if (side === 1) { px = W + 10; py = Math.random() * H * 0.6 + 20; pvx = -speed; pvy = (Math.random() - 0.3) * 0.3; }
+        else if (side === 2) { px = Math.random() * W; py = -10; pvx = (Math.random() - 0.5) * 0.5; pvy = speed; }
+        else { px = Math.random() * W; py = H + 10; pvx = (Math.random() - 0.5) * 0.5; pvy = -speed; }
+
+        atcState.planes.push({
+          x: px, y: py, vx: pvx, vy: pvy,
+          callsign: callsign,
+          landing: false,
+          fuel: 100,
+          size: 6
+        });
+      }
+
+      function handleAtcClick(e) {
+        if (!atcState || !atcState.running) return;
+        const rect = atcCanvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (W / rect.width);
+        const my = (e.clientY - rect.top) * (H / rect.height);
+
+        // Check if clicking a plane
+        let clickedPlane = null;
+        for (const p of atcState.planes) {
+          const dx = p.x - mx, dy = p.y - my;
+          if (Math.sqrt(dx * dx + dy * dy) < 20) {
+            clickedPlane = p;
+            break;
+          }
+        }
+
+        if (clickedPlane) {
+          atcState.selected = clickedPlane;
+        } else if (atcState.selected) {
+          // Direct selected plane toward click point
+          const dx = mx - atcState.selected.x;
+          const dy = my - atcState.selected.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const speed = 0.7;
+          atcState.selected.vx = (dx / dist) * speed;
+          atcState.selected.vy = (dy / dist) * speed;
+          atcState.selected.landing = true;
+          atcState.selected = null;
+        }
+      }
+
+      atcCanvas.addEventListener('click', handleAtcClick);
+      atcCanvas._clickHandler = handleAtcClick;
+
+      // Touch support
+      atcCanvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        handleAtcClick({ clientX: touch.clientX, clientY: touch.clientY });
+      });
+
+      function drawAtcFrame() {
+        if (!atcState || !atcState.running) return;
+        const s = atcState;
+        atcCtx.clearRect(0, 0, W, H);
+
+        // Dark radar background
+        const radGrad = atcCtx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.6);
+        radGrad.addColorStop(0, '#0d1f3c');
+        radGrad.addColorStop(1, '#060e1c');
+        atcCtx.fillStyle = radGrad;
+        atcCtx.fillRect(0, 0, W, H);
+
+        // Radar rings
+        atcCtx.strokeStyle = 'rgba(0,255,100,0.1)';
+        atcCtx.lineWidth = 1;
+        for (let r = 50; r < W; r += 60) {
+          atcCtx.beginPath();
+          atcCtx.arc(W/2, H/2, r, 0, Math.PI * 2);
+          atcCtx.stroke();
+        }
+
+        // Radar crosshairs
+        atcCtx.beginPath();
+        atcCtx.moveTo(W/2, 0); atcCtx.lineTo(W/2, H);
+        atcCtx.moveTo(0, H/2); atcCtx.lineTo(W, H/2);
+        atcCtx.stroke();
+
+        // Radar sweep
+        s.radarAngle += 0.015;
+        const sweepGrad = atcCtx.createConicGradient(s.radarAngle, W/2, H/2);
+        sweepGrad.addColorStop(0, 'rgba(0,255,100,0.15)');
+        sweepGrad.addColorStop(0.08, 'rgba(0,255,100,0)');
+        sweepGrad.addColorStop(1, 'rgba(0,255,100,0)');
+        atcCtx.fillStyle = sweepGrad;
+        atcCtx.beginPath();
+        atcCtx.arc(W/2, H/2, W * 0.6, 0, Math.PI * 2);
+        atcCtx.fill();
+
+        // Runway
+        atcCtx.fillStyle = 'rgba(0,255,100,0.6)';
+        atcCtx.fillRect(s.runway.x - s.runway.w/2, s.runway.y - s.runway.h/2, s.runway.w, s.runway.h);
+        // Runway stripes
+        atcCtx.fillStyle = 'rgba(0,255,100,0.3)';
+        for (let i = 0; i < 5; i++) {
+          atcCtx.fillRect(s.runway.x - s.runway.w/2 + 5 + i * 12, s.runway.y - 1, 8, 2);
+        }
+        // Label
+        atcCtx.fillStyle = 'rgba(0,255,100,0.5)';
+        atcCtx.font = '10px monospace';
+        atcCtx.fillText('RWY 09', s.runway.x - 18, s.runway.y + 16);
+
+        // Spawn planes
+        s.spawnTimer++;
+        if (s.spawnTimer >= s.spawnInterval && s.planes.length < 8) {
+          spawnPlane();
+          s.spawnTimer = 0;
+          s.spawnInterval = Math.max(90, s.spawnInterval - 3);
+        }
+
+        // Update and draw planes
+        for (let i = s.planes.length - 1; i >= 0; i--) {
+          const p = s.planes[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.fuel -= 0.02;
+
+          // Check landing on runway
+          const rw = s.runway;
+          if (p.landing && Math.abs(p.x - rw.x) < rw.w/2 + 5 && Math.abs(p.y - rw.y) < 15) {
+            s.landed++;
+            s.score += 10;
+            document.getElementById('atcScore').textContent = s.score;
+            document.getElementById('atcLanded').textContent = s.landed;
+            s.planes.splice(i, 1);
+            continue;
+          }
+
+          // Check if off-screen (missed)
+          if (p.x < -30 || p.x > W + 30 || p.y < -30 || p.y > H + 30) {
+            if (p.landing || p.fuel < 30) {
+              s.missed++;
+              document.getElementById('atcMissed').textContent = s.missed + '/3';
+            }
+            s.planes.splice(i, 1);
+            if (s.missed >= 3) {
+              s.running = false;
+              cancelAnimationFrame(atcAnim);
+              atcCanvas.removeEventListener('click', atcCanvas._clickHandler);
+              const best = parseInt(localStorage.getItem('atcBest') || '0');
+              const isNew = s.score > best;
+              if (isNew) { localStorage.setItem('atcBest', s.score); document.getElementById('cardAtcBest').textContent = s.score; }
+              showGameOver('atcWrapper', s.score, isNew ? s.score : best, isNew, 'Planes landed: ' + s.landed);
+              return;
+            }
+            continue;
+          }
+
+          // Check collisions
+          for (let j = i - 1; j >= 0; j--) {
+            const p2 = s.planes[j];
+            const dx = p.x - p2.x, dy = p.y - p2.y;
+            if (Math.sqrt(dx * dx + dy * dy) < 18) {
+              s.running = false;
+              cancelAnimationFrame(atcAnim);
+              atcCanvas.removeEventListener('click', atcCanvas._clickHandler);
+              const best = parseInt(localStorage.getItem('atcBest') || '0');
+              const isNew = s.score > best;
+              if (isNew) { localStorage.setItem('atcBest', s.score); document.getElementById('cardAtcBest').textContent = s.score; }
+              showGameOver('atcWrapper', s.score, isNew ? s.score : best, isNew, 'COLLISION! Planes landed: ' + s.landed);
+              return;
+            }
+          }
+
+          // Draw plane
+          const isSelected = p === s.selected;
+          const planeAngle = Math.atan2(p.vy, p.vx);
+
+          // Selection ring
+          if (isSelected) {
+            atcCtx.strokeStyle = '#00ff64';
+            atcCtx.lineWidth = 2;
+            atcCtx.beginPath();
+            atcCtx.arc(p.x, p.y, 14, 0, Math.PI * 2);
+            atcCtx.stroke();
+          }
+
+          // Plane icon
+          atcCtx.save();
+          atcCtx.translate(p.x, p.y);
+          atcCtx.rotate(planeAngle);
+          atcCtx.fillStyle = p.landing ? '#00ff64' : (p.fuel < 30 ? '#ff4444' : '#00cc55');
+          atcCtx.beginPath();
+          atcCtx.moveTo(8, 0);
+          atcCtx.lineTo(-6, -5);
+          atcCtx.lineTo(-4, 0);
+          atcCtx.lineTo(-6, 5);
+          atcCtx.closePath();
+          atcCtx.fill();
+          atcCtx.restore();
+
+          // Callsign label
+          atcCtx.fillStyle = p.fuel < 30 ? '#ff4444' : 'rgba(0,255,100,0.7)';
+          atcCtx.font = '9px monospace';
+          atcCtx.fillText(p.callsign, p.x + 10, p.y - 8);
+
+          // Fuel indicator
+          if (p.fuel < 50) {
+            atcCtx.fillStyle = p.fuel < 30 ? 'rgba(255,68,68,0.5)' : 'rgba(255,200,0,0.5)';
+            atcCtx.fillRect(p.x + 10, p.y - 2, p.fuel * 0.3, 3);
+          }
+        }
+
+        // Top HUD
+        atcCtx.fillStyle = 'rgba(0,255,100,0.4)';
+        atcCtx.font = '11px monospace';
+        atcCtx.fillText('AIRCRAFT: ' + s.planes.length, 10, 18);
+        atcCtx.fillText('FREQUENCY: 118.70', 10, 32);
+
+        atcAnim = requestAnimationFrame(drawAtcFrame);
+      }
+
+      // Initial spawn
+      spawnPlane();
+      spawnPlane();
+      drawAtcFrame();
+    }
+
+    document.getElementById('atcStart').addEventListener('click', startAtcGame);
+
+    // Load ATC best score
+    const atcBestStored = localStorage.getItem('atcBest') || '0';
+    document.getElementById('cardAtcBest').textContent = atcBestStored;
+
+    // ========== FLIGHT SIM BINGO ==========
+    const bingoAllChallenges = [
+      "Land in a crosswind", "Fly at night", "Do a barrel roll", "Visit 3 countries",
+      "Fly under a bridge", "Land on water", "Reach FL400", "Fly a helicopter",
+      "Use only ILS to land", "Fly in a storm", "Complete a full flight plan",
+      "Taxi without hitting anything", "Fly inverted for 10 sec", "Land on a carrier",
+      "Do a touch-and-go", "Fly in formation", "Navigate by VOR only",
+      "Land at your nearest airport", "Fly the longest runway", "Grease a landing (<100fpm)",
+      "Fly a turboprop", "Visit an island airport", "Do a go-around",
+      "Fly at sunset", "Land with one engine", "Cross an ocean",
+      "Fly through a canyon", "Reach Mach 1", "Land at KLAX",
+      "Fly from EGLL to LFPG", "Use a bush plane", "Fly at dawn",
+      "Land on a grass strip", "Fly a warbird", "Maintain heading 270 for 10 min",
+      "Land at the highest airport", "Fly through northern lights",
+      "Complete a holding pattern", "Land in fog", "Fly supersonic",
+      "Visit a mountain airport", "Fly a seaplane", "Do 3 landings in 10 min",
+      "Fly a glider", "Land at KJFK"
+    ];
+
+    let bingoGrid = [];
+    let bingoMarked = [];
+
+    function generateBingoCard() {
+      const shuffled = [...bingoAllChallenges].sort(() => Math.random() - 0.5);
+      bingoGrid = shuffled.slice(0, 25);
+      bingoMarked = Array(25).fill(false);
+      bingoMarked[12] = true; // Free center space
+      bingoGrid[12] = "FREE SPACE ✈️";
+      renderBingoBoard();
+      document.getElementById('bingoStatus').textContent = '';
+    }
+
+    function renderBingoBoard() {
+      const board = document.getElementById('bingoBoard');
+      board.innerHTML = '';
+      bingoGrid.forEach((challenge, i) => {
+        const cell = document.createElement('div');
+        cell.textContent = challenge;
+        cell.style.cssText = `
+          padding: 0.5rem 0.25rem;
+          text-align: center;
+          font-size: 10px;
+          line-height: 1.3;
+          border-radius: 6px;
+          cursor: pointer;
+          min-height: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          border: 1px solid var(--border-light);
+          user-select: none;
+          font-weight: ${bingoMarked[i] ? '600' : '400'};
+          background: ${bingoMarked[i] ? 'var(--accent)' : 'var(--bg-card)'};
+          color: ${bingoMarked[i] ? '#fff' : 'var(--text-main)'};
+        `;
+        cell.addEventListener('click', () => {
+          if (i === 12) return; // free space always marked
+          bingoMarked[i] = !bingoMarked[i];
+          renderBingoBoard();
+          checkBingo();
+        });
+        board.appendChild(cell);
+      });
+    }
+
+    function checkBingo() {
+      const lines = [];
+      // Rows
+      for (let r = 0; r < 5; r++) lines.push([r*5, r*5+1, r*5+2, r*5+3, r*5+4]);
+      // Columns
+      for (let c = 0; c < 5; c++) lines.push([c, c+5, c+10, c+15, c+20]);
+      // Diagonals
+      lines.push([0, 6, 12, 18, 24]);
+      lines.push([4, 8, 12, 16, 20]);
+
+      let bingos = 0;
+      for (const line of lines) {
+        if (line.every(i => bingoMarked[i])) bingos++;
+      }
+
+      const status = document.getElementById('bingoStatus');
+      if (bingos > 0) {
+        status.textContent = `🎉 BINGO! You got ${bingos} line${bingos > 1 ? 's' : ''}!`;
+        status.style.color = '#22c55e';
+      } else {
+        const marked = bingoMarked.filter(Boolean).length;
+        status.textContent = `${marked}/25 marked`;
+        status.style.color = 'var(--accent)';
+      }
+    }
+
+    document.getElementById('bingoNew').addEventListener('click', generateBingoCard);
+    // Auto-generate first card
+    generateBingoCard();
   </script>
 </body>
 </html>
