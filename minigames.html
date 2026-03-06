@@ -584,6 +584,87 @@
         display: block;
       }
     }
+
+    /* Styled range sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: var(--border-light);
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 8px rgba(193,122,74,0.4);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Score popup animation */
+    @keyframes scorePopup {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
+    }
+
+    /* Confetti particles */
+    @keyframes confettiFall {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
+    }
+
+    /* Pulse for new high scores */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 5px rgba(193,122,74,0.3); }
+      50% { box-shadow: 0 0 20px rgba(193,122,74,0.6); }
+    }
+
+    .game-over-overlay .go-best.new-best {
+      color: #fbbf24;
+      font-size: 18px;
+      font-weight: 700;
+      animation: pulseGlow 1s ease-in-out infinite;
+      padding: 0.25rem 1rem;
+      border-radius: 6px;
+    }
+
+    /* Difficulty indicator */
+    .difficulty-bar {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+    .difficulty-bar .pip {
+      width: 6px;
+      height: 12px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.3s;
+    }
+    .difficulty-bar .pip.active {
+      background: #22c55e;
+    }
+    .difficulty-bar .pip.active.warn {
+      background: #fbbf24;
+    }
+    .difficulty-bar .pip.active.danger {
+      background: #ef4444;
+    }
   </style>
 </head>
 
@@ -831,9 +912,9 @@
         <h2 style="text-align: center; color: var(--accent);">Perfect Landing</h2>
         <div class="game-instructions">
           <h3>How to Play:</h3>
-          <p><strong>Desktop:</strong> Use ← → arrow keys to move. Press ↓ to descend faster.</p>
+          <p><strong>Desktop:</strong> ← → to move. ↑ adds throttle (slow descent). ↓ speeds up descent.</p>
           <p><strong>Mobile:</strong> Use the on-screen buttons below to control your plane.</p>
-          <p>💡 <em>Land gently on the runway for a perfect score!</em></p>
+          <p>💡 <em>Watch the PAPI lights and aim for under 200 fpm touchdown rate!</em></p>
         </div>
         <div class="game-score">Altitude: <span id="landingAlt">1000</span>m | Speed: <span id="landingSpeed">0</span> m/s</div>
         <div class="canvas-wrapper" id="landingWrapper">
@@ -844,10 +925,11 @@
         <div class="mobile-controls" id="landingMobileControls">
           <div class="landing-controls">
             <div class="touch-btn-row">
-              <button class="touch-btn" id="landingDown">↓</button>
+              <button class="touch-btn" id="landingUp">↑</button>
             </div>
             <div class="touch-btn-row">
               <button class="touch-btn" id="landingLeft">←</button>
+              <button class="touch-btn" id="landingDown">↓</button>
               <button class="touch-btn" id="landingRight">→</button>
             </div>
           </div>
@@ -1631,18 +1713,32 @@
 
     function showGameOver(wrapperId, score, best, isNewBest, extraMsg) {
       const wrapper = document.getElementById(wrapperId);
-      // Remove existing overlay
       const existing = wrapper.querySelector('.game-over-overlay');
       if (existing) existing.remove();
 
       const overlay = document.createElement('div');
       overlay.className = 'game-over-overlay';
-      overlay.innerHTML =
+
+      // Confetti particles for new high score
+      let confettiHTML = '';
+      if (isNewBest) {
+        const colors = ['#fbbf24','#ef4444','#22c55e','#3b82f6','#a855f7','#ec4899'];
+        for (let i = 0; i < 30; i++) {
+          const color = colors[i % colors.length];
+          const left = Math.random() * 100;
+          const delay = Math.random() * 0.8;
+          const dur = 1.5 + Math.random();
+          confettiHTML += `<div style="position:absolute;top:0;left:${left}%;width:8px;height:8px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};animation:confettiFall ${dur}s ${delay}s ease-out forwards;pointer-events:none;"></div>`;
+        }
+      }
+
+      overlay.innerHTML = confettiHTML +
         '<h3>Game Over</h3>' +
         '<div class="go-score">Score: ' + score + '</div>' +
-        (isNewBest ? '<div class="go-best">NEW HIGH SCORE!</div>' : '<div class="go-best">Best: ' + best + '</div>') +
+        (isNewBest ? '<div class="go-best new-best">NEW HIGH SCORE!</div>' : '<div class="go-best">Best: ' + best + '</div>') +
         (extraMsg ? '<div class="go-rating">' + extraMsg + '</div>' : '') +
-        '<button onclick="this.parentElement.remove()">Play Again</button>';
+        '<button onclick="this.parentElement.remove()">Play Again</button>' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:0.5rem;">Press Space or tap to restart</div>';
       wrapper.appendChild(overlay);
     }
 
@@ -1677,6 +1773,38 @@
           y: Math.random() * canvasH * 0.6,
           w: 40 + Math.random() * 60,
           speed: 0.3 + Math.random() * 0.5
+        });
+      }
+    }
+
+    // Parallax mountain layers for Flappy Plane
+    let mountains = [];
+    function initMountains(canvasW, canvasH) {
+      mountains = [];
+      // Far mountains (slow)
+      const far = [];
+      for (let x = 0; x < canvasW * 2; x += 60) {
+        far.push({ x: x, h: 40 + Math.random() * 50 });
+      }
+      mountains.push({ peaks: far, speed: 0.3, color: 'rgba(100,140,180,0.4)', baseY: canvasH * 0.65 });
+      // Near mountains (faster)
+      const near = [];
+      for (let x = 0; x < canvasW * 2; x += 40) {
+        near.push({ x: x, h: 25 + Math.random() * 35 });
+      }
+      mountains.push({ peaks: near, speed: 0.8, color: 'rgba(80,120,80,0.5)', baseY: canvasH * 0.75 });
+    }
+
+    // Score particles
+    let scoreParticles = [];
+    function addScoreParticle(x, y) {
+      for (let i = 0; i < 5; i++) {
+        scoreParticles.push({
+          x: x, y: y,
+          vx: (Math.random() - 0.5) * 4,
+          vy: -2 - Math.random() * 3,
+          life: 1,
+          color: ['#fbbf24','#22c55e','#3b82f6'][Math.floor(Math.random()*3)]
         });
       }
     }
@@ -1721,10 +1849,16 @@
 
       g.plane.y += g.plane.velocity;
 
-      // Add obstacles (scale gap based on canvas size)
-      if (g.frame % 90 === 0) {
+      // Progressive difficulty
+      const diffLevel = Math.min(g.score, 30);
+      const pipeSpeed = 3 + diffLevel * 0.1;
+      const spawnRate = Math.max(60, 90 - diffLevel);
+      const gapReduction = diffLevel * 1.5;
+
+      // Add obstacles with progressive difficulty
+      if (g.frame % spawnRate === 0) {
         const scaleFactor = flappyCanvas.height / 400;
-        const gap = Math.max(100, 150 * scaleFactor);
+        const gap = Math.max(80 * scaleFactor, 150 * scaleFactor - gapReduction * scaleFactor);
         const minHeight = 50 * scaleFactor;
         const maxHeight = flappyCanvas.height - gap - (50 * scaleFactor);
         const height = Math.random() * (maxHeight - minHeight) + minHeight;
@@ -1733,13 +1867,14 @@
 
       // Update obstacles
       g.obstacles.forEach((obs, i) => {
-        obs.x -= 3;
+        obs.x -= pipeSpeed;
 
         // Score
         if (obs.x + 50 < g.plane.x && !obs.scored) {
           g.score++;
           obs.scored = true;
           document.getElementById('flappyScore').textContent = g.score;
+          addScoreParticle(g.plane.x + g.plane.size, g.plane.y);
         }
 
         // Collision
@@ -1795,6 +1930,25 @@
         flappyCtx.fill();
       });
 
+      // Draw parallax mountains
+      if (mountains.length === 0) initMountains(flappyCanvas.width, flappyCanvas.height);
+      mountains.forEach(layer => {
+        flappyCtx.fillStyle = layer.color;
+        flappyCtx.beginPath();
+        flappyCtx.moveTo(0, flappyCanvas.height);
+        layer.peaks.forEach((p, i) => {
+          const px = p.x - (g.frame * layer.speed) % (flappyCanvas.width * 2);
+          const adjustedX = px < -60 ? px + flappyCanvas.width * 2 : px;
+          if (i === 0) flappyCtx.moveTo(adjustedX, layer.baseY);
+          flappyCtx.lineTo(adjustedX, layer.baseY - p.h);
+        });
+        flappyCtx.lineTo(flappyCanvas.width + 60, layer.baseY);
+        flappyCtx.lineTo(flappyCanvas.width + 60, flappyCanvas.height);
+        flappyCtx.lineTo(0, flappyCanvas.height);
+        flappyCtx.closePath();
+        flappyCtx.fill();
+      });
+
       // Draw obstacles with gradient
       g.obstacles.forEach(obs => {
         const pipeGrad = flappyCtx.createLinearGradient(obs.x, 0, obs.x + 50, 0);
@@ -1804,10 +1958,23 @@
         flappyCtx.fillStyle = pipeGrad;
         flappyCtx.fillRect(obs.x, 0, 50, obs.top);
         flappyCtx.fillRect(obs.x, obs.top + obs.gap, 50, flappyCanvas.height);
-        // Pipe caps
-        flappyCtx.fillStyle = '#1b5e20';
-        flappyCtx.fillRect(obs.x - 3, obs.top - 12, 56, 12);
-        flappyCtx.fillRect(obs.x - 3, obs.top + obs.gap, 56, 12);
+        // Pipe highlight (shine effect)
+        flappyCtx.fillStyle = 'rgba(255,255,255,0.15)';
+        flappyCtx.fillRect(obs.x + 5, 0, 8, obs.top);
+        flappyCtx.fillRect(obs.x + 5, obs.top + obs.gap, 8, flappyCanvas.height);
+        // Pipe caps with 3D effect
+        const capGrad = flappyCtx.createLinearGradient(obs.x - 3, 0, obs.x + 53, 0);
+        capGrad.addColorStop(0, '#1b5e20');
+        capGrad.addColorStop(0.4, '#2e7d32');
+        capGrad.addColorStop(1, '#1b5e20');
+        flappyCtx.fillStyle = capGrad;
+        flappyCtx.fillRect(obs.x - 3, obs.top - 14, 56, 14);
+        flappyCtx.fillRect(obs.x - 3, obs.top + obs.gap, 56, 14);
+        // Cap border
+        flappyCtx.strokeStyle = '#145218';
+        flappyCtx.lineWidth = 1;
+        flappyCtx.strokeRect(obs.x - 3, obs.top - 14, 56, 14);
+        flappyCtx.strokeRect(obs.x - 3, obs.top + obs.gap, 56, 14);
       });
 
       // Draw engine thrust effect when active
@@ -1851,14 +2018,37 @@
       const angle = Math.min(Math.max(g.plane.velocity * 0.05, -0.4), 0.4);
       drawAircraft(flappyCtx, g.plane.x, g.plane.y, g.plane.size * 2, angle);
 
+      // Draw and update score particles
+      for (let i = scoreParticles.length - 1; i >= 0; i--) {
+        const p = scoreParticles[i];
+        p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.life -= 0.025;
+        if (p.life <= 0) { scoreParticles.splice(i, 1); continue; }
+        flappyCtx.globalAlpha = p.life;
+        flappyCtx.fillStyle = p.color;
+        flappyCtx.fillRect(p.x, p.y, 4, 4);
+        flappyCtx.globalAlpha = 1;
+      }
+
       // Score HUD on canvas
-      flappyCtx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-      flappyCtx.fillRect(flappyCanvas.width - 80, 8, 72, 28);
+      flappyCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      flappyCtx.fillRect(flappyCanvas.width - 90, 6, 82, 36);
       flappyCtx.fillStyle = '#fff';
-      flappyCtx.font = 'bold ' + Math.max(14, flappyCanvas.width * 0.03) + 'px -apple-system, sans-serif';
+      flappyCtx.font = 'bold ' + Math.max(18, flappyCanvas.width * 0.04) + 'px -apple-system, sans-serif';
       flappyCtx.textAlign = 'center';
-      flappyCtx.fillText(g.score, flappyCanvas.width - 44, 28);
+      flappyCtx.fillText(g.score, flappyCanvas.width - 49, 30);
       flappyCtx.textAlign = 'left';
+
+      // Difficulty indicator
+      const diffPips = Math.min(10, Math.floor(diffLevel / 3));
+      flappyCtx.fillStyle = 'rgba(0,0,0,0.4)';
+      flappyCtx.fillRect(8, 6, 86, 18);
+      flappyCtx.fillStyle = 'rgba(255,255,255,0.5)';
+      flappyCtx.font = '9px -apple-system, sans-serif';
+      flappyCtx.fillText('SPEED', 12, 17);
+      for (let i = 0; i < 10; i++) {
+        flappyCtx.fillStyle = i < diffPips ? (i < 4 ? '#22c55e' : i < 7 ? '#fbbf24' : '#ef4444') : 'rgba(255,255,255,0.15)';
+        flappyCtx.fillRect(48 + i * 5, 9, 3, 10);
+      }
 
       requestAnimationFrame(gameLoop);
     }
@@ -1991,17 +2181,28 @@
       const runwayWidth = 100 * scaleFactor;
       const randomRunwayX = Math.random() * (landingCanvas.width - runwayWidth - 100 * scaleFactor) + 50 * scaleFactor;
 
+      // Wind system
+      const windSpeed = (Math.random() - 0.5) * 3;
+      const windGusts = Math.random() * 1.5;
+
       landingGame = {
         plane: {
           x: randomX,
           y: randomY,
-          velocityY: 2,
+          velocityY: 1.5,
           velocityX: randomVelocityX,
-          size: Math.max(20, 30 * scaleFactor)
+          size: Math.max(20, 30 * scaleFactor),
+          throttle: 0
         },
         runway: { x: randomRunwayX, y: landingCanvas.height - 30 * scaleFactor, width: runwayWidth },
         running: true,
-        scaleFactor: scaleFactor
+        scaleFactor: scaleFactor,
+        wind: windSpeed,
+        windGust: 0,
+        gustTimer: 0,
+        gustMax: windGusts,
+        startTime: Date.now(),
+        maxDescentRate: 0
       };
 
       landingLoop();
@@ -2021,16 +2222,39 @@
 
       const g = landingGame;
 
-      // Controls
+      // Wind gusts
+      g.gustTimer++;
+      if (g.gustTimer % 120 === 0) {
+        g.windGust = (Math.random() - 0.5) * g.gustMax * 2;
+      }
+      if (g.gustTimer % 60 === 0 && Math.abs(g.windGust) > 0.1) {
+        g.windGust *= 0.7;
+      }
+
+      // Controls with throttle
       if (keys['ArrowLeft']) g.plane.velocityX = -3;
       else if (keys['ArrowRight']) g.plane.velocityX = 3;
       else g.plane.velocityX *= 0.9;
 
-      if (keys['ArrowDown']) g.plane.velocityY = 4;
-      else g.plane.velocityY = 2;
+      if (keys['ArrowUp']) {
+        g.plane.throttle = Math.min(g.plane.throttle + 0.3, 3);
+        g.plane.velocityY = Math.max(0.5, 2 - g.plane.throttle);
+      } else if (keys['ArrowDown']) {
+        g.plane.throttle = 0;
+        g.plane.velocityY = 4;
+      } else {
+        g.plane.throttle = Math.max(0, g.plane.throttle - 0.1);
+        g.plane.velocityY = 2 - g.plane.throttle * 0.3;
+      }
+
+      // Apply wind
+      g.plane.velocityX += (g.wind + g.windGust) * 0.02;
 
       g.plane.x += g.plane.velocityX;
       g.plane.y += g.plane.velocityY;
+
+      // Track max descent rate for scoring
+      g.maxDescentRate = Math.max(g.maxDescentRate, g.plane.velocityY);
 
       // Keep plane in bounds horizontally
       if (g.plane.x < 0) g.plane.x = 0;
@@ -2045,14 +2269,23 @@
       // Landing check
       if (g.plane.y + g.plane.size >= g.runway.y) {
         const onRunway = g.plane.x >= g.runway.x && g.plane.x + g.plane.size <= g.runway.x + g.runway.width;
-        const gentleLanding = Math.abs(g.plane.velocityY) < 3;
+        const touchdownFpm = Math.round(g.plane.velocityY * 200);
+        const centerX = g.runway.x + g.runway.width / 2;
+        const planeCenter = g.plane.x + g.plane.size / 2;
+        const centerlineOffset = Math.abs(planeCenter - centerX) / (g.runway.width / 2);
+        const elapsedSec = ((Date.now() - g.startTime) / 1000).toFixed(1);
+        const fpmText = touchdownFpm + ' fpm';
 
-        if (onRunway && gentleLanding) {
-          showLandingResult('landingWrapper', 'Perfect Landing!', 'Smooth touchdown on the centerline. Outstanding!', '\u2B50');
+        if (onRunway && touchdownFpm < 200) {
+          const rating = touchdownFpm < 80 ? 'Butter!' : touchdownFpm < 150 ? 'Smooth!' : 'Acceptable';
+          const centerBonus = centerlineOffset < 0.3 ? ' Centerline perfect!' : '';
+          showLandingResult('landingWrapper', 'Perfect Landing!', rating + ' ' + fpmText + centerBonus + ' | Time: ' + elapsedSec + 's', '\u2B50');
+        } else if (onRunway && touchdownFpm < 400) {
+          showLandingResult('landingWrapper', 'Firm Landing', 'Touchdown at ' + fpmText + '. Try using arrow-up to reduce descent rate.', '\u26A0\uFE0F');
         } else if (onRunway) {
-          showLandingResult('landingWrapper', 'Hard Landing', 'You hit the runway too fast. Ease up on descent!', '\u26A0\uFE0F');
+          showLandingResult('landingWrapper', 'Hard Landing!', 'Slammed in at ' + fpmText + '! Use throttle (up arrow) to control descent.', '\u274C');
         } else {
-          showLandingResult('landingWrapper', 'Missed Runway', 'You missed the runway completely. Line up better!', '\u274C');
+          showLandingResult('landingWrapper', 'Missed Runway', 'Off-runway landing! Align with the runway markers.', '\u274C');
         }
         stopLandingGame();
         return;
@@ -2101,15 +2334,58 @@
       landingCtx.stroke();
       landingCtx.setLineDash([]);
 
-      // Wind indicator
-      landingCtx.fillStyle = 'rgba(0,0,0,0.4)';
-      landingCtx.fillRect(8, 8, 90, 24);
-      landingCtx.fillStyle = '#fff';
-      landingCtx.font = '11px -apple-system, sans-serif';
-      landingCtx.fillText('Wind: ' + (g.wind || '0') + ' kt', 14, 24);
+      // PAPI lights (precision approach path indicator)
+      const idealGlide = 3; // 3 degree glideslope
+      const distToRunway = Math.sqrt(Math.pow(g.plane.x - (g.runway.x + g.runway.width/2), 2) + Math.pow(g.runway.y - g.plane.y, 2));
+      const actualAngle = Math.atan2(g.runway.y - g.plane.y, distToRunway) * 180 / Math.PI;
+      const papiX = g.runway.x - 14;
+      for (let p = 0; p < 4; p++) {
+        const threshold = idealGlide + (p - 1.5) * 0.8;
+        const isRed = g.plane.velocityY > threshold;
+        landingCtx.fillStyle = isRed ? '#ef4444' : '#fff';
+        landingCtx.beginPath();
+        landingCtx.arc(papiX, g.runway.y + 4 + p * 5, 2.5, 0, Math.PI * 2);
+        landingCtx.fill();
+        // Glow
+        landingCtx.fillStyle = isRed ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.3)';
+        landingCtx.beginPath();
+        landingCtx.arc(papiX, g.runway.y + 4 + p * 5, 5, 0, Math.PI * 2);
+        landingCtx.fill();
+      }
 
-      // Draw plane (F-16)
+      // HUD panel
+      landingCtx.fillStyle = 'rgba(0,0,0,0.5)';
+      landingCtx.fillRect(6, 6, 120, 52);
+      landingCtx.fillStyle = '#fff';
+      landingCtx.font = '10px monospace';
+      const windDir = g.wind > 0 ? '→' : '←';
+      const windStr = Math.abs(g.wind).toFixed(1);
+      landingCtx.fillText('WIND: ' + windDir + ' ' + windStr + 'kt', 12, 20);
+      const fpm = Math.round(g.plane.velocityY * 200);
+      const fpmColor = fpm < 200 ? '#22c55e' : fpm < 400 ? '#fbbf24' : '#ef4444';
+      landingCtx.fillStyle = fpmColor;
+      landingCtx.fillText('V/S: ' + fpm + ' fpm', 12, 34);
+      landingCtx.fillStyle = '#fff';
+      landingCtx.fillText('THR: ' + (g.plane.throttle > 0 ? Math.round(g.plane.throttle/3*100) + '%' : 'IDLE'), 12, 48);
+      // Wind gust indicator
+      if (Math.abs(g.windGust) > 0.3) {
+        landingCtx.fillStyle = '#fbbf24';
+        landingCtx.fillText('GUST', 90, 20);
+      }
+
+      // Draw plane (F-16) with throttle glow
       const descentAngle = Math.atan2(g.plane.velocityY, 5) * 0.3;
+      if (g.plane.throttle > 0.5) {
+        landingCtx.save();
+        const tGlow = landingCtx.createRadialGradient(g.plane.x, g.plane.y + g.plane.size/2, 0, g.plane.x, g.plane.y + g.plane.size/2, 15);
+        tGlow.addColorStop(0, `rgba(255,200,100,${g.plane.throttle/4})`);
+        tGlow.addColorStop(1, 'rgba(255,100,0,0)');
+        landingCtx.fillStyle = tGlow;
+        landingCtx.beginPath();
+        landingCtx.arc(g.plane.x, g.plane.y + g.plane.size/2, 15, 0, Math.PI * 2);
+        landingCtx.fill();
+        landingCtx.restore();
+      }
       drawF16(landingCtx, g.plane.x, g.plane.y, g.plane.size * 1.5, descentAngle);
 
       requestAnimationFrame(landingLoop);
@@ -2179,6 +2455,20 @@
       keys['ArrowRight'] = false;
     });
 
+    // Up button (throttle)
+    const landingUpBtn = document.getElementById('landingUp');
+    landingUpBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      keys['ArrowUp'] = true;
+    }, { passive: false });
+    landingUpBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      keys['ArrowUp'] = false;
+    }, { passive: false });
+    landingUpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); keys['ArrowUp'] = true; });
+    landingUpBtn.addEventListener('mouseup', () => { keys['ArrowUp'] = false; });
+    landingUpBtn.addEventListener('mouseleave', () => { keys['ArrowUp'] = false; });
+
     // Down button
     landingDownBtn.addEventListener('touchstart', (e) => {
       e.preventDefault();
@@ -2217,20 +2507,35 @@
 
     // MEMORY GAME
     let memoryGame = null;
+    let memoryTimer = null;
     const aircraft = ['✈️', '🛩️', '🚁', '🛫', '🛬', '🚀', '🎈', '🪂'];
 
     function startMemoryGame() {
       const cards = [...aircraft, ...aircraft].sort(() => Math.random() - 0.5);
 
+      if (memoryTimer) clearInterval(memoryTimer);
+
       memoryGame = {
         cards: cards,
         flipped: [],
         matched: [],
-        moves: 0
+        moves: 0,
+        startTime: Date.now(),
+        elapsed: 0,
+        comboCount: 0
       };
 
       document.getElementById('memoryMoves').textContent = '0';
       document.getElementById('memoryPairs').textContent = '0';
+
+      // Start timer
+      memoryTimer = setInterval(() => {
+        if (memoryGame && memoryGame.matched.length < 16) {
+          memoryGame.elapsed = Math.floor((Date.now() - memoryGame.startTime) / 1000);
+          document.getElementById('memoryMoves').parentElement.innerHTML =
+            'Moves: <span id="memoryMoves">' + memoryGame.moves + '</span> | Pairs: <span id="memoryPairs">' + (memoryGame.matched.length / 2) + '</span>/8 | Time: <span>' + memoryGame.elapsed + 's</span>';
+        }
+      }, 1000);
 
       const grid = document.getElementById('memoryGrid');
       grid.innerHTML = '';
@@ -2266,30 +2571,61 @@
         const [first, second] = memoryGame.flipped;
         if (memoryGame.cards[first] === memoryGame.cards[second]) {
           memoryGame.matched.push(first, second);
-          document.getElementById('memoryPairs').textContent = memoryGame.matched.length / 2;
+          memoryGame.comboCount++;
           memoryGame.flipped = [];
 
-          if (memoryGame.matched.length === 16) {
+          // Match pulse animation
+          const grid = document.getElementById('memoryGrid');
+          [first, second].forEach(i => {
+            const card = grid.children[i];
+            card.style.transform = 'scale(1.15)';
+            card.style.boxShadow = '0 0 12px rgba(34,197,94,0.5)';
             setTimeout(() => {
+              card.style.transform = 'scale(1)';
+              card.style.boxShadow = 'none';
+            }, 300);
+          });
+
+          // Combo indicator
+          if (memoryGame.comboCount >= 2) {
+            const comboDiv = document.createElement('div');
+            comboDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:800;color:#22c55e;pointer-events:none;animation:scorePopup 0.8s ease forwards;z-index:9999;';
+            comboDiv.textContent = memoryGame.comboCount + 'x COMBO!';
+            document.body.appendChild(comboDiv);
+            setTimeout(() => comboDiv.remove(), 800);
+          }
+
+          if (memoryGame.matched.length === 16) {
+            if (memoryTimer) clearInterval(memoryTimer);
+            setTimeout(() => {
+              const time = memoryGame.elapsed;
               const rating = memoryGame.moves <= 12 ? 'Perfect memory!' : memoryGame.moves <= 18 ? 'Great job!' : 'Keep practicing!';
-              document.getElementById('memoryMoves').parentElement.innerHTML = '<span style="color:var(--accent);font-weight:700;">You won in ' + memoryGame.moves + ' moves! ' + rating + '</span>';
+              const timeRating = time < 30 ? 'Speed demon!' : time < 60 ? 'Quick thinking!' : '';
+              document.getElementById('memoryMoves').parentElement.innerHTML = '<span style="color:var(--accent);font-weight:700;">You won in ' + memoryGame.moves + ' moves (' + time + 's)! ' + rating + ' ' + timeRating + '</span>';
             }, 400);
           }
         } else {
+          memoryGame.comboCount = 0;
           setTimeout(() => {
             const grid = document.getElementById('memoryGrid');
             [first, second].forEach(i => {
               const card = grid.children[i];
-              card.style.transform = 'rotateY(180deg)';
+              // Shake animation for mismatch
+              card.style.transform = 'translateX(-4px)';
+              setTimeout(() => { card.style.transform = 'translateX(4px)'; }, 50);
+              setTimeout(() => { card.style.transform = 'translateX(-2px)'; }, 100);
               setTimeout(() => {
-                card.innerHTML = '<span style="font-size:24px; color:var(--accent); font-weight:700;">?</span>';
-                card.style.background = 'var(--accent-light)';
-                card.style.borderColor = 'var(--border-light)';
-                card.style.transform = 'rotateY(0deg)';
-              }, 150);
+                card.style.transform = 'rotateY(180deg)';
+                setTimeout(() => {
+                  card.innerHTML = '<span style="font-size:24px; color:var(--accent); font-weight:700;">?</span>';
+                  card.style.background = 'var(--accent-light)';
+                  card.style.borderColor = 'var(--border-light)';
+                  card.style.transform = 'rotateY(0deg)';
+                }, 150);
+              }, 200);
             });
             memoryGame.flipped = [];
-          }, 1000);
+          }, 800);
         }
       }
     }
@@ -2316,6 +2652,7 @@
     ];
 
     let triviaState = null;
+    let triviaQuestionTimer = null;
 
     function shuffleArray(arr) {
       const a = [...arr];
@@ -2327,8 +2664,9 @@
     }
 
     function startTrivia() {
+      if (triviaQuestionTimer) clearInterval(triviaQuestionTimer);
       const selected = shuffleArray(triviaQuestions).slice(0, 10);
-      triviaState = { questions: selected, current: 0, score: 0 };
+      triviaState = { questions: selected, current: 0, score: 0, streak: 0, maxStreak: 0, timeLeft: 15 };
       document.getElementById('triviaScore').textContent = '0';
       document.getElementById('triviaQ').textContent = '1';
       document.getElementById('triviaFeedback').style.display = 'none';
@@ -2336,16 +2674,20 @@
     }
 
     function showTriviaQuestion() {
+      if (triviaQuestionTimer) clearInterval(triviaQuestionTimer);
+
       if (!triviaState || triviaState.current >= triviaState.questions.length) {
         document.getElementById('triviaQuestion').textContent = `Quiz Complete! You scored ${triviaState.score}/10`;
         document.getElementById('triviaOptions').innerHTML = '';
         document.getElementById('triviaFeedback').style.display = 'block';
         document.getElementById('triviaFeedback').style.background = 'var(--accent-light)';
         document.getElementById('triviaFeedback').style.color = 'var(--accent)';
-        document.getElementById('triviaFeedback').textContent = triviaState.score >= 8 ? 'Aviation expert!' : triviaState.score >= 5 ? 'Good flying knowledge!' : 'Keep learning, pilot!';
+        const streakMsg = triviaState.maxStreak >= 5 ? ' | Max streak: ' + triviaState.maxStreak + '!' : '';
+        document.getElementById('triviaFeedback').textContent = (triviaState.score >= 8 ? 'Aviation expert!' : triviaState.score >= 5 ? 'Good flying knowledge!' : 'Keep learning, pilot!') + streakMsg;
         return;
       }
 
+      triviaState.timeLeft = 15;
       const q = triviaState.questions[triviaState.current];
       document.getElementById('triviaQ').textContent = triviaState.current + 1;
       document.getElementById('triviaQuestion').textContent = q.q;
@@ -2354,16 +2696,43 @@
 
       const optionsDiv = document.getElementById('triviaOptions');
       const shuffledOpts = shuffleArray(q.options);
-      optionsDiv.innerHTML = shuffledOpts.map(opt => `
+      // Timer bar + streak
+      const streakText = triviaState.streak >= 2 ? '<span style="color:#22c55e;font-weight:700;font-size:13px;">' + triviaState.streak + ' streak!</span>' : '';
+      optionsDiv.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;"><div id="triviaTimerBar" style="flex:1;height:4px;background:var(--border-light);border-radius:2px;margin-right:0.5rem;"><div id="triviaTimerFill" style="height:100%;background:var(--accent);border-radius:2px;width:100%;transition:width 1s linear;"></div></div><span id="triviaTime" style="font-size:12px;font-weight:600;color:var(--accent);min-width:30px;">15s</span>' + streakText + '</div>' +
+        shuffledOpts.map(opt => `
         <button style="padding: 0.85rem 1.25rem; background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 10px; color: var(--text-main); font-size: 15px; cursor: pointer; text-align: left; transition: all 0.2s; font-weight: 500;" class="trivia-opt" data-answer="${opt}" onmouseenter="this.style.borderColor='var(--accent)';this.style.transform='translateX(4px)'" onmouseleave="this.style.borderColor='var(--border-light)';this.style.transform='none'">${opt}</button>
       `).join('');
 
       optionsDiv.querySelectorAll('.trivia-opt').forEach(btn => {
         btn.addEventListener('click', () => handleTriviaAnswer(btn, q.a));
       });
+
+      // Question timer
+      triviaQuestionTimer = setInterval(() => {
+        triviaState.timeLeft--;
+        const timerEl = document.getElementById('triviaTime');
+        const fillEl = document.getElementById('triviaTimerFill');
+        if (timerEl) timerEl.textContent = triviaState.timeLeft + 's';
+        if (fillEl) fillEl.style.width = (triviaState.timeLeft / 15 * 100) + '%';
+        if (triviaState.timeLeft <= 5 && fillEl) fillEl.style.background = '#ef4444';
+        if (triviaState.timeLeft <= 0) {
+          clearInterval(triviaQuestionTimer);
+          // Time's up - auto-wrong
+          triviaState.streak = 0;
+          const feedback = document.getElementById('triviaFeedback');
+          feedback.textContent = `Time's up! The answer was: ${q.a}`;
+          feedback.style.background = '#fee2e2';
+          feedback.style.color = '#991b1b';
+          feedback.style.display = 'block';
+          document.querySelectorAll('.trivia-opt').forEach(b => { b.disabled = true; b.style.cursor = 'default'; });
+          triviaState.current++;
+          setTimeout(showTriviaQuestion, 1500);
+        }
+      }, 1000);
     }
 
     function handleTriviaAnswer(btn, correct) {
+      if (triviaQuestionTimer) clearInterval(triviaQuestionTimer);
       const chosen = btn.dataset.answer;
       const feedback = document.getElementById('triviaFeedback');
       const allBtns = document.querySelectorAll('.trivia-opt');
@@ -2380,11 +2749,15 @@
 
       if (chosen === correct) {
         triviaState.score++;
+        triviaState.streak++;
+        triviaState.maxStreak = Math.max(triviaState.maxStreak, triviaState.streak);
         document.getElementById('triviaScore').textContent = triviaState.score;
-        feedback.textContent = 'Correct!';
+        const speedBonus = triviaState.timeLeft >= 10 ? ' (Quick!)' : '';
+        feedback.textContent = 'Correct!' + speedBonus + (triviaState.streak >= 3 ? ' ' + triviaState.streak + ' in a row!' : '');
         feedback.style.background = '#dcfce7';
         feedback.style.color = '#166534';
       } else {
+        triviaState.streak = 0;
         btn.style.borderColor = '#ef4444';
         btn.style.background = '#fee2e2';
         btn.style.color = '#991b1b';
@@ -2563,11 +2936,31 @@
       const groundY = H * 0.82;
       let distance = 0;
       let frame = 0;
+      let maxAlt = 0;
+
+      // Wind system
+      const baseWind = (Math.random() - 0.5) * 0.5;
+      let windGust = 0;
+      const windParticles = [];
 
       // Trees and terrain
       const trees = [];
-      for (let i = 0; i < 12; i++) {
-        trees.push({ x: 80 + Math.random() * W * 2, h: 15 + Math.random() * 25 });
+      for (let i = 0; i < 20; i++) {
+        trees.push({ x: 80 + Math.random() * W * 3, h: 15 + Math.random() * 30 });
+      }
+
+      // Target zones with multipliers
+      const targets = [
+        { dist: 30, label: '30m', mult: '1x', color: 'rgba(59,130,246,0.3)' },
+        { dist: 60, label: '60m', mult: '2x', color: 'rgba(34,197,94,0.3)' },
+        { dist: 100, label: '100m', mult: '3x', color: 'rgba(251,191,36,0.3)' },
+        { dist: 150, label: '150m', mult: '5x', color: 'rgba(239,68,68,0.3)' }
+      ];
+
+      // Birds
+      const birds = [];
+      for (let i = 0; i < 4; i++) {
+        birds.push({ x: 100 + Math.random() * W * 2, y: 20 + Math.random() * groundY * 0.5, wingPhase: Math.random() * Math.PI * 2, speed: 0.3 + Math.random() * 0.5 });
       }
 
       document.getElementById('paperResult').textContent = '';
@@ -2575,108 +2968,254 @@
       function drawFrame() {
         paperCtx.clearRect(0, 0, W, H);
 
-        // Sky gradient
+        // Sky gradient with sun
         const sky = paperCtx.createLinearGradient(0, 0, 0, H);
-        sky.addColorStop(0, '#5BA3E6');
-        sky.addColorStop(0.6, '#87CEEB');
+        sky.addColorStop(0, '#4A90D9');
+        sky.addColorStop(0.4, '#87CEEB');
+        sky.addColorStop(0.7, '#B0E0E6');
         sky.addColorStop(0.82, '#90EE90');
         sky.addColorStop(1, '#228B22');
         paperCtx.fillStyle = sky;
         paperCtx.fillRect(0, 0, W, H);
 
-        // Clouds
-        paperCtx.fillStyle = 'rgba(255,255,255,0.7)';
-        [[80,40],[200,60],[350,30],[480,55]].forEach(([cx,cy]) => {
+        // Sun
+        const sunGrad = paperCtx.createRadialGradient(W - 60, 35, 5, W - 60, 35, 40);
+        sunGrad.addColorStop(0, 'rgba(255,240,180,0.9)');
+        sunGrad.addColorStop(0.3, 'rgba(255,220,120,0.4)');
+        sunGrad.addColorStop(1, 'rgba(255,200,100,0)');
+        paperCtx.fillStyle = sunGrad;
+        paperCtx.beginPath();
+        paperCtx.arc(W - 60, 35, 40, 0, Math.PI * 2);
+        paperCtx.fill();
+        paperCtx.fillStyle = '#FFF8DC';
+        paperCtx.beginPath();
+        paperCtx.arc(W - 60, 35, 12, 0, Math.PI * 2);
+        paperCtx.fill();
+
+        // Clouds with depth
+        const cloudPositions = [[80,30,50],[200,55,35],[350,25,45],[480,50,30],[560,15,40]];
+        cloudPositions.forEach(([cx,cy,sz]) => {
+          const scrolledX = cx - distance * 0.1;
+          paperCtx.fillStyle = 'rgba(255,255,255,0.8)';
           paperCtx.beginPath();
-          paperCtx.ellipse(cx - distance * 0.1, cy, 40, 15, 0, 0, Math.PI * 2);
+          paperCtx.ellipse(scrolledX, cy, sz, sz * 0.35, 0, 0, Math.PI * 2);
+          paperCtx.fill();
+          paperCtx.fillStyle = 'rgba(255,255,255,0.6)';
+          paperCtx.beginPath();
+          paperCtx.ellipse(scrolledX + sz * 0.4, cy - sz * 0.15, sz * 0.6, sz * 0.25, 0, 0, Math.PI * 2);
+          paperCtx.fill();
+          paperCtx.beginPath();
+          paperCtx.ellipse(scrolledX - sz * 0.3, cy + sz * 0.05, sz * 0.5, sz * 0.2, 0, 0, Math.PI * 2);
           paperCtx.fill();
         });
+
+        // Background hills
+        paperCtx.fillStyle = 'rgba(100,160,80,0.4)';
+        paperCtx.beginPath();
+        paperCtx.moveTo(0, groundY);
+        for (let hx = 0; hx <= W; hx += 30) {
+          const hOff = Math.sin((hx + distance * 0.5) * 0.02) * 20 + Math.cos((hx + distance * 0.5) * 0.035) * 10;
+          paperCtx.lineTo(hx, groundY - 15 - Math.abs(hOff));
+        }
+        paperCtx.lineTo(W, groundY);
+        paperCtx.closePath();
+        paperCtx.fill();
 
         // Ground
         paperCtx.fillStyle = '#4a8c3f';
         paperCtx.fillRect(0, groundY, W, H - groundY);
-
-        // Ground line
+        // Grass texture
         paperCtx.strokeStyle = '#3a7c2f';
-        paperCtx.lineWidth = 2;
-        paperCtx.beginPath();
-        paperCtx.moveTo(0, groundY);
-        paperCtx.lineTo(W, groundY);
-        paperCtx.stroke();
-
-        // Trees (scroll with distance)
-        trees.forEach(t => {
-          const tx = t.x - distance * 3;
-          if (tx > -20 && tx < W + 20) {
-            paperCtx.fillStyle = '#2d6b1e';
-            paperCtx.beginPath();
-            paperCtx.moveTo(tx, groundY);
-            paperCtx.lineTo(tx - 8, groundY);
-            paperCtx.lineTo(tx - 4, groundY - t.h);
-            paperCtx.lineTo(tx + 4, groundY - t.h);
-            paperCtx.lineTo(tx + 8, groundY);
-            paperCtx.closePath();
-            paperCtx.fill();
-          }
-        });
-
-        // Distance markers
-        paperCtx.fillStyle = 'rgba(255,255,255,0.5)';
-        paperCtx.font = '10px sans-serif';
-        for (let m = 10; m < distance + 50; m += 10) {
-          const mx = 40 + (m - distance) * 3;
-          if (mx > 0 && mx < W) {
-            paperCtx.fillText(m + 'm', mx, groundY + 14);
-            paperCtx.fillRect(mx, groundY, 1, 6);
-          }
-        }
-
-        // Trail
-        paperCtx.strokeStyle = 'rgba(193, 122, 74, 0.4)';
-        paperCtx.lineWidth = 2;
-        if (trail.length > 1) {
+        paperCtx.lineWidth = 1;
+        for (let gx = 0; gx < W; gx += 8) {
+          const offset = ((gx + Math.floor(distance * 3)) % W);
           paperCtx.beginPath();
-          paperCtx.moveTo(trail[0][0], trail[0][1]);
-          for (let i = 1; i < trail.length; i++) {
-            paperCtx.lineTo(trail[i][0], trail[i][1]);
-          }
+          paperCtx.moveTo(gx, groundY);
+          paperCtx.lineTo(gx + 2, groundY - 3 - Math.random() * 3);
           paperCtx.stroke();
         }
 
-        // Draw paper airplane
+        // Target zones
+        targets.forEach(t => {
+          const tx = 40 + (t.dist - distance) * 3;
+          if (tx > -20 && tx < W + 20) {
+            // Flag pole
+            paperCtx.fillStyle = t.color;
+            paperCtx.fillRect(tx - 1, groundY - 30, 2, 30);
+            // Flag
+            paperCtx.fillRect(tx + 1, groundY - 30, 18, 12);
+            // Label
+            paperCtx.fillStyle = '#fff';
+            paperCtx.font = 'bold 8px sans-serif';
+            paperCtx.fillText(t.mult, tx + 3, groundY - 21);
+            // Ground ring
+            paperCtx.strokeStyle = t.color.replace('0.3', '0.6');
+            paperCtx.lineWidth = 2;
+            paperCtx.beginPath();
+            paperCtx.ellipse(tx, groundY, 12, 4, 0, 0, Math.PI * 2);
+            paperCtx.stroke();
+          }
+        });
+
+        // Trees (scroll with distance) - better triangular shapes
+        trees.forEach(t => {
+          const tx = t.x - distance * 3;
+          if (tx > -20 && tx < W + 20) {
+            // Trunk
+            paperCtx.fillStyle = '#5c4033';
+            paperCtx.fillRect(tx - 2, groundY - 5, 4, 5);
+            // Foliage layers
+            for (let layer = 0; layer < 3; layer++) {
+              const layerH = t.h * 0.4 * (3 - layer) / 3;
+              const layerW = 6 + layer * 3;
+              const layerY = groundY - 5 - layer * (t.h * 0.3);
+              paperCtx.fillStyle = layer === 0 ? '#1a5c0f' : layer === 1 ? '#228B22' : '#2d8c1e';
+              paperCtx.beginPath();
+              paperCtx.moveTo(tx, layerY - layerH);
+              paperCtx.lineTo(tx - layerW, layerY);
+              paperCtx.lineTo(tx + layerW, layerY);
+              paperCtx.closePath();
+              paperCtx.fill();
+            }
+          }
+        });
+
+        // Birds
+        birds.forEach(b => {
+          const bx = b.x - distance * 0.8;
+          if (bx > -20 && bx < W + 20) {
+            b.wingPhase += 0.1;
+            const wingY = Math.sin(b.wingPhase) * 4;
+            paperCtx.strokeStyle = '#333';
+            paperCtx.lineWidth = 1.5;
+            paperCtx.beginPath();
+            paperCtx.moveTo(bx - 6, b.y + wingY);
+            paperCtx.quadTo(bx - 2, b.y + wingY - 3, bx, b.y);
+            paperCtx.quadTo(bx + 2, b.y + wingY - 3, bx + 6, b.y + wingY);
+            paperCtx.stroke();
+          }
+        });
+
+        // Distance markers with flags
+        paperCtx.font = 'bold 10px sans-serif';
+        for (let m = 10; m < distance + 50; m += 10) {
+          const mx = 40 + (m - distance) * 3;
+          if (mx > 0 && mx < W) {
+            paperCtx.fillStyle = 'rgba(255,255,255,0.6)';
+            paperCtx.fillRect(mx, groundY, 1, 6);
+            paperCtx.fillText(m + 'm', mx - 8, groundY + 16);
+          }
+        }
+
+        // Wind particles
+        if (frame % 5 === 0 && (Math.abs(baseWind) > 0.1 || Math.abs(windGust) > 0.3)) {
+          windParticles.push({
+            x: Math.random() * W, y: Math.random() * groundY * 0.8,
+            life: 1
+          });
+        }
+        const totalWind = baseWind + windGust;
+        for (let wp = windParticles.length - 1; wp >= 0; wp--) {
+          const p = windParticles[wp];
+          p.x += totalWind * 3;
+          p.life -= 0.02;
+          if (p.life <= 0 || p.x < 0 || p.x > W) { windParticles.splice(wp, 1); continue; }
+          paperCtx.globalAlpha = p.life * 0.3;
+          paperCtx.strokeStyle = '#fff';
+          paperCtx.lineWidth = 1;
+          paperCtx.beginPath();
+          paperCtx.moveTo(p.x, p.y);
+          paperCtx.lineTo(p.x + totalWind * 8, p.y);
+          paperCtx.stroke();
+          paperCtx.globalAlpha = 1;
+        }
+
+        // Trail with gradient
+        if (trail.length > 1) {
+          for (let i = 1; i < trail.length; i++) {
+            const alpha = i / trail.length;
+            paperCtx.strokeStyle = `rgba(193, 122, 74, ${alpha * 0.6})`;
+            paperCtx.lineWidth = 1 + alpha;
+            paperCtx.beginPath();
+            paperCtx.moveTo(trail[i-1][0], trail[i-1][1]);
+            paperCtx.lineTo(trail[i][0], trail[i][1]);
+            paperCtx.stroke();
+          }
+        }
+
+        // Draw paper airplane with shadow
         paperCtx.save();
+        // Shadow on ground
+        if (y < groundY - 10) {
+          const shadowScale = Math.max(0.3, 1 - (groundY - y) / (groundY * 0.8));
+          paperCtx.globalAlpha = shadowScale * 0.3;
+          paperCtx.fillStyle = '#000';
+          paperCtx.beginPath();
+          paperCtx.ellipse(x, groundY + 2, 10 * shadowScale, 3 * shadowScale, 0, 0, Math.PI * 2);
+          paperCtx.fill();
+          paperCtx.globalAlpha = 1;
+        }
+
         paperCtx.translate(x, y);
         paperCtx.rotate(angle * Math.PI / 180);
+        // Wing flap effect based on lift
+        const flapAngle = Math.sin(frame * 0.15) * (vx > 2 ? 2 : 5);
+        // Upper wing
         paperCtx.fillStyle = '#fff';
         paperCtx.strokeStyle = '#c17a4a';
         paperCtx.lineWidth = 1.5;
         paperCtx.beginPath();
-        paperCtx.moveTo(18, 0);
-        paperCtx.lineTo(-12, -8);
+        paperCtx.moveTo(20, 0);
+        paperCtx.lineTo(-14, -9 - flapAngle);
         paperCtx.lineTo(-6, 0);
-        paperCtx.lineTo(-12, 8);
+        paperCtx.closePath();
+        paperCtx.fill();
+        paperCtx.stroke();
+        // Lower wing
+        paperCtx.fillStyle = '#f0f0f0';
+        paperCtx.beginPath();
+        paperCtx.moveTo(20, 0);
+        paperCtx.lineTo(-14, 9 + flapAngle);
+        paperCtx.lineTo(-6, 0);
         paperCtx.closePath();
         paperCtx.fill();
         paperCtx.stroke();
         // Wing fold line
         paperCtx.beginPath();
-        paperCtx.moveTo(18, 0);
-        paperCtx.lineTo(-8, 0);
-        paperCtx.strokeStyle = 'rgba(193,122,74,0.5)';
+        paperCtx.moveTo(20, 0);
+        paperCtx.lineTo(-10, 0);
+        paperCtx.strokeStyle = 'rgba(193,122,74,0.4)';
+        paperCtx.lineWidth = 1;
         paperCtx.stroke();
         paperCtx.restore();
 
-        // HUD
-        paperCtx.fillStyle = 'rgba(0,0,0,0.5)';
-        paperCtx.fillRect(W - 110, 8, 100, 22);
+        // HUD panel
+        paperCtx.fillStyle = 'rgba(0,0,0,0.55)';
+        paperCtx.fillRect(W - 130, 6, 122, 48);
         paperCtx.fillStyle = '#fff';
-        paperCtx.font = 'bold 13px sans-serif';
-        paperCtx.fillText(Math.round(distance) + ' m', W - 100, 24);
+        paperCtx.font = 'bold 14px sans-serif';
+        paperCtx.fillText(Math.round(distance) + ' m', W - 120, 24);
+        paperCtx.font = '10px sans-serif';
+        const altM = Math.round((groundY - y) * 0.5);
+        maxAlt = Math.max(maxAlt, altM);
+        paperCtx.fillText('Alt: ' + Math.max(0, altM) + 'm', W - 120, 38);
+        // Wind indicator
+        const windArrow = totalWind > 0 ? '→' : '←';
+        paperCtx.fillStyle = Math.abs(totalWind) > 0.3 ? '#fbbf24' : '#fff';
+        paperCtx.fillText('Wind: ' + windArrow + ' ' + Math.abs(totalWind).toFixed(1), W - 120, 50);
+
+        // Wind gust update
+        if (frame % 80 === 0) {
+          windGust = (Math.random() - 0.5) * 1.2;
+        }
+        windGust *= 0.98;
 
         // Physics update
         const lift = liftCoeff * vx * 0.5;
         vy += gravity - lift;
+        vy += totalWind * 0.003; // Wind affects vertical
         vx -= dragCoeff * vx;
+        vx += totalWind * 0.005; // Wind affects speed slightly
         if (vx < 0.1) vx = 0.1;
         x += vx;
         y += vy;
@@ -2684,7 +3223,7 @@
         angle = Math.atan2(vy, vx) * 180 / Math.PI;
 
         trail.push([x, y]);
-        if (trail.length > 100) trail.shift();
+        if (trail.length > 120) trail.shift();
 
         // Keep plane horizontally centered after it moves far enough
         if (x > W * 0.4) {
@@ -2700,6 +3239,21 @@
           paperAnim = null;
           const finalDist = Math.round(distance);
 
+          // Check target zone bonuses
+          let zoneBonus = '';
+          let closestTarget = null;
+          let closestDiff = Infinity;
+          targets.forEach(t => {
+            const diff = Math.abs(finalDist - t.dist);
+            if (diff < 5 && diff < closestDiff) {
+              closestDiff = diff;
+              closestTarget = t;
+            }
+          });
+          if (closestTarget) {
+            zoneBonus = ' TARGET HIT: ' + closestTarget.label + ' (' + closestTarget.mult + ')';
+          }
+
           let rating = '⭐';
           if (finalDist > 100) rating = '⭐⭐⭐⭐⭐';
           else if (finalDist > 70) rating = '⭐⭐⭐⭐';
@@ -2713,7 +3267,7 @@
             document.getElementById('paperBest').textContent = paperBestDist;
             document.getElementById('cardPaperBest').textContent = paperBestDist;
           }
-          showGameOver('paperWrapper', finalDist + 'm', paperBestDist + 'm', isNew, rating);
+          showGameOver('paperWrapper', finalDist + 'm', paperBestDist + 'm', isNew, rating + zoneBonus + ' | Max alt: ' + maxAlt + 'm');
           return;
         }
 
@@ -2781,7 +3335,9 @@
           callsign: callsign,
           landing: false,
           fuel: 100,
-          size: 6
+          size: 6,
+          trail: [],
+          altitude: Math.floor(Math.random() * 30 + 10) * 100
         });
       }
 
@@ -2791,13 +3347,15 @@
         const mx = (e.clientX - rect.left) * (W / rect.width);
         const my = (e.clientY - rect.top) * (H / rect.height);
 
-        // Check if clicking a plane
+        // Check if clicking a plane (bigger hitbox for mobile)
         let clickedPlane = null;
+        let closestDist = 30; // increased hitbox radius
         for (const p of atcState.planes) {
           const dx = p.x - mx, dy = p.y - my;
-          if (Math.sqrt(dx * dx + dy * dy) < 20) {
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < closestDist) {
+            closestDist = dist;
             clickedPlane = p;
-            break;
           }
         }
 
@@ -2885,6 +3443,21 @@
           s.spawnInterval = Math.max(90, s.spawnInterval - 3);
         }
 
+        // Landing flash effects
+        if (!s.landFlashes) s.landFlashes = [];
+        for (let lf = s.landFlashes.length - 1; lf >= 0; lf--) {
+          const f = s.landFlashes[lf];
+          f.life -= 0.03;
+          if (f.life <= 0) { s.landFlashes.splice(lf, 1); continue; }
+          atcCtx.globalAlpha = f.life;
+          atcCtx.strokeStyle = '#00ff64';
+          atcCtx.lineWidth = 2;
+          atcCtx.beginPath();
+          atcCtx.arc(f.x, f.y, (1 - f.life) * 25, 0, Math.PI * 2);
+          atcCtx.stroke();
+          atcCtx.globalAlpha = 1;
+        }
+
         // Update and draw planes
         for (let i = s.planes.length - 1; i >= 0; i--) {
           const p = s.planes[i];
@@ -2892,13 +3465,18 @@
           p.y += p.vy;
           p.fuel -= 0.02;
 
+          // Record trail
+          p.trail.push({ x: p.x, y: p.y });
+          if (p.trail.length > 40) p.trail.shift();
+
           // Check landing on runway
           const rw = s.runway;
           if (p.landing && Math.abs(p.x - rw.x) < rw.w/2 + 5 && Math.abs(p.y - rw.y) < 15) {
             s.landed++;
-            s.score += 10;
+            s.score += 10 + Math.floor(p.fuel / 10);
             document.getElementById('atcScore').textContent = s.score;
             document.getElementById('atcLanded').textContent = s.landed;
+            s.landFlashes.push({ x: p.x, y: p.y, life: 1 });
             s.planes.splice(i, 1);
             continue;
           }
@@ -2939,50 +3517,128 @@
             }
           }
 
+          // Draw flight trail
+          if (p.trail.length > 1) {
+            for (let t = 1; t < p.trail.length; t++) {
+              const alpha = (t / p.trail.length) * 0.4;
+              atcCtx.strokeStyle = p.landing ? `rgba(0,255,100,${alpha})` : `rgba(0,200,80,${alpha})`;
+              atcCtx.lineWidth = 1;
+              atcCtx.beginPath();
+              atcCtx.moveTo(p.trail[t-1].x, p.trail[t-1].y);
+              atcCtx.lineTo(p.trail[t].x, p.trail[t].y);
+              atcCtx.stroke();
+            }
+          }
+
           // Draw plane
           const isSelected = p === s.selected;
           const planeAngle = Math.atan2(p.vy, p.vx);
 
-          // Selection ring
+          // Selection ring with pulse
           if (isSelected) {
-            atcCtx.strokeStyle = '#00ff64';
+            const pulse = 0.5 + Math.sin(Date.now() * 0.005) * 0.3;
+            atcCtx.strokeStyle = `rgba(0,255,100,${pulse})`;
             atcCtx.lineWidth = 2;
             atcCtx.beginPath();
-            atcCtx.arc(p.x, p.y, 14, 0, Math.PI * 2);
+            atcCtx.arc(p.x, p.y, 16, 0, Math.PI * 2);
             atcCtx.stroke();
+            // Heading indicator line
+            const headLen = 35;
+            atcCtx.strokeStyle = 'rgba(0,255,100,0.3)';
+            atcCtx.setLineDash([4, 4]);
+            atcCtx.beginPath();
+            atcCtx.moveTo(p.x, p.y);
+            atcCtx.lineTo(p.x + Math.cos(planeAngle) * headLen, p.y + Math.sin(planeAngle) * headLen);
+            atcCtx.stroke();
+            atcCtx.setLineDash([]);
           }
 
-          // Plane icon
+          // Proximity warning
+          for (let j = i - 1; j >= 0; j--) {
+            const p2 = s.planes[j];
+            const pdx = p.x - p2.x, pdy = p.y - p2.y;
+            const pdist = Math.sqrt(pdx * pdx + pdy * pdy);
+            if (pdist < 40 && pdist > 18) {
+              atcCtx.strokeStyle = 'rgba(255,68,68,0.4)';
+              atcCtx.lineWidth = 1;
+              atcCtx.beginPath();
+              atcCtx.moveTo(p.x, p.y);
+              atcCtx.lineTo(p2.x, p2.y);
+              atcCtx.stroke();
+            }
+          }
+
+          // Plane icon - bigger and more detailed
           atcCtx.save();
           atcCtx.translate(p.x, p.y);
           atcCtx.rotate(planeAngle);
-          atcCtx.fillStyle = p.landing ? '#00ff64' : (p.fuel < 30 ? '#ff4444' : '#00cc55');
+          const pColor = p.landing ? '#00ff64' : (p.fuel < 30 ? '#ff4444' : '#00cc55');
+          // Plane body
+          atcCtx.fillStyle = pColor;
           atcCtx.beginPath();
-          atcCtx.moveTo(8, 0);
-          atcCtx.lineTo(-6, -5);
-          atcCtx.lineTo(-4, 0);
-          atcCtx.lineTo(-6, 5);
+          atcCtx.moveTo(10, 0);
+          atcCtx.lineTo(-4, -2);
+          atcCtx.lineTo(-8, 0);
+          atcCtx.lineTo(-4, 2);
+          atcCtx.closePath();
+          atcCtx.fill();
+          // Wings
+          atcCtx.beginPath();
+          atcCtx.moveTo(2, 0);
+          atcCtx.lineTo(-3, -7);
+          atcCtx.lineTo(-5, -6);
+          atcCtx.lineTo(-2, 0);
+          atcCtx.lineTo(-5, 6);
+          atcCtx.lineTo(-3, 7);
+          atcCtx.closePath();
+          atcCtx.fill();
+          // Tail
+          atcCtx.beginPath();
+          atcCtx.moveTo(-6, 0);
+          atcCtx.lineTo(-9, -4);
+          atcCtx.lineTo(-8, 0);
+          atcCtx.lineTo(-9, 4);
           atcCtx.closePath();
           atcCtx.fill();
           atcCtx.restore();
 
-          // Callsign label
-          atcCtx.fillStyle = p.fuel < 30 ? '#ff4444' : 'rgba(0,255,100,0.7)';
-          atcCtx.font = '9px monospace';
-          atcCtx.fillText(p.callsign, p.x + 10, p.y - 8);
+          // Info block
+          atcCtx.fillStyle = p.fuel < 30 ? '#ff4444' : (isSelected ? '#00ff64' : 'rgba(0,255,100,0.7)');
+          atcCtx.font = isSelected ? 'bold 10px monospace' : '9px monospace';
+          atcCtx.fillText(p.callsign, p.x + 14, p.y - 10);
+          // Altitude
+          atcCtx.fillStyle = 'rgba(0,255,100,0.4)';
+          atcCtx.font = '8px monospace';
+          atcCtx.fillText('FL' + Math.floor(p.altitude / 100), p.x + 14, p.y - 1);
 
-          // Fuel indicator
-          if (p.fuel < 50) {
-            atcCtx.fillStyle = p.fuel < 30 ? 'rgba(255,68,68,0.5)' : 'rgba(255,200,0,0.5)';
-            atcCtx.fillRect(p.x + 10, p.y - 2, p.fuel * 0.3, 3);
-          }
+          // Fuel bar
+          const fuelBarW = 20;
+          const fuelPct = Math.max(0, p.fuel / 100);
+          atcCtx.fillStyle = 'rgba(0,0,0,0.3)';
+          atcCtx.fillRect(p.x + 14, p.y + 3, fuelBarW, 2);
+          atcCtx.fillStyle = p.fuel < 30 ? '#ff4444' : p.fuel < 50 ? '#fbbf24' : 'rgba(0,255,100,0.5)';
+          atcCtx.fillRect(p.x + 14, p.y + 3, fuelBarW * fuelPct, 2);
         }
 
-        // Top HUD
-        atcCtx.fillStyle = 'rgba(0,255,100,0.4)';
-        atcCtx.font = '11px monospace';
-        atcCtx.fillText('AIRCRAFT: ' + s.planes.length, 10, 18);
-        atcCtx.fillText('FREQUENCY: 118.70', 10, 32);
+        // Top HUD panel
+        atcCtx.fillStyle = 'rgba(0,0,0,0.4)';
+        atcCtx.fillRect(4, 4, 140, 54);
+        atcCtx.fillStyle = 'rgba(0,255,100,0.6)';
+        atcCtx.font = '10px monospace';
+        atcCtx.fillText('TRAFFIC: ' + s.planes.length + ' ACTIVE', 10, 18);
+        atcCtx.fillText('FREQ: 118.70 MHz', 10, 30);
+        atcCtx.fillText('RWY 09 | CLEAR', 10, 42);
+        atcCtx.fillStyle = 'rgba(0,255,100,0.3)';
+        atcCtx.fillText('CLICK: SELECT → DIRECT', 10, 54);
+
+        // Bottom status
+        atcCtx.fillStyle = 'rgba(0,0,0,0.4)';
+        atcCtx.fillRect(W - 100, H - 22, 96, 18);
+        atcCtx.fillStyle = 'rgba(0,255,100,0.5)';
+        atcCtx.font = '9px monospace';
+        const elapsed = Math.floor((Date.now() - (s.startTime || Date.now())) / 1000);
+        if (!s.startTime) s.startTime = Date.now();
+        atcCtx.fillText('TIME: ' + Math.floor(elapsed/60) + ':' + String(elapsed%60).padStart(2,'0'), W - 94, H - 8);
 
         atcAnim = requestAnimationFrame(drawAtcFrame);
       }
@@ -3020,6 +3676,32 @@
 
     let bingoGrid = [];
     let bingoMarked = [];
+    let bingoHasCelebrated = false;
+
+    // Load saved bingo state
+    function loadBingoState() {
+      const saved = localStorage.getItem('bingoState');
+      if (saved) {
+        try {
+          const state = JSON.parse(saved);
+          bingoGrid = state.grid;
+          bingoMarked = state.marked;
+          bingoHasCelebrated = state.celebrated || false;
+          renderBingoBoard();
+          checkBingo(true);
+          return true;
+        } catch(e) {}
+      }
+      return false;
+    }
+
+    function saveBingoState() {
+      localStorage.setItem('bingoState', JSON.stringify({
+        grid: bingoGrid,
+        marked: bingoMarked,
+        celebrated: bingoHasCelebrated
+      }));
+    }
 
     function generateBingoCard() {
       const shuffled = [...bingoAllChallenges].sort(() => Math.random() - 0.5);
@@ -3027,73 +3709,121 @@
       bingoMarked = Array(25).fill(false);
       bingoMarked[12] = true; // Free center space
       bingoGrid[12] = "FREE SPACE ✈️";
+      bingoHasCelebrated = false;
       renderBingoBoard();
       document.getElementById('bingoStatus').textContent = '';
+      saveBingoState();
     }
 
     function renderBingoBoard() {
       const board = document.getElementById('bingoBoard');
       board.innerHTML = '';
+
+      // Find winning lines for highlighting
+      const winLines = getWinningLines();
+      const winCells = new Set();
+      winLines.forEach(line => line.forEach(i => winCells.add(i)));
+
       bingoGrid.forEach((challenge, i) => {
         const cell = document.createElement('div');
+        const isWinCell = winCells.has(i);
         cell.textContent = challenge;
         cell.style.cssText = `
           padding: 0.5rem 0.25rem;
           text-align: center;
           font-size: 10px;
           line-height: 1.3;
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
           min-height: 60px;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s;
-          border: 1px solid var(--border-light);
+          transition: all 0.25s;
+          border: 2px solid ${isWinCell ? '#22c55e' : (bingoMarked[i] ? 'var(--accent)' : 'var(--border-light)')};
           user-select: none;
           font-weight: ${bingoMarked[i] ? '600' : '400'};
-          background: ${bingoMarked[i] ? 'var(--accent)' : 'var(--bg-card)'};
-          color: ${bingoMarked[i] ? '#fff' : 'var(--text-main)'};
+          background: ${isWinCell ? '#22c55e' : (bingoMarked[i] ? 'var(--accent)' : 'var(--bg-card)')};
+          color: ${bingoMarked[i] || isWinCell ? '#fff' : 'var(--text-main)'};
+          ${isWinCell ? 'box-shadow: 0 0 8px rgba(34,197,94,0.4);' : ''}
         `;
         cell.addEventListener('click', () => {
           if (i === 12) return; // free space always marked
           bingoMarked[i] = !bingoMarked[i];
+
+          // Click animation
+          cell.style.transform = 'scale(0.9)';
+          setTimeout(() => { cell.style.transform = 'scale(1)'; }, 150);
+
           renderBingoBoard();
           checkBingo();
+          saveBingoState();
+        });
+        // Hover effect
+        cell.addEventListener('mouseenter', () => {
+          if (!bingoMarked[i]) cell.style.borderColor = 'var(--accent)';
+        });
+        cell.addEventListener('mouseleave', () => {
+          if (!bingoMarked[i] && !winCells.has(i)) cell.style.borderColor = 'var(--border-light)';
         });
         board.appendChild(cell);
       });
     }
 
-    function checkBingo() {
+    function getWinningLines() {
       const lines = [];
-      // Rows
       for (let r = 0; r < 5; r++) lines.push([r*5, r*5+1, r*5+2, r*5+3, r*5+4]);
-      // Columns
       for (let c = 0; c < 5; c++) lines.push([c, c+5, c+10, c+15, c+20]);
-      // Diagonals
       lines.push([0, 6, 12, 18, 24]);
       lines.push([4, 8, 12, 16, 20]);
+      return lines.filter(line => line.every(i => bingoMarked[i]));
+    }
 
-      let bingos = 0;
-      for (const line of lines) {
-        if (line.every(i => bingoMarked[i])) bingos++;
+    function bingoConfetti() {
+      const board = document.getElementById('bingoBoard');
+      const rect = board.getBoundingClientRect();
+      const colors = ['#fbbf24','#ef4444','#22c55e','#3b82f6','#a855f7','#ec4899','#f97316'];
+
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        const x = rect.left + Math.random() * rect.width;
+        const color = colors[i % colors.length];
+        particle.style.cssText = `position:fixed;left:${x}px;top:${rect.top}px;width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};pointer-events:none;z-index:9999;animation:confettiFall ${1.5+Math.random()}s ${Math.random()*0.5}s ease-out forwards;`;
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 3000);
       }
+    }
+
+    function checkBingo(silent) {
+      const winLines = getWinningLines();
+      const bingos = winLines.length;
 
       const status = document.getElementById('bingoStatus');
       if (bingos > 0) {
-        status.textContent = `🎉 BINGO! You got ${bingos} line${bingos > 1 ? 's' : ''}!`;
+        status.textContent = `BINGO! You got ${bingos} line${bingos > 1 ? 's' : ''}!`;
         status.style.color = '#22c55e';
+        status.style.fontSize = '18px';
+
+        // Confetti celebration (only once per bingo)
+        if (!bingoHasCelebrated && !silent) {
+          bingoHasCelebrated = true;
+          bingoConfetti();
+          saveBingoState();
+        }
       } else {
         const marked = bingoMarked.filter(Boolean).length;
         status.textContent = `${marked}/25 marked`;
         status.style.color = 'var(--accent)';
+        status.style.fontSize = '';
+        bingoHasCelebrated = false;
       }
     }
 
     document.getElementById('bingoNew').addEventListener('click', generateBingoCard);
-    // Auto-generate first card
-    generateBingoCard();
+    // Load saved card or generate new one
+    if (!loadBingoState()) {
+      generateBingoCard();
+    }
   </script>
 </body>
 </html>
